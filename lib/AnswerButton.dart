@@ -1,46 +1,75 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'AnswersList.dart';
 
 class AnswerButton extends StatefulWidget {
-  const AnswerButton({super.key, });
+  final answerId;
+
+  const AnswerButton({super.key, required this.answerId});
 
   @override
   State<AnswerButton> createState() => _AnswerButtonState();
 }
 
 class _AnswerButtonState extends State<AnswerButton> {
-  Color _backgroundColor = Colors.white;
+  bool _active = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("Button pressed!");
-      },
-      onLongPress: () {
-        print("Long Press!");
-      },
+    return Consumer<AnswersList>(
+      builder: (context, answersList, child) {
+        if(answersList.activeId != widget.answerId){
+          _active = false;
+        }
 
-      child: Container(
-        color: _backgroundColor,
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              child: Text("A"),
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Colors.black
+        return GestureDetector(
+          onTap: () {
+            if(_active) {
+              answersList.setActive(-1);
+            } else {
+              answersList.setActive(widget.answerId);
+            }
+            setState(() {
+              _active = !_active;
+            });
+          },
+          onLongPress: () {
+            print("Long Press!");
+          },
+          child: Container(
+              color: (_active) ? Colors.black : Colors.white,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 17),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            right: BorderSide(
+                                color: (_active) ? Colors.white : Colors.black
+                            )
+                        )
+                    ),
+                    child: Text(
+                      "A",
+                      style: TextStyle(
+                          color: (_active) ? Colors.white : Colors.black
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Text(
+                    "und der Superpapagei (001)",
+                    style: TextStyle(
+                        color: (_active) ? Colors.white : Colors.black
+                    ),
                   )
-                )
-              ),
-            ),
-            SizedBox(width: 20),
-            Text("und der Superpapagei (001)")
-          ],
-        )
-      ),
+                ],
+              )
+          ),
+        );
+      }
     );
   }
 }
