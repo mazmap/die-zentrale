@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/AnswerSelector.dart';
+import 'package:quizzly/Coord.dart';
 import 'package:quizzly/HintsMask.dart';
 
 import 'AnswersList.dart';
@@ -55,6 +58,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<CoordBox> _hintCoords = [];
+  final Random _random = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    double x = _random.nextInt(350).toDouble();
+    double y = _random.nextInt(350).toDouble();
+    _hintCoords.add(CoordBox(x,y,40));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -131,11 +145,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 10,),
               FutureBuilder<ui.Image>(
-                  future: _loadImage("assets/covers/folge-001.jpg"),
+                  future: _loadImage("assets/illustrations/illustration-folge-001.png"),
                   builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
                     if(snapshot.hasData){
                       return CustomPaint(
-                        foregroundPainter: HintsMask(snapshot.data!),
+                        foregroundPainter: HintsMask(snapshot.data!, _hintCoords),
                         child: Container(
                           height: 350,
                           color: Colors.black,
@@ -151,7 +165,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: FilledButton(
-                        onPressed: () {  },
+                        onPressed: () {
+                          double x = _random.nextInt(350).toDouble();
+                          double y = _random.nextInt(350).toDouble();
+
+                          setState(() {
+                            _hintCoords = [..._hintCoords, CoordBox(x, y, 40)];
+                          });
+                        },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith((states) {
                               // If the button is pressed, return green, otherwise blue
