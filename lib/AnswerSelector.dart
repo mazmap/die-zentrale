@@ -7,7 +7,9 @@ import 'package:quizzly/VerticalAnswerDivider.dart';
 import 'AnswersList.dart';
 
 class AnswerSelector extends StatefulWidget {
-  const AnswerSelector({super.key});
+  final List<String> possibleAnswers;
+
+  const AnswerSelector({super.key, required this.possibleAnswers});
 
   @override
   State<AnswerSelector> createState() => _AnswerSelectorState();
@@ -16,24 +18,20 @@ class AnswerSelector extends StatefulWidget {
 class _AnswerSelectorState extends State<AnswerSelector> {
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = [];
+
+    for(int i=0; i<widget.possibleAnswers.length-1; i++){
+      children.add(AnswerButton(answerId: i, answerText: widget.possibleAnswers[i],));
+      children.add(const VerticalAnswerDivider());
+    }
+    children.add(AnswerButton(answerId: widget.possibleAnswers.length-1, answerText: widget.possibleAnswers.last));
+
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black)
       ),
       child: Column(
-        children: const [
-          AnswerButton(answerId: 0,),
-          VerticalAnswerDivider(),
-          AnswerButton(answerId: 1,),
-          VerticalAnswerDivider(),
-          AnswerButton(answerId: 2,),
-          VerticalAnswerDivider(),
-          AnswerButton(answerId: 3,),
-          VerticalAnswerDivider(),
-          AnswerButton(answerId: 4,),
-          VerticalAnswerDivider(),
-          AnswerButton(answerId: 5,),
-        ],
+        children: children,
       )
     );
   }

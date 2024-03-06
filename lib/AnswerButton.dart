@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 import 'AnswersList.dart';
 
 class AnswerButton extends StatefulWidget {
-  final answerId;
+  final int answerId;
+  final String answerText;
 
-  const AnswerButton({super.key, required this.answerId});
+  const AnswerButton({super.key, required this.answerId, required this.answerText});
 
   @override
   State<AnswerButton> createState() => _AnswerButtonState();
@@ -15,6 +16,8 @@ class AnswerButton extends StatefulWidget {
 
 class _AnswerButtonState extends State<AnswerButton> {
   bool _active = false;
+  
+  final String letters = "ABCDEFGHIJKLMNOPQRSTUVW";
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +55,16 @@ class _AnswerButtonState extends State<AnswerButton> {
                         )
                     ),
                     child: Text(
-                      "A",
+                      letters.characters.elementAt(widget.answerId),
                       style: TextStyle(
                           color: (_active) ? Colors.white : Colors.black
                       ),
+                      overflow: TextOverflow.fade,
                     ),
                   ),
                   const SizedBox(width: 20),
                   Text(
-                    "und der Superpapagei (001)",
+                    widget.answerText,
                     style: TextStyle(
                         color: (_active) ? Colors.white : Colors.black
                     ),

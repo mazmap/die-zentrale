@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/AnswerSelector.dart';
 import 'package:quizzly/Coord.dart';
+import 'package:quizzly/Episodes.dart';
 import 'package:quizzly/HintsMask.dart';
 
 import 'AnswersList.dart';
@@ -48,6 +49,13 @@ Future<ui.Image> _loadImage(String imageAssetPath) async {
   return frame.image;
 }
 
+String generateEpCoverAssetPath(String episodeName) {
+  int episodeNumber = Episodes.episodeTitles.indexOf(episodeName)+1;
+  String stringifiedEpNumber = "00$episodeNumber";
+  stringifiedEpNumber = stringifiedEpNumber.substring(stringifiedEpNumber.length-3, stringifiedEpNumber.length);
+  return stringifiedEpNumber;
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -61,12 +69,36 @@ class _MyHomePageState extends State<MyHomePage> {
   List<CoordBox> _hintCoords = [];
   final Random _random = Random();
 
+  List<String> leftTitles = [];
+
+  int currentQuestionNumber = 1;
+
+  int correctAnswer = -1;
+
+  List<String> possibleAnswers = [];
+  String currentEpCoverPath = "";
+
   @override
   void initState() {
     super.initState();
-    double x = _random.nextInt(350).toDouble();
-    double y = _random.nextInt(350).toDouble();
+    double x = _random.nextInt(350-40).toDouble();
+    double y = _random.nextInt(350-40).toDouble();
     _hintCoords.add(CoordBox(x,y,40));
+
+    leftTitles = Episodes.episodeTitles.getRange(0, 201).toList();
+
+    int randomIdx;
+    for(int i=0; i<6; i++){
+      randomIdx = _random.nextInt(leftTitles.length-1-i);
+      possibleAnswers.add(leftTitles[randomIdx]);
+      leftTitles.removeAt(randomIdx);
+    }
+    
+    correctAnswer = _random.nextInt(5);
+
+    String stringifiedEpNumber = generateEpCoverAssetPath(possibleAnswers[correctAnswer]);
+    currentEpCoverPath = "assets/illustrations/illustration-folge-$stringifiedEpNumber.png";
+    print(currentEpCoverPath);
   }
 
   @override
@@ -79,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
             color: Colors.white,
             padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-            child: Stack(
+            child: Row(
               children: [
                 Container(
                   decoration: const BoxDecoration(
@@ -99,53 +131,44 @@ class _MyHomePageState extends State<MyHomePage> {
                   alignment: Alignment.center,
                   child: Text("<-"),
                 ),
+                Expanded(
+                    child: Container(
+                        color: Colors.black,
+                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Text(
+                            "Frage $currentQuestionNumber/200",
+                            style: TextStyle(color: Colors.white)
+                        )
+                    )
+                ),
                 Container(
-                  child: Text("Die Drei Fragezeichen Cover Quiz"),
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                              color: Colors.black,
-                              width: 1
-                          ),
-                      )
-                  ),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Colors.black,
+                                width: 1
+                            ),
+                            left: BorderSide(
+                                color: Colors.black,
+                                width: 1
+                            )
+                        )
+                    ),
+                    child: Text(
+                        "157"
+                    )
                 )
               ],
             )
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
           child: ListView(
             children: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                        color: Colors.black,
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Text(
-                            "Frage 1/200",
-                            style: TextStyle(color: Colors.white)
-                        )
-                    )
-                  ),
-                  SizedBox(width: 10,),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black)
-                    ),
-                    child: Text(
-                      "157"
-                    )
-                  )
-                ],
-              ),
-              SizedBox(height: 10,),
               FutureBuilder<ui.Image>(
-                  future: _loadImage("assets/illustrations/illustration-folge-001.png"),
+                  future: _loadImage(currentEpCoverPath),
                   builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
                     if(snapshot.hasData){
                       return CustomPaint(
@@ -166,8 +189,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: FilledButton(
                         onPressed: () {
-                          double x = _random.nextInt(350).toDouble();
-                          double y = _random.nextInt(350).toDouble();
+                          double x = _random.nextInt(350-40).toDouble();
+                          double y = _random.nextInt(350-40).toDouble();
 
                           setState(() {
                             _hintCoords = [..._hintCoords, CoordBox(x, y, 40)];
@@ -215,27 +238,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               SizedBox(height: 10),
-              AnswerSelector()
+              AnswerSelector(possibleAnswers: possibleAnswers,)
             ],
           ),
         ),
         bottomNavigationBar: BottomAppBar(
           elevation: 0,
+          height: 70,
+          padding: EdgeInsets.zero,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical:5),
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
                   color: Colors.black
                 )
-              )
+              ),
             ),
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Consumer<AnswersList>(
               builder: (context, answersList, child) {
                 return FilledButton(
                     onPressed: () {
                       if(answersList.activeId != -1){
                         print("Active Button: ${answersList.activeId}");
+                        setState(() {
+                          currentQuestionNumber = currentQuestionNumber+1;
+                        });
                       } else {
                         print("No active Button");
                       }
@@ -257,7 +285,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: MaterialStateProperty.resolveWith((states) {
                           return ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
                         }),
-                        animationDuration: Duration(milliseconds: 1)
+                        animationDuration: Duration(milliseconds: 1),
+                      fixedSize: MaterialStateProperty.resolveWith((states) {
+                        return Size(0, 50);
+                      }),
                     ),
                     child: Text("Antworten")
                 );
