@@ -24,7 +24,7 @@ class HintsMask extends CustomPainter {
     final path = Path();
 
     for(CoordBox coord in hintCoords){
-      path.addRect(Rect.fromLTWH(coord.x, coord.y, 50, 50));
+      path.addRect(Rect.fromLTWH(coord.x, coord.y, coord.h, coord.h));
     }
 
     canvas.clipPath(path);

@@ -78,6 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> possibleAnswers = [];
   String currentEpCoverPath = "";
 
+  int tipCounter = 0;
+  int _tipCost = 1;
+
+  bool _isTipDeactivated = false;
+
   @override
   void initState() {
     super.initState();
@@ -86,15 +91,17 @@ class _MyHomePageState extends State<MyHomePage> {
     _hintCoords.add(CoordBox(x,y,40));
 
     leftTitles = Episodes.episodeTitles.getRange(0, 201).toList();
+    List<String> titlesForSelection = [...leftTitles];
 
     int randomIdx;
     for(int i=0; i<6; i++){
       randomIdx = _random.nextInt(leftTitles.length-1-i);
-      possibleAnswers.add(leftTitles[randomIdx]);
-      leftTitles.removeAt(randomIdx);
+      possibleAnswers.add(titlesForSelection[randomIdx]);
+      titlesForSelection.removeAt(randomIdx);
     }
     
     correctAnswer = _random.nextInt(5);
+    leftTitles.remove(possibleAnswers[correctAnswer]);
 
     String stringifiedEpNumber = generateEpCoverAssetPath(possibleAnswers[correctAnswer]);
     currentEpCoverPath = "assets/illustrations/illustration-folge-$stringifiedEpNumber.png";
@@ -156,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                     ),
                     child: Text(
-                        "157"
+                        "0"
                     )
                 )
               ],
@@ -188,12 +195,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Expanded(
                     child: FilledButton(
-                        onPressed: () {
-                          double x = _random.nextInt(350-40).toDouble();
-                          double y = _random.nextInt(350-40).toDouble();
+                        onPressed: _isTipDeactivated ? null : () {
+                          int size = 0;
+                          bool toggle = false;
+                          int newTipCost = 0;
+                          if(tipCounter == 0 || tipCounter == 1){
+                            size = 40;
+                          } else if (tipCounter >=2 && tipCounter <= 4){
+                            size = 60;
+                          } else if (tipCounter >=5 && tipCounter <=6){
+                            size = 80;
+                          } else {
+                            size = 80;
+                            toggle = true;
+                          }
+
+
+                          switch(tipCounter){
+                            case 0: newTipCost = 1; break;
+                            case 1:
+                            case 2:
+                            case 3: newTipCost = 2; break;
+                            case 4:
+                            case 5:
+                            case 6: newTipCost = 4; break;
+                          }
+
+                          tipCounter++;
+
+                          double x = _random.nextInt(350-size).toDouble();
+                          double y = _random.nextInt(350-size).toDouble();
 
                           setState(() {
-                            _hintCoords = [..._hintCoords, CoordBox(x, y, 40)];
+                            _hintCoords = [..._hintCoords, CoordBox(x, y, size.toDouble())];
+                            _isTipDeactivated = toggle;
+                            _tipCost = newTipCost;
                           });
                         },
                         style: ButtonStyle(
@@ -222,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             return EdgeInsets.symmetric(horizontal: 20, vertical: 10);
                           })
                         ),
-                        child: Text("Nächster Tip (-2)")
+                        child: _isTipDeactivated ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")
                     ),
                   ),
                   SizedBox(width: 10),
@@ -261,9 +297,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       if(answersList.activeId != -1){
                         print("Active Button: ${answersList.activeId}");
-                        setState(() {
-                          currentQuestionNumber = currentQuestionNumber+1;
-                        });
+
+                        if(answersList.activeId == correctAnswer){
+                          setState(() {
+                            currentQuestionNumber = currentQuestionNumber+1;
+                          });
+                        } else {
+                          print("Wrong Answer!");
+                        }
                       } else {
                         print("No active Button");
                       }
