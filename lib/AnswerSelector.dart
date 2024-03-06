@@ -20,23 +20,20 @@ class _AnswerSelectorState extends State<AnswerSelector> {
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black)
       ),
-      child: ChangeNotifierProvider(
-        create: (context) => AnswersList(),
-        child: Column(
-          children: [
-            AnswerButton(answerId: 0,),
-            VerticalAnswerDivider(),
-            AnswerButton(answerId: 1,),
-            VerticalAnswerDivider(),
-            AnswerButton(answerId: 2,),
-            VerticalAnswerDivider(),
-            AnswerButton(answerId: 3,),
-            VerticalAnswerDivider(),
-            AnswerButton(answerId: 4,),
-            VerticalAnswerDivider(),
-            AnswerButton(answerId: 5,),
-          ],
-        ),
+      child: Column(
+        children: const [
+          AnswerButton(answerId: 0,),
+          VerticalAnswerDivider(),
+          AnswerButton(answerId: 1,),
+          VerticalAnswerDivider(),
+          AnswerButton(answerId: 2,),
+          VerticalAnswerDivider(),
+          AnswerButton(answerId: 3,),
+          VerticalAnswerDivider(),
+          AnswerButton(answerId: 4,),
+          VerticalAnswerDivider(),
+          AnswerButton(answerId: 5,),
+        ],
       )
     );
   }
