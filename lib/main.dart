@@ -5,8 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/AnswerSelector.dart';
 import 'package:quizzly/Coord.dart';
+import 'package:quizzly/CurrentPoints.dart';
 import 'package:quizzly/Episodes.dart';
 import 'package:quizzly/HintsMask.dart';
+import 'package:quizzly/HintsNotifier.dart';
+import 'package:quizzly/QuestionDetails.dart';
+import 'package:quizzly/TipButton.dart';
 
 import 'AnswersList.dart';
 
@@ -66,7 +70,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<CoordBox> _hintCoords = [];
   final Random _random = Random();
 
   List<String> leftTitles = [];
@@ -78,17 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> possibleAnswers = [];
   String currentEpCoverPath = "";
 
-  int tipCounter = 0;
-  int _tipCost = 1;
-
-  bool _isTipDeactivated = false;
-
   @override
   void initState() {
     super.initState();
-    double x = _random.nextInt(350-40).toDouble();
-    double y = _random.nextInt(350-40).toDouble();
-    _hintCoords.add(CoordBox(x,y,40));
 
     leftTitles = Episodes.episodeTitles.getRange(0, 201).toList();
     List<String> titlesForSelection = [...leftTitles];
@@ -110,11 +105,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AnswersList(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AnswersList()),
+        ChangeNotifierProvider(create: (context) => CurrentPoints()),
+        ChangeNotifierProvider(create: (context)=>HintsNotifier()),
+        ChangeNotifierProvider(create: (context) => QuestionDetails())
+      ],
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(40), // Set this height
+          preferredSize: const Size.fromHeight(40), // Set this height
           child: Container(
             color: Colors.white,
             padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
@@ -133,24 +133,47 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                     )
                   ),
-                  width: 50,
                   height: 50,
-                  alignment: Alignment.center,
-                  child: Text("<-"),
+                  child: FilledButton(
+                    onPressed: () {},
+                    child: Icon(Icons.arrow_back, size:18),
+                    style: ButtonStyle(
+                      alignment: Alignment.center,
+                      backgroundColor: MaterialStateProperty.resolveWith((states) {
+                        return Colors.white;
+                      }),
+                      iconColor: MaterialStateProperty.resolveWith((states) {
+                        return Colors.black;
+                      }),
+                      surfaceTintColor: MaterialStateProperty.resolveWith((states) {
+                        return Colors.black;
+                      }),
+                      padding: MaterialStateProperty.resolveWith((states) {
+                        return EdgeInsets.symmetric(horizontal: 5);
+                      }),
+                      minimumSize: MaterialStateProperty.resolveWith((states) {
+                        return Size(10,10);
+                      }),
+                    ),
+                  ),
                 ),
                 Expanded(
                     child: Container(
                         color: Colors.black,
-                        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Text(
-                            "Frage $currentQuestionNumber/200",
-                            style: TextStyle(color: Colors.white)
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Consumer<QuestionDetails>(
+                          builder: (context, questionDetails, child) {
+                            return Text(
+                                "Frage ${questionDetails.questionNumber}/200",
+                                style: const TextStyle(color: Colors.white)
+                            );
+                          }
                         )
                     )
                 ),
                 Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: const BoxDecoration(
                         border: Border(
                             bottom: BorderSide(
                                 color: Colors.black,
@@ -162,8 +185,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             )
                         )
                     ),
-                    child: Text(
-                        "0"
+                    child: Consumer<CurrentPoints>(
+                      builder: (context, currentPoints, child){
+                        return Text(
+                            "${currentPoints.total}"
+                        );
+                      }
                     )
                 )
               ],
@@ -174,106 +201,49 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
           child: ListView(
             children: <Widget>[
-              FutureBuilder<ui.Image>(
-                  future: _loadImage(currentEpCoverPath),
-                  builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
-                    if(snapshot.hasData){
-                      return CustomPaint(
-                        foregroundPainter: HintsMask(snapshot.data!, _hintCoords),
-                        child: Container(
-                          height: 350,
-                          color: Colors.black,
-                        )
-                        //child: Image.asset("assets/covers/folge-001.jpg")
-                      );
-                    }
-                    return Text("Hallo");
-                  }
+              Consumer<HintsNotifier>(
+                builder: (context, hintsNotifier, child) {
+                  return FutureBuilder<ui.Image>(
+                      future: _loadImage(currentEpCoverPath),
+                      builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+                        if(snapshot.hasData){
+                          return CustomPaint(
+                              foregroundPainter: HintsMask(snapshot.data!, hintsNotifier.hintCoords, hintsNotifier.isRevealed),
+                              child: Container(
+                                height: 350,
+                                color: Colors.black,
+                              )
+                            //child: Image.asset("assets/covers/folge-001.jpg")
+                          );
+                        }
+                        return const Text("Fehler beim Bild Laden!");
+                      }
+                  );
+                }
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 children: [
-                  Expanded(
-                    child: FilledButton(
-                        onPressed: _isTipDeactivated ? null : () {
-                          int size = 0;
-                          bool toggle = false;
-                          int newTipCost = 0;
-                          if(tipCounter == 0 || tipCounter == 1){
-                            size = 40;
-                          } else if (tipCounter >=2 && tipCounter <= 4){
-                            size = 60;
-                          } else if (tipCounter >=5 && tipCounter <=6){
-                            size = 80;
-                          } else {
-                            size = 80;
-                            toggle = true;
-                          }
-
-
-                          switch(tipCounter){
-                            case 0: newTipCost = 1; break;
-                            case 1:
-                            case 2:
-                            case 3: newTipCost = 2; break;
-                            case 4:
-                            case 5:
-                            case 6: newTipCost = 4; break;
-                          }
-
-                          tipCounter++;
-
-                          double x = _random.nextInt(350-size).toDouble();
-                          double y = _random.nextInt(350-size).toDouble();
-
-                          setState(() {
-                            _hintCoords = [..._hintCoords, CoordBox(x, y, size.toDouble())];
-                            _isTipDeactivated = toggle;
-                            _tipCost = newTipCost;
-                          });
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith((states) {
-                              // If the button is pressed, return green, otherwise blue
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.black;
-                              }
-                              return Colors.white;
-                            }),
-                            foregroundColor: MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.white;
-                              }
-                              return Colors.black;
-                            }),
-                            shape: MaterialStateProperty.resolveWith((states) {
-                              return ContinuousRectangleBorder();
-                            }),
-                            animationDuration: Duration(milliseconds: 1),
-                            alignment: Alignment.centerLeft,
-                          side: MaterialStateProperty.resolveWith((states) {
-                            return BorderSide(color: Colors.black);
-                          }),
-                          padding: MaterialStateProperty.resolveWith((states) {
-                            return EdgeInsets.symmetric(horizontal: 20, vertical: 10);
-                          })
-                        ),
-                        child: _isTipDeactivated ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")
-                    ),
+                  const Expanded(
+                    child: TipButton()
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Container(
                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black)
                       ),
-                      child: Text(
-                          "20"
+                      child: Consumer<CurrentPoints>(
+                        builder: (context, currentPoints, child){
+                          return Text(
+                              "${currentPoints.local}"
+                          );
+                        }
                       )
                   )
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               AnswerSelector(possibleAnswers: possibleAnswers,)
             ],
           ),
@@ -283,25 +253,25 @@ class _MyHomePageState extends State<MyHomePage> {
           height: 70,
           padding: EdgeInsets.zero,
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(
                 top: BorderSide(
                   color: Colors.black
                 )
               ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Consumer<AnswersList>(
-              builder: (context, answersList, child) {
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Consumer4<AnswersList, CurrentPoints, QuestionDetails, HintsNotifier>(
+              builder: (context, answersList, currentPoints, questionDetails, hintsNotifier, child) {
                 return FilledButton(
                     onPressed: () {
                       if(answersList.activeId != -1){
                         print("Active Button: ${answersList.activeId}");
 
                         if(answersList.activeId == correctAnswer){
-                          setState(() {
-                            currentQuestionNumber = currentQuestionNumber+1;
-                          });
+                          questionDetails.incrementQuestionNumber();
+                          hintsNotifier.reveal();
+                          currentPoints.setTotalPlusLocal();
                         } else {
                           print("Wrong Answer!");
                         }

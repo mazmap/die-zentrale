@@ -19,6 +19,8 @@ class _AnswerButtonState extends State<AnswerButton> {
   
   final String letters = "ABCDEFGHIJKLMNOPQRSTUVW";
 
+  bool _isScrolling = false;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AnswersList>(
@@ -39,7 +41,9 @@ class _AnswerButtonState extends State<AnswerButton> {
             });
           },
           onLongPress: () {
-            print("Long Press!");
+            setState(() {
+              _isScrolling = true;
+            });
           },
           child: Container(
               color: (_active) ? Colors.black : Colors.white,
@@ -59,7 +63,6 @@ class _AnswerButtonState extends State<AnswerButton> {
                       style: TextStyle(
                           color: (_active) ? Colors.white : Colors.black
                       ),
-                      overflow: TextOverflow.fade,
                     ),
                   ),
                   const SizedBox(width: 20),

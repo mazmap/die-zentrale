@@ -12,8 +12,9 @@ import 'Coord.dart';
 class HintsMask extends CustomPainter {
   final ui.Image image;
   final List<CoordBox> hintCoords;
+  final bool reveal;
 
-  HintsMask(this.image, this.hintCoords);
+  HintsMask(this.image, this.hintCoords, this.reveal);
 
   @override
   void paint(Canvas canvas, Size size) async {
@@ -21,13 +22,15 @@ class HintsMask extends CustomPainter {
     paint.color = Colors.white;
     paint.style = PaintingStyle.fill;
 
-    final path = Path();
+    if(!reveal){
+      final path = Path();
 
-    for(CoordBox coord in hintCoords){
-      path.addRect(Rect.fromLTWH(coord.x, coord.y, coord.h, coord.h));
+      for(CoordBox coord in hintCoords){
+        path.addRect(Rect.fromLTWH(coord.x, coord.y, coord.h, coord.h));
+      }
+
+      canvas.clipPath(path);
     }
-
-    canvas.clipPath(path);
 
     canvas.drawImage(image, const Offset(0, 0), paint);
   }
