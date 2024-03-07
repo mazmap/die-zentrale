@@ -38,16 +38,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<ui.Image> _loadImage(String imageAssetPath) async {
+Future<ui.Image> _loadImage(String imageAssetPath, Size? size) async {
   //final bytes = await rootBundle.load(file);
   //Uint8List data = bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
   //return decodeImageFromList(data);
 
+  print(size);
+
   final ByteData data = await rootBundle.load(imageAssetPath);
   final codec = await ui.instantiateImageCodec(
     data.buffer.asUint8List(),
-    targetHeight: 350,
-    targetWidth: 350,
+    targetHeight: (size == null) ? 0 : size.width.toInt()-30,
+    targetWidth: (size == null) ? 0 : size.width.toInt()-30,
   );
   var frame = await codec.getNextFrame();
   return frame.image;
@@ -204,16 +206,19 @@ class _MyHomePageState extends State<MyHomePage> {
               Consumer<HintsNotifier>(
                 builder: (context, hintsNotifier, child) {
                   return FutureBuilder<ui.Image>(
-                      future: _loadImage(currentEpCoverPath),
+                      future: _loadImage(currentEpCoverPath, MediaQuery.of(context).size),
                       builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
                         if(snapshot.hasData){
-                          return CustomPaint(
-                              foregroundPainter: HintsMask(snapshot.data!, hintsNotifier.hintCoords, hintsNotifier.isRevealed),
-                              child: Container(
-                                height: 350,
-                                color: Colors.black,
-                              )
-                            //child: Image.asset("assets/covers/folge-001.jpg")
+                          double deviceWidth = MediaQuery.of(context).size.width;
+                          return Container(
+                            color: Colors.black,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: CustomPaint(
+                                  foregroundPainter: HintsMask(snapshot.data!, hintsNotifier.hintCoords, hintsNotifier.isRevealed),
+                                size: Size(deviceWidth-30, deviceWidth-30),
+                              ),
+                            ),
                           );
                         }
                         return const Text("Fehler beim Bild Laden!");
