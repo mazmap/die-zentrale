@@ -67,8 +67,7 @@ class _TipButtonState extends State<TipButton> {
               });
             },
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith((states) {
-                  // If the button is pressed, return green, otherwise blue
+                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                   if (states.contains(MaterialState.pressed)) {
                     return Colors.black;
                   }
@@ -81,15 +80,12 @@ class _TipButtonState extends State<TipButton> {
                   return Colors.black;
                 }),
                 shape: MaterialStateProperty.resolveWith((states) {
-                  return ContinuousRectangleBorder();
+                  return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
                 }),
-                animationDuration: Duration(milliseconds: 1),
+                animationDuration: const Duration(milliseconds: 1),
                 alignment: Alignment.centerLeft,
-                side: MaterialStateProperty.resolveWith((states) {
-                  return BorderSide(color: Colors.black);
-                }),
                 padding: MaterialStateProperty.resolveWith((states) {
-                  return EdgeInsets.symmetric(horizontal: 20, vertical: 10);
+                  return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
                 })
             ),
             child: _isTipDeactivated ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")

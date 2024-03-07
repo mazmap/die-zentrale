@@ -286,7 +286,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith((states) {
-                          // If the button is pressed, return green, otherwise blue
                           if (states.contains(MaterialState.pressed)) {
                             return Colors.black;
                           }
@@ -299,9 +298,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           return Colors.black;
                         }),
                         shape: MaterialStateProperty.resolveWith((states) {
-                          return ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                          return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
                         }),
-                        animationDuration: Duration(milliseconds: 1),
+                        animationDuration: const Duration(milliseconds: 1),
                       fixedSize: MaterialStateProperty.resolveWith((states) {
                         return Size(0, 50);
                       }),

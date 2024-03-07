@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'AnswersList.dart';
@@ -18,8 +19,6 @@ class _AnswerButtonState extends State<AnswerButton> {
   bool _active = false;
   
   final String letters = "ABCDEFGHIJKLMNOPQRSTUVW";
-
-  bool _isScrolling = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +40,7 @@ class _AnswerButtonState extends State<AnswerButton> {
             });
           },
           onLongPress: () {
-            setState(() {
-              _isScrolling = true;
-            });
+
           },
           child: Container(
               color: (_active) ? Colors.black : Colors.white,
@@ -66,12 +63,21 @@ class _AnswerButtonState extends State<AnswerButton> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  Text(
-                    widget.answerText,
-                    style: TextStyle(
-                        color: (_active) ? Colors.white : Colors.black
+                  Expanded(
+                    flex: 1,
+                    child: Tooltip(
+                      message: "${widget.answerText}",
+                      child: Text(
+                        widget.answerText,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: TextStyle(
+                            color: (_active) ? Colors.white : Colors.black
+                        ),
+                      )
                     ),
-                  )
+                  ),
+                  const SizedBox(width: 10)
                 ],
               )
           ),
