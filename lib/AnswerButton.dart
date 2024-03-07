@@ -66,7 +66,8 @@ class _AnswerButtonState extends State<AnswerButton> {
                   Expanded(
                     flex: 1,
                     child: Tooltip(
-                      message: "${widget.answerText}",
+                      message: widget.answerText,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
                         widget.answerText,
                         overflow: TextOverflow.fade,

@@ -33,6 +33,16 @@ class HintsMask extends CustomPainter {
     }
 
     canvas.drawImage(image, const Offset(0, 0), paint);
+
+    Paint borderPaint = Paint();
+    borderPaint.style = PaintingStyle.stroke;
+    borderPaint.strokeWidth = 1.0;
+    borderPaint.color = Colors.white;
+
+    canvas.drawRect(
+        Rect.fromLTWH(hintCoords.last.x+1, hintCoords.last.y+1, hintCoords.last.h-2, hintCoords.last.h-2),
+        borderPaint
+    );
   }
 
   @override

@@ -65,6 +65,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - assets/images/covers.png
     - assets/illustrations/illustration-folge-001.png
     - assets/illustrations/illustration-folge-002.png
     - assets/illustrations/illustration-folge-003.png

@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +71,6 @@ class _QuizRouteState extends State<QuizRoute> {
 
     String stringifiedEpNumber = generateEpCoverAssetPath(possibleAnswers[correctAnswer]);
     currentEpCoverPath = "assets/illustrations/illustration-folge-$stringifiedEpNumber.png";
-    print(currentEpCoverPath);
   }
 
   @override
@@ -178,8 +178,8 @@ class _QuizRouteState extends State<QuizRoute> {
                       return FutureBuilder<ui.Image>(
                           future: _loadImage(currentEpCoverPath, MediaQuery.of(context).size),
                           builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+                            double deviceWidth = MediaQuery.of(context).size.width;
                             if(snapshot.hasData){
-                              double deviceWidth = MediaQuery.of(context).size.width;
                               return Container(
                                 color: Colors.black,
                                 child: Align(
@@ -191,7 +191,17 @@ class _QuizRouteState extends State<QuizRoute> {
                                 ),
                               );
                             }
-                            return const Text("Fehler beim Bild Laden!");
+                            return Container(
+                              color: Colors.black,
+                              height: deviceWidth-30,
+                              width: deviceWidth-30,
+                              child: const Center(
+                                child: Text(
+                                    "Cover wird geladen...",
+                                  style: TextStyle(color: Colors.white),
+                                )
+                              )
+                            );
                           }
                       );
                     }

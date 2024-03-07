@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/QuizRoute.dart';
 
 class HomeRoute extends StatefulWidget {
@@ -15,8 +17,61 @@ class _HomeRouteState extends State<HomeRoute> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
         child: Container(
-          color: Colors.white
+          color: Colors.black,
+          height: MediaQuery.of(context).viewPadding.top
         ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            color: Colors.black,
+            padding: EdgeInsets.only(bottom: 20),
+            child: Column(
+              children: [
+                Image.asset("assets/images/covers.png", width: 300,),
+                const Text(
+                  "Das Drei Fragezeichen Cover Quiz",
+                  style: TextStyle(
+                    color: Colors. white
+                  )
+                ),
+                const Text(
+                  "Folge 1 bis 202",
+                  style: TextStyle(
+                      color: Colors. white
+                  )
+                )
+              ]
+            )
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: ListView(
+                children: const [
+                  HomeTile(title: "Leaderboard", children: [
+                    Center(
+                        child: Text("to be continued...")
+                    )
+                  ]),
+                  const SizedBox(height: 20),
+                  HomeTile(title: "Mitteilungen", children: [
+                    Center(
+                        child: Text("to be continued...")
+                    )
+                  ]),
+                  const SizedBox(height: 20),
+                  HomeTile(title: "History", children: [
+                    Center(
+                        child: Text("to be continued...")
+                    )
+                  ]),
+                ],
+              ),
+            ),
+          )
+        ]
       ),
       bottomNavigationBar: BottomAppBar(
           elevation: 0,
