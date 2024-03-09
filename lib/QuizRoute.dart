@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzly/CoverDisplay.dart';
 import 'package:quizzly/SimpleTextButton.dart';
 
 import 'AnswerSelector.dart';
@@ -23,17 +24,6 @@ class QuizRoute extends StatefulWidget {
 
   @override
   State<QuizRoute> createState() => _QuizRouteState();
-}
-
-Future<ui.Image> _loadImage(String imageAssetPath, Size? size) async {
-  final ByteData data = await rootBundle.load(imageAssetPath);
-  final codec = await ui.instantiateImageCodec(
-    data.buffer.asUint8List(),
-    targetHeight: (size == null) ? 0 : size.width.toInt()-30,
-    targetWidth: (size == null) ? 0 : size.width.toInt()-30,
-  );
-  var frame = await codec.getNextFrame();
-  return frame.image;
 }
 
 String generateEpCoverAssetPath(String episodeName) {
@@ -176,62 +166,7 @@ class _QuizRouteState extends State<QuizRoute> {
             padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
             child: ListView(
               children: <Widget>[
-                IntrinsicHeight(
-                  child: Stack(
-                    children: [
-                      ClipRect( // ClipRect is necessary: https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html
-                        child: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                              Color.fromRGBO(0, 255, 37, 1),
-                              BlendMode.color
-                          ),
-                          child: Consumer<HintsNotifier>(
-                              builder: (context, hintsNotifier, child) {
-                                return FutureBuilder<ui.Image>(
-                                    future: _loadImage(currentEpCoverPath, MediaQuery.of(context).size),
-                                    builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
-                                      double deviceWidth = MediaQuery.of(context).size.width;
-                                      if(snapshot.hasData){
-                                        return Container(
-                                          color: Colors.black,
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: CustomPaint(
-                                              foregroundPainter: HintsMask(snapshot.data!, hintsNotifier.hintCoords, hintsNotifier.isRevealed),
-                                              size: Size(deviceWidth-30, deviceWidth-30),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      return Container(
-                                          color: Colors.black,
-                                          height: deviceWidth-30,
-                                          width: deviceWidth-30,
-                                          child: const Center(
-                                              child: Text(
-                                                "Cover wird geladen...",
-                                                style: TextStyle(color: Colors.white),
-                                              )
-                                          )
-                                      );
-                                    }
-                                );
-                              }
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          color: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          child: Text(
-                              "Richtig!",
-                          )
-                        )
-                      )
-                    ],
-                  ),
-                ),
+                CoverDisplay(coverAssetPath: currentEpCoverPath),
                 const SizedBox(height: 10),
                 Row(
                   children: [
