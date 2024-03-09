@@ -26,10 +26,10 @@ class _HomeRouteState extends State<HomeRoute> {
         children: [
           Container(
             color: Colors.black,
-            padding: EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               children: [
-                Image.asset("assets/images/covers.png", width: 300,),
+                Image.asset("assets/images/covers.png", width: (MediaQuery.of(context).size.width/4)*3),
                 const Text(
                   "Das Drei Fragezeichen Cover Quiz",
                   style: TextStyle(

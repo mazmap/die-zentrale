@@ -21,12 +21,15 @@ class _TipButtonState extends State<TipButton> {
 
   bool _isTipDeactivated = false;
 
+  final MaterialStatesController _statesController = MaterialStatesController();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<CurrentPoints, HintsNotifier>(
       builder: (context, currentPoints, hintsNotifier, child) {
         return FilledButton(
             onPressed: _isTipDeactivated ? null : () {
+              //_statesController.update(MaterialState.pressed, true);
               int size = 0;
               bool toggle = false;
               int newTipCost = 0;
@@ -88,6 +91,7 @@ class _TipButtonState extends State<TipButton> {
                   return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
                 })
             ),
+            statesController: _statesController,
             child: _isTipDeactivated ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")
         );
       }

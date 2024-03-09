@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzly/SimpleTextButton.dart';
 
 import 'AnswerSelector.dart';
 import 'AnswersList.dart';
@@ -77,7 +78,7 @@ class _QuizRouteState extends State<QuizRoute> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AnswersList()),
+        ChangeNotifierProvider(create: (context) => AnswersList(correctAnswer)),
         ChangeNotifierProvider(create: (context) => CurrentPoints()),
         ChangeNotifierProvider(create: (context)=>HintsNotifier()),
         ChangeNotifierProvider(create: (context) => QuestionDetails())
@@ -250,16 +251,15 @@ class _QuizRouteState extends State<QuizRoute> {
                       builder: (context, answersList, currentPoints, questionDetails, hintsNotifier, child) {
                         return FilledButton(
                             onPressed: () {
-                              if(answersList.activeId != -1){
-                                print("Active Button: ${answersList.activeId}");
-
-                                if(answersList.activeId == correctAnswer){
+                              if(answersList.isOneSelected()){
+                                if(answersList.isCorrectAnswerSelected()){
                                   questionDetails.incrementQuestionNumber();
-                                  hintsNotifier.reveal();
                                   currentPoints.setTotalPlusLocal();
                                 } else {
-                                  print("Wrong Answer!");
+
                                 }
+                                hintsNotifier.reveal();
+                                answersList.reveal();
                               } else {
                                 print("No active Button");
                               }

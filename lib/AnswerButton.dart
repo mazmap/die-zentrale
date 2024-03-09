@@ -20,30 +20,65 @@ class _AnswerButtonState extends State<AnswerButton> {
   
   final String letters = "ABCDEFGHIJKLMNOPQRSTUVW";
 
+  Color _backgroundColor = Colors.white;
+  Color _color = Colors.black;
+
+  void _toggleColors(){
+    setState(() {
+      _backgroundColor = (_active) ? Colors.black : Colors.white;
+      _color = (_active) ? Colors.white : Colors.black;
+    });
+  }
+
+  void _setColorsDefaults(){
+    _backgroundColor = (_active) ? Colors.black : Colors.white;
+    _color = (_active) ? Colors.white : Colors.black;
+  }
+
+  void _setRevealedColors(bool correct){
+    _backgroundColor = (correct) ? Color.fromRGBO(0, 255, 37, 1) : Color.fromRGBO(255, 0, 62, 1);
+    _color = (correct) ? Colors.black : Colors.white;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AnswersList>(
       builder: (context, answersList, child) {
-        if(answersList.activeId != widget.answerId){
+        if(!answersList.isActiveId(widget.answerId)){
           _active = false;
+          _setColorsDefaults();
+        }
+
+        if(answersList.isRevealed()){
+          if(answersList.isCorrectAnswer(widget.answerId)){
+            // highlight correct answer
+            _setRevealedColors(true);
+          } else {
+            if(_active){
+              // highlight wrong answer
+              _setRevealedColors(false);
+            }
+          }
         }
 
         return GestureDetector(
           onTap: () {
-            if(_active) {
-              answersList.setActive(-1);
-            } else {
-              answersList.setActive(widget.answerId);
-            }
-            setState(() {
+            if(!answersList.isRevealed()){
+              if(_active) {
+                // deselect answer option
+                answersList.setActive(-1);
+              } else {
+                answersList.setActive(widget.answerId);
+              }
               _active = !_active;
-            });
-          },
-          onLongPress: () {
-
+              _toggleColors();
+            } else {
+              // do nothing
+            }
           },
           child: Container(
-              color: (_active) ? Colors.black : Colors.white,
+              color: _backgroundColor,
               child: Row(
                 children: [
                   Container(
@@ -51,14 +86,14 @@ class _AnswerButtonState extends State<AnswerButton> {
                     decoration: BoxDecoration(
                         border: Border(
                             right: BorderSide(
-                                color: (_active) ? Colors.white : Colors.black
+                                color: _color,
                             )
                         )
                     ),
                     child: Text(
                       letters.characters.elementAt(widget.answerId),
                       style: TextStyle(
-                          color: (_active) ? Colors.white : Colors.black
+                          color: _color,
                       ),
                     ),
                   ),
@@ -73,7 +108,7 @@ class _AnswerButtonState extends State<AnswerButton> {
                         overflow: TextOverflow.fade,
                         softWrap: false,
                         style: TextStyle(
-                            color: (_active) ? Colors.white : Colors.black
+                            color: _color
                         ),
                       )
                     ),
