@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/QuizRoute.dart';
+import 'package:quizzly/SlideFromRightRoute.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({super.key});
@@ -90,9 +91,7 @@ class _HomeRouteState extends State<HomeRoute> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const QuizRoute()
-                      )
+                      SlideFromRightRoute(page: const QuizRoute())
                     );
                   },
                   style: ButtonStyle(

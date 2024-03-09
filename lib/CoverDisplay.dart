@@ -1,8 +1,6 @@
 import 'dart:ui' as ui;
 import "dart:async";
 
-import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/utils.dart';
@@ -21,23 +19,29 @@ class CoverDisplay extends StatefulWidget {
 }
 
 class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMixin{
-  late final AnimationController _animationController = AnimationController(
-    duration: const Duration(milliseconds: 200),
-    vsync: this,
-  )..animateTo(1.0, curve: Curves.easeOut);
-  late final _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+  late final AnimationController _animationController;
+  late final Animation _animation;
 
-  late final Future<ui.Image> image = loadImage(widget.coverAssetPath, MediaQuery.of(context).size);
+  late final Future<ui.Image> image = loadImage(widget.coverAssetPath, MediaQuery.of(context).size); // cannot be called in initState because of MediaQuery
 
   ui.Image? loadedImage;
 
   bool _showOverlay = true;
 
   @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    )..animateTo(1.0, curve: Curves.easeOut);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+  }
+
+  @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,12 +60,15 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
 
                     if(loadedImage != null){
                       return Container(
-                        color: Colors.black,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          border: Border.all(color: Colors.black)
+                        ),
                         child: Align(
                           alignment: Alignment.center,
                           child: CustomPaint(
                               foregroundPainter: HintsMask(loadedImage!, hintsNotifier.hintCoords, hintsNotifier.isRevealed),
-                              size: Size(deviceWidth-30, deviceWidth-30),
+                              size: Size(deviceWidth-32, deviceWidth-32),
                               child: (!answersList.isRevealed()) ? null : AnimatedBuilder(
                                   animation: _animation,
                                   builder: (BuildContext context, Widget? child) {
@@ -69,8 +76,8 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
                                   },
                                   child: Image.asset(
                                       widget.coverAssetPath,
-                                      width: deviceWidth-30,
-                                      height: deviceWidth-30
+                                      width: deviceWidth-32,
+                                      height: deviceWidth-32
                                   )
                               )
                           ),
@@ -109,7 +116,7 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
                     ClipRect( // ClipRect is necessary: https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html
                       child: ColorFiltered(
                         colorFilter: ColorFilter.mode(
-                            (isCorrect) ? Color.fromRGBO(64, 255, 92, 1) : Color.fromRGBO(255, 64, 110, 1),
+                            (isCorrect) ? const Color.fromRGBO(64, 255, 92, 1) : const Color.fromRGBO(255, 64, 110, 1),
                             BlendMode.color
                         ),
                         child: imageWithHints,
@@ -117,13 +124,13 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
                     ),
                     Center(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                          child: Text(
-                            (isCorrect) ? "Richtig!" : "Leider falsch :(",
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black),
                             color: Colors.white,
+                          ),
+                          child: Text(
+                            (isCorrect) ? "Richtig!" : "Leider falsch :(",
                           ),
                         )
                     )
