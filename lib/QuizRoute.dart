@@ -72,7 +72,7 @@ class _QuizRouteState extends State<QuizRoute> {
       providers: [
         ChangeNotifierProvider(create: (context) => AnswersList(correctAnswer)),
         ChangeNotifierProvider(create: (context) => CurrentPoints()),
-        ChangeNotifierProvider(create: (context)=>HintsNotifier()),
+        ChangeNotifierProvider(create: (context) => HintsNotifier()),
         ChangeNotifierProvider(create: (context) => QuestionDetails())
       ],
       child: Scaffold(

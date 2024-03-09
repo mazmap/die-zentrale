@@ -15,7 +15,6 @@ class AnswersList extends ChangeNotifier {
 
   void reveal(){
     _isRevealed = true;
-    print("called!");
     notifyListeners();
   }
 

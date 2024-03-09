@@ -17,20 +17,18 @@ class HintsMask extends CustomPainter {
   HintsMask(this.image, this.hintCoords, this.reveal);
 
   @override
-  void paint(Canvas canvas, Size size) async {
+  void paint(Canvas canvas, Size size) {
     Paint paint = Paint();
     paint.color = Colors.white;
     paint.style = PaintingStyle.fill;
 
-    if(!reveal){
-      final path = Path();
+    final path = Path();
 
-      for(CoordBox coord in hintCoords){
-        path.addRect(Rect.fromLTWH(coord.x, coord.y, coord.h, coord.h));
-      }
-
-      canvas.clipPath(path);
+    for(CoordBox coord in hintCoords){
+      path.addRect(Rect.fromLTWH(coord.x, coord.y, coord.h, coord.h));
     }
+
+    canvas.clipPath(path);
 
     canvas.drawImage(image, const Offset(0, 0), paint);
 
