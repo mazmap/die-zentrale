@@ -22,6 +22,8 @@ class _QuizRouteState extends State<QuizRoute> {
 
   late final QuestionDetails initialQuestion;
 
+  final ScrollController _listViewController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +93,7 @@ class _QuizRouteState extends State<QuizRoute> {
                             child: Consumer<CurrentQuizState>(
                                 builder: (context, currentQuizState, child) {
                                   return Text(
-                                      "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/200",
+                                      "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/202",
                                       style: const TextStyle(color: Colors.white)
                                   );
                                 }
@@ -128,6 +130,7 @@ class _QuizRouteState extends State<QuizRoute> {
           body: Padding(
             padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
             child: ListView(
+              controller: _listViewController,
               children: <Widget>[
                 Selector<CurrentQuizState, String>(
                   builder: (_, currentCoverAssetPath, __) {
@@ -147,7 +150,7 @@ class _QuizRouteState extends State<QuizRoute> {
                     ),
                     const SizedBox(width: 10),
                     Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9.5),
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black)
                         ),
@@ -195,6 +198,7 @@ class _QuizRouteState extends State<QuizRoute> {
                                   QuestionDetails newQuestion = currentQuizState.createNewQuestion();
                                   answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
                                   hintsNotifier.reset();
+                                  _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -263,6 +267,7 @@ class _QuizRouteState extends State<QuizRoute> {
                                     // WRONG ANSWER
                                     currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.wrongAnswer);
                                   }
+                                  _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                                 } else {
                                   // NO ANSWER SELECTED
                                 }
