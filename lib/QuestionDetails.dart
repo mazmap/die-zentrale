@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 
-class QuestionDetails extends ChangeNotifier {
-  int questionNumber = 1;
+enum QuestionAnswerState { wrongAnswer, rightAnswer }
 
-  void incrementQuestionNumber(){
-    questionNumber++;
-    notifyListeners();
-  }
+class QuestionDetails {
+  final int questionNumber;
+  final List<String> answerStack;
+  final int correctAnswerId;
+  final String coverAssetPath;
 
-  void incrementQuestionNumberBy(int value){
-    questionNumber += value;
-    notifyListeners();
+  late QuestionAnswerState questionAnswerState;
+
+  QuestionDetails({
+    required this.questionNumber,
+    required this.answerStack,
+    required this.correctAnswerId,
+    required this.coverAssetPath
+  });
+
+  String getCorrectAnswerTitle(){
+    return answerStack[correctAnswerId];
   }
 }

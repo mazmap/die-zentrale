@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:quizzly/AnswerButton.dart';
 
 class AnswersList extends ChangeNotifier {
   int _activeId = -1;
-  final int _correctAnswerId;
+  int _correctAnswerId;
   bool _isRevealed = false;
 
   AnswersList(this._correctAnswerId);
@@ -16,6 +15,17 @@ class AnswersList extends ChangeNotifier {
   void reveal(){
     _isRevealed = true;
     notifyListeners();
+  }
+
+  void resetAndUpdateWith(int newCorrectAnswerId){
+    reset();
+    _correctAnswerId = newCorrectAnswerId;
+    notifyListeners();
+  }
+
+  void reset(){
+    _activeId = -1;
+    _isRevealed = false;
   }
 
   bool isRevealed(){

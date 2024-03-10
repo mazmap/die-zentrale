@@ -12,7 +12,7 @@ import 'package:quizzly/SimpleTextButton.dart';
 
 import 'AnswerSelector.dart';
 import 'AnswersList.dart';
-import 'CurrentPoints.dart';
+import 'CurrentQuizState.dart';
 import 'Episodes.dart';
 import 'HintsMask.dart';
 import 'HintsNotifier.dart';
@@ -26,54 +26,25 @@ class QuizRoute extends StatefulWidget {
   State<QuizRoute> createState() => _QuizRouteState();
 }
 
-String generateEpCoverAssetPath(String episodeName) {
-  int episodeNumber = Episodes.episodeTitles.indexOf(episodeName)+1;
-  String stringifiedEpNumber = "00$episodeNumber";
-  stringifiedEpNumber = stringifiedEpNumber.substring(stringifiedEpNumber.length-3, stringifiedEpNumber.length);
-  return stringifiedEpNumber;
-}
-
 class _QuizRouteState extends State<QuizRoute> {
-  final Random _random = Random();
 
-  List<String> leftTitles = [];
-
-  int currentQuestionNumber = 1;
-
-  int correctAnswer = -1;
-
-  List<String> possibleAnswers = [];
-  String currentEpCoverPath = "";
+  late final QuestionDetails initialQuestion;
 
   @override
   void initState() {
     super.initState();
-
-    leftTitles = Episodes.episodeTitles.getRange(0, 201).toList();
-    List<String> titlesForSelection = [...leftTitles];
-
-    int randomIdx;
-    for(int i=0; i<6; i++){
-      randomIdx = _random.nextInt(leftTitles.length-1-i);
-      possibleAnswers.add(titlesForSelection[randomIdx]);
-      titlesForSelection.removeAt(randomIdx);
-    }
-
-    correctAnswer = _random.nextInt(5);
-    leftTitles.remove(possibleAnswers[correctAnswer]);
-
-    String stringifiedEpNumber = generateEpCoverAssetPath(possibleAnswers[correctAnswer]);
-    currentEpCoverPath = "assets/illustrations/illustration-folge-$stringifiedEpNumber.png";
+    initialQuestion = CurrentQuizState.createInitialQuestion();
+    print(initialQuestion.coverAssetPath);
   }
+
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AnswersList(correctAnswer)),
-        ChangeNotifierProvider(create: (context) => CurrentPoints()),
+        ChangeNotifierProvider(create: (context) => CurrentQuizState.initializeWith(initialQuestion)),
         ChangeNotifierProvider(create: (context) => HintsNotifier()),
-        ChangeNotifierProvider(create: (context) => QuestionDetails())
+        ChangeNotifierProvider(create: (context) => AnswersList(initialQuestion.correctAnswerId))
       ],
       child: Scaffold(
           appBar: PreferredSize(
@@ -126,10 +97,10 @@ class _QuizRouteState extends State<QuizRoute> {
                         child: Container(
                             color: Colors.black,
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            child: Consumer<QuestionDetails>(
-                                builder: (context, questionDetails, child) {
+                            child: Consumer<CurrentQuizState>(
+                                builder: (context, currentQuizState, child) {
                                   return Text(
-                                      "Frage ${questionDetails.questionNumber}/200",
+                                      "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/200",
                                       style: const TextStyle(color: Colors.white)
                                   );
                                 }
@@ -150,10 +121,10 @@ class _QuizRouteState extends State<QuizRoute> {
                                 )
                             )
                         ),
-                        child: Consumer<CurrentPoints>(
+                        child: Consumer<CurrentQuizState>(
                             builder: (context, currentPoints, child){
                               return Text(
-                                  "${currentPoints.total}"
+                                  "${currentPoints.totalPoints}"
                               );
                             }
                         )
@@ -166,7 +137,16 @@ class _QuizRouteState extends State<QuizRoute> {
             padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
             child: ListView(
               children: <Widget>[
-                CoverDisplay(coverAssetPath: currentEpCoverPath),
+                Selector<CurrentQuizState, String>(
+                  builder: (_, currentCoverAssetPath, __) {
+                    print("Init in Selector: $currentCoverAssetPath");
+                    return CoverDisplay(coverAssetPath: currentCoverAssetPath, key: UniqueKey()); // UniqueKey is neccessary for correct rendering: https://medium.com/flutter/keys-what-are-they-good-for-13cb51742e7d
+                  },
+                  selector: (_, currentQuizState) {
+                    print("Selector Method: ${currentQuizState.getLatestQuestionDetails().coverAssetPath}");
+                    return currentQuizState.getLatestQuestionDetails().coverAssetPath;
+                  },
+                ),
                 const SizedBox(height: 10),
                 Row(
                   children: [
@@ -179,10 +159,10 @@ class _QuizRouteState extends State<QuizRoute> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black)
                         ),
-                        child: Consumer<CurrentPoints>(
+                        child: Consumer<CurrentQuizState>(
                             builder: (context, currentPoints, child){
                               return Text(
-                                  "${currentPoints.local}"
+                                  "${currentPoints.localPoints}"
                               );
                             }
                         )
@@ -190,7 +170,12 @@ class _QuizRouteState extends State<QuizRoute> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                AnswerSelector(possibleAnswers: possibleAnswers,)
+                Selector<CurrentQuizState, List<String>>(
+                  builder: (BuildContext context, List<String> value, Widget? child) {
+                    return AnswerSelector(possibleAnswers: value);
+                  },
+                  selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack,
+                )
               ],
             ),
           ),
@@ -207,19 +192,21 @@ class _QuizRouteState extends State<QuizRoute> {
                     ),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: Consumer4<AnswersList, CurrentPoints, QuestionDetails, HintsNotifier>(
-                      builder: (context, answersList, currentPoints, questionDetails, hintsNotifier, child) {
+                  child: Consumer3<AnswersList, CurrentQuizState, HintsNotifier>(
+                      builder: (context, answersList, currentPoints, hintsNotifier, child) {
                         return FilledButton(
                             onPressed: () {
                               if(answersList.isOneSelected()){
-                                if(answersList.isCorrectAnswerSelected()){
-                                  questionDetails.incrementQuestionNumber();
-                                  currentPoints.setTotalPlusLocal();
-                                } else {
-
-                                }
-                                hintsNotifier.reveal();
                                 answersList.reveal();
+                                if(answersList.isCorrectAnswerSelected()){
+                                  currentPoints.setTotalPlusLocal();
+                                  QuestionDetails newQuestion = currentPoints.createNewQuestion();
+                                  answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
+                                  hintsNotifier.reset();
+                                  print("Right Answer");
+                                } else {
+                                  print("Wrong Answer");
+                                }
                               } else {
                                 print("No active Button");
                               }

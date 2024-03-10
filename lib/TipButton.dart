@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/Coord.dart';
-import 'package:quizzly/CurrentPoints.dart';
+import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/HintsNotifier.dart';
+
+import 'AnswersList.dart';
 
 class TipButton extends StatefulWidget {
   const TipButton({super.key});
@@ -16,7 +18,6 @@ class TipButton extends StatefulWidget {
 class _TipButtonState extends State<TipButton> {
   final Random _random = Random();
 
-  int _tipCounter = 0;
   int _tipCost = 1;
 
   bool _isTipDeactivated = false;
@@ -25,19 +26,20 @@ class _TipButtonState extends State<TipButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<CurrentPoints, HintsNotifier>(
-      builder: (context, currentPoints, hintsNotifier, child) {
+    return Consumer3<CurrentQuizState, HintsNotifier, AnswersList>(
+      builder: (context, currentPoints, hintsNotifier, answersList, child) {
         return FilledButton(
-            onPressed: _isTipDeactivated ? null : () {
-              //_statesController.update(MaterialState.pressed, true);
+            onPressed: (_isTipDeactivated || answersList.isRevealed()) ? null : () {
+              int tipCounter = hintsNotifier.hintCoords.length;
+                            
               int size = 0;
               bool toggle = false;
               int newTipCost = 0;
-              if(_tipCounter == 0 || _tipCounter == 1){
+              if(tipCounter == 0 || tipCounter == 1){
                 size = 40;
-              } else if (_tipCounter >=2 && _tipCounter <= 4){
+              } else if (tipCounter >=2 && tipCounter <= 4){
                 size = 60;
-              } else if (_tipCounter >=5 && _tipCounter <=6){
+              } else if (tipCounter >=5 && tipCounter <=6){
                 size = 80;
               } else {
                 size = 80;
@@ -46,7 +48,7 @@ class _TipButtonState extends State<TipButton> {
 
               currentPoints.setLocalMinus(_tipCost);
 
-              switch(_tipCounter){
+              switch(tipCounter){
                 case 0: newTipCost = 1; break;
                 case 1:
                 case 2:
@@ -56,12 +58,9 @@ class _TipButtonState extends State<TipButton> {
                 case 6: newTipCost = 4; break;
               }
 
-              _tipCounter++;
-
               double x = _random.nextInt(350-size).toDouble();
               double y = _random.nextInt(350-size).toDouble();
 
-              // TODO: Add ChangeNotifyListeners for HintsNotifier
               hintsNotifier.addBox(CoordBox(x, y, size.toDouble()));
 
               setState(() {
@@ -92,7 +91,7 @@ class _TipButtonState extends State<TipButton> {
                 })
             ),
             statesController: _statesController,
-            child: _isTipDeactivated ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")
+            child: (_isTipDeactivated || answersList.isRevealed()) ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")
         );
       }
     );

@@ -12,10 +12,15 @@ import 'HintsNotifier.dart';
 class CoverDisplay extends StatefulWidget {
   final String coverAssetPath;
 
-  const CoverDisplay({super.key, required this.coverAssetPath});
+  CoverDisplay({super.key, required this.coverAssetPath}) {
+    print("Constructor in CoverDisplay: $coverAssetPath");
+  }
 
   @override
-  State<CoverDisplay> createState() => _CoverDisplayState();
+  State<CoverDisplay> createState() {
+    print("Create State in CoverDisplay: $coverAssetPath");
+    return _CoverDisplayState();
+  }
 }
 
 class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMixin{
@@ -36,6 +41,8 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
       vsync: this,
     )..animateTo(1.0, curve: Curves.easeOut);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+
+    print("Init State in CoverDisplay: ${widget.coverAssetPath}");
   }
 
   @override
@@ -67,7 +74,7 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
                         child: Align(
                           alignment: Alignment.center,
                           child: CustomPaint(
-                              foregroundPainter: HintsMask(loadedImage!, hintsNotifier.hintCoords, hintsNotifier.isRevealed),
+                              foregroundPainter: HintsMask(loadedImage!, hintsNotifier.hintCoords, answersList.isRevealed()),
                               size: Size(deviceWidth-32, deviceWidth-32),
                               child: (!answersList.isRevealed()) ? null : AnimatedBuilder(
                                   animation: _animation,

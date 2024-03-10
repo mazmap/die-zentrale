@@ -7,12 +7,10 @@ import 'Coord.dart';
 class HintsNotifier extends ChangeNotifier {
   List<CoordBox> hintCoords = [];
 
-  bool isRevealed = false;
-
   HintsNotifier(){
-    Random _random = Random();
-    double x = _random.nextInt(350-40).toDouble();
-    double y = _random.nextInt(350-40).toDouble();
+    Random random = Random();
+    double x = random.nextInt(350-40).toDouble();
+    double y = random.nextInt(350-40).toDouble();
     hintCoords.add(CoordBox(x,y,40));
   }
 
@@ -21,8 +19,13 @@ class HintsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reveal(){
-    isRevealed = true;
+  void reset(){
+    hintCoords = [];
+    Random random = Random();
+    double x = random.nextInt(350-40).toDouble();
+    double y = random.nextInt(350-40).toDouble();
+    hintCoords.add(CoordBox(x,y,40));
+
     notifyListeners();
   }
 }
