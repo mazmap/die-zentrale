@@ -22,78 +22,93 @@ class _TipButtonState extends State<TipButton> {
 
   bool _isTipDeactivated = false;
 
-  final MaterialStatesController _statesController = MaterialStatesController();
-
   @override
   Widget build(BuildContext context) {
-    return Consumer3<CurrentQuizState, HintsNotifier, AnswersList>(
-      builder: (context, currentPoints, hintsNotifier, answersList, child) {
-        return FilledButton(
-            onPressed: (_isTipDeactivated || answersList.isRevealed()) ? null : () {
-              int tipCounter = hintsNotifier.hintCoords.length;
-                            
-              int size = 0;
-              bool toggle = false;
-              int newTipCost = 0;
-              if(tipCounter == 0 || tipCounter == 1){
-                size = 40;
-              } else if (tipCounter >=2 && tipCounter <= 4){
-                size = 60;
-              } else if (tipCounter >=5 && tipCounter <=6){
-                size = 80;
-              } else {
-                size = 80;
-                toggle = true;
-              }
+    return Consumer<CurrentQuizState>(
+      builder: (BuildContext context, CurrentQuizState currentQuizState, Widget? child) {
+        return Consumer<HintsNotifier>(
+          builder: (context, hintsNotifier, child){
+            String buttonText;
+            if(currentQuizState.isCurrentQuestionRevealed()){
+              // RESET
+              _tipCost = 1;
+              _isTipDeactivated = false;
 
-              currentPoints.setLocalMinus(_tipCost);
+              int tipCounter = hintsNotifier.hintCoords.length-1;
+              buttonText = "$tipCounter Tips benutzt";
+            } else if (_isTipDeactivated){
+              buttonText = "Kein Tip mehr übrig";
+            } else {
+              buttonText = "Nächster Tip (-$_tipCost)";
+            }
 
-              switch(tipCounter){
-                case 0: newTipCost = 1; break;
-                case 1:
-                case 2:
-                case 3: newTipCost = 2; break;
-                case 4:
-                case 5:
-                case 6: newTipCost = 4; break;
-              }
+            return FilledButton(
+                onPressed: (_isTipDeactivated || currentQuizState.isCurrentQuestionRevealed()) ? null : () {
+                  int tipCounter = hintsNotifier.hintCoords.length-1;
 
-              double x = _random.nextInt(350-size).toDouble();
-              double y = _random.nextInt(350-size).toDouble();
-
-              hintsNotifier.addBox(CoordBox(x, y, size.toDouble()));
-
-              setState(() {
-                _isTipDeactivated = toggle;
-                _tipCost = newTipCost;
-              });
-            },
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.black;
+                  int size = 0;
+                  bool toggle = false;
+                  int newTipCost = 0;
+                  if(tipCounter == 0 || tipCounter == 1){
+                    size = 40;
+                  } else if (tipCounter >=2 && tipCounter <= 4){
+                    size = 60;
+                  } else if (tipCounter >=5 && tipCounter <=6){
+                    size = 80;
+                  } else {
+                    size = 80;
+                    toggle = true;
                   }
-                  return Colors.white;
-                }),
-                foregroundColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.white;
+
+                  currentQuizState.setCurrentQuestionPossiblePointsMinus(_tipCost);
+
+                  switch(tipCounter){
+                    case 0: newTipCost = 1; break;
+                    case 1:
+                    case 2:
+                    case 3: newTipCost = 2; break;
+                    case 4:
+                    case 5:
+                    case 6: newTipCost = 4; break;
                   }
-                  return Colors.black;
-                }),
-                shape: MaterialStateProperty.resolveWith((states) {
-                  return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                }),
-                animationDuration: const Duration(milliseconds: 1),
-                alignment: Alignment.centerLeft,
-                padding: MaterialStateProperty.resolveWith((states) {
-                  return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
-                })
-            ),
-            statesController: _statesController,
-            child: (_isTipDeactivated || answersList.isRevealed()) ? Text("Kein Tip mehr übrig") : Text("Nächster Tip (-$_tipCost)")
+
+                  double x = _random.nextInt(350-size).toDouble();
+                  double y = _random.nextInt(350-size).toDouble();
+
+                  hintsNotifier.addBox(CoordBox(x, y, size.toDouble()));
+
+                  setState(() {
+                    _isTipDeactivated = toggle;
+                    _tipCost = newTipCost;
+                  });
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.black;
+                      }
+                      return Colors.white;
+                    }),
+                    foregroundColor: MaterialStateProperty.resolveWith((states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.white;
+                      }
+                      return Colors.black;
+                    }),
+                    shape: MaterialStateProperty.resolveWith((states) {
+                      return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                    }),
+                    animationDuration: const Duration(milliseconds: 1),
+                    alignment: Alignment.centerLeft,
+                    padding: MaterialStateProperty.resolveWith((states) {
+                      return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
+                    })
+                ),
+                child: Text(buttonText)
+            );
+          },
         );
-      }
+      },
     );
   }
 }

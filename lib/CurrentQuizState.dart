@@ -8,9 +8,6 @@ import 'Episodes.dart';
 import 'QuestionDetails.dart';
 
 class CurrentQuizState extends ChangeNotifier {
-  int totalPoints = 0;
-  int localPoints = 20;
-
   List<QuestionDetails> _questionHistory = [];
 
   final Random _random = Random();
@@ -28,15 +25,27 @@ class CurrentQuizState extends ChangeNotifier {
     _questionHistory.add(initialQuestion);
   }
 
-  void setLocalMinus(int value){
-    localPoints -= value;
+  void setCurrentQuestionPossiblePointsMinus(int value){
+    _questionHistory.last.possiblePoints -= value;
     notifyListeners();
   }
 
-  void setTotalPlusLocal(){
-    totalPoints += localPoints;
-    localPoints = 20;
-    notifyListeners();
+  int getCurrentlyPossiblePoints(){
+    return _questionHistory.last.possiblePoints;
+  }
+
+  int getTotalPoints(){
+    int totalPoints = 0;
+
+    QuestionDetails element;
+    for(int i=0; i<_questionHistory.length; i++){
+      element = _questionHistory[i];
+      if(element.answerState == AnswerState.rightAnswer){
+        totalPoints += element.possiblePoints;
+      }
+    }
+
+    return totalPoints;
   }
 
   QuestionDetails getLatestQuestionDetails(){
@@ -93,15 +102,33 @@ class CurrentQuizState extends ChangeNotifier {
     return initialQuestion;
   }
 
-  void completeCurrentQuestion(List<CoordBox> hints, ){
-
+  void completeCurrentQuestion(List<CoordBox> hints, AnswerState answerState){
+    _questionHistory.last.hints = hints;
+    _questionHistory.last.answerState = answerState;
   }
 
-  void setCurrentQuestionAnswerState(QuestionAnswerState state){
-    _questionHistory.last.questionAnswerState = state;
+  void setCurrentQuestionAnswerState(AnswerState state){
+    _questionHistory.last.answerState = state;
   }
 
   int getNumberOfQuestions(){
     return _questionHistory.length;
+  }
+
+  void revealCurrentQuestionAnswer(){
+    _questionHistory.last.isRevealed = true;
+    notifyListeners();
+  }
+
+  bool isCurrentQuestionRevealed(){
+    return _questionHistory.last.isRevealed;
+  }
+
+  QuestionDetails getNthQuestionDetails(int n){
+    return _questionHistory[n];
+  }
+
+  int getTotalHintAmount(){
+    return _questionHistory.fold(0, (prev, elem) => prev + elem.hints.length);
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 class AnswersList extends ChangeNotifier {
   int _activeId = -1;
   int _correctAnswerId;
-  bool _isRevealed = false;
 
   AnswersList(this._correctAnswerId);
 
@@ -12,24 +11,16 @@ class AnswersList extends ChangeNotifier {
     notifyListeners();
   }
 
-  void reveal(){
-    _isRevealed = true;
-    notifyListeners();
-  }
-
-  void resetAndUpdateWith(int newCorrectAnswerId){
+  int resetAndUpdateWith(int newCorrectAnswerId){
+    int activeId = _activeId;
     reset();
     _correctAnswerId = newCorrectAnswerId;
     notifyListeners();
+    return activeId;
   }
 
   void reset(){
     _activeId = -1;
-    _isRevealed = false;
-  }
-
-  bool isRevealed(){
-    return _isRevealed;
   }
 
   bool isOneSelected(){

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzly/CurrentQuizState.dart';
 
 import 'AnswersList.dart';
 
@@ -43,82 +44,89 @@ class _AnswerButtonState extends State<AnswerButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AnswersList>(
-      builder: (context, answersList, child) {
-        if(!answersList.isActiveId(widget.answerId)){
-          _active = false;
-          _setColorsDefaults();
-        }
-
-        if(answersList.isRevealed()){
-          if(answersList.isCorrectAnswer(widget.answerId)){
-            // highlight correct answer
-            _setRevealedColors(true);
-          } else {
-            if(_active){
-              // highlight wrong answer
-              _setRevealedColors(false);
-            }
-          }
-        }
-
-        return GestureDetector(
-          onTap: () {
-            if(!answersList.isRevealed()){
-              if(_active) {
-                // deselect answer option
-                answersList.setActive(-1);
-              } else {
-                answersList.setActive(widget.answerId);
+    return Selector<CurrentQuizState, bool>(
+      selector: (BuildContext context, CurrentQuizState currentQuizState) {
+        return currentQuizState.isCurrentQuestionRevealed();
+      },
+      builder: (BuildContext context, bool isCurrentQuestionRevealed, Widget? child) {
+        return Consumer<AnswersList>(
+            builder: (context, answersList, child) {
+              if(!answersList.isActiveId(widget.answerId)){
+                _active = false;
+                _setColorsDefaults();
               }
-              _active = !_active;
-              _toggleColors();
-            } else {
-              // do nothing
-            }
-          },
-          child: Container(
-              color: _backgroundColor,
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 17),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            right: BorderSide(
-                                color: _color,
-                            )
-                        )
-                    ),
-                    child: Text(
-                      letters.characters.elementAt(widget.answerId),
-                      style: TextStyle(
-                          color: _color,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    flex: 1,
-                    child: Tooltip(
-                      message: widget.answerText,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        widget.answerText,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                        style: TextStyle(
-                            color: _color
+
+              if(isCurrentQuestionRevealed){
+                if(answersList.isCorrectAnswer(widget.answerId)){
+                  // highlight correct answer
+                  _setRevealedColors(true);
+                } else {
+                  if(_active){
+                    // highlight wrong answer
+                    _setRevealedColors(false);
+                  }
+                }
+              }
+
+              return GestureDetector(
+                onTap: () {
+                  if(!isCurrentQuestionRevealed){
+                    if(_active) {
+                      // deselect answer option
+                      answersList.setActive(-1);
+                    } else {
+                      answersList.setActive(widget.answerId);
+                    }
+                    _active = !_active;
+                    _toggleColors();
+                  } else {
+                    // do nothing
+                  }
+                },
+                child: Container(
+                    color: _backgroundColor,
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 17),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  right: BorderSide(
+                                    color: _color,
+                                  )
+                              )
+                          ),
+                          child: Text(
+                            letters.characters.elementAt(widget.answerId),
+                            style: TextStyle(
+                              color: _color,
+                            ),
+                          ),
                         ),
-                      )
-                    ),
-                  ),
-                  const SizedBox(width: 10)
-                ],
-              )
-          ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          flex: 1,
+                          child: Tooltip(
+                              message: widget.answerText,
+                              margin: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                widget.answerText,
+                                overflow: TextOverflow.fade,
+                                softWrap: false,
+                                style: TextStyle(
+                                    color: _color
+                                ),
+                              )
+                          ),
+                        ),
+                        const SizedBox(width: 10)
+                      ],
+                    )
+                ),
+              );
+            }
         );
-      }
+      },
     );
   }
 }

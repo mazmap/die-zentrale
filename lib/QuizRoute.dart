@@ -1,20 +1,12 @@
-import 'dart:math';
-import 'dart:ui' as ui;
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
-import 'package:quizzly/SimpleTextButton.dart';
+import 'package:quizzly/QuizSummaryRoute.dart';
+import 'package:quizzly/SlideFromRightRoute.dart';
 
 import 'AnswerSelector.dart';
 import 'AnswersList.dart';
 import 'CurrentQuizState.dart';
-import 'Episodes.dart';
-import 'HintsMask.dart';
 import 'HintsNotifier.dart';
 import 'QuestionDetails.dart';
 import 'TipButton.dart';
@@ -34,7 +26,6 @@ class _QuizRouteState extends State<QuizRoute> {
   void initState() {
     super.initState();
     initialQuestion = CurrentQuizState.createInitialQuestion();
-    print(initialQuestion.coverAssetPath);
   }
 
 
@@ -121,12 +112,13 @@ class _QuizRouteState extends State<QuizRoute> {
                                 )
                             )
                         ),
-                        child: Consumer<CurrentQuizState>(
-                            builder: (context, currentPoints, child){
-                              return Text(
-                                  "${currentPoints.totalPoints}"
-                              );
-                            }
+                        child: Selector<CurrentQuizState, int>(
+                        selector: (BuildContext context, CurrentQuizState currentQuizState) {
+                            return currentQuizState.getTotalPoints();
+                          },
+                          builder: (BuildContext context, int totalPoints, Widget? child) {
+                            return Text("$totalPoints");
+                          },
                         )
                     )
                   ],
@@ -159,12 +151,13 @@ class _QuizRouteState extends State<QuizRoute> {
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black)
                         ),
-                        child: Consumer<CurrentQuizState>(
-                            builder: (context, currentPoints, child){
-                              return Text(
-                                  "${currentPoints.localPoints}"
-                              );
-                            }
+                        child: Selector<CurrentQuizState, int>(
+                          selector: (BuildContext context, CurrentQuizState currentQuizState) {
+                            return currentQuizState.getCurrentlyPossiblePoints();
+                          },
+                          builder: (BuildContext context, int currentlyPossiblePoints, Widget? child) {
+                            return Text("$currentlyPossiblePoints");
+                          },
                         )
                     )
                   ],
@@ -193,47 +186,111 @@ class _QuizRouteState extends State<QuizRoute> {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: Consumer3<AnswersList, CurrentQuizState, HintsNotifier>(
-                      builder: (context, answersList, currentPoints, hintsNotifier, child) {
-                        return FilledButton(
-                            onPressed: () {
-                              if(answersList.isOneSelected()){
-                                answersList.reveal();
-                                if(answersList.isCorrectAnswerSelected()){
-                                  currentPoints.setTotalPlusLocal();
-                                  QuestionDetails newQuestion = currentPoints.createNewQuestion();
+                      builder: (context, answersList, currentQuizState, hintsNotifier, child) {
+                        if(currentQuizState.isCurrentQuestionRevealed()){
+                          // SHOW NEXT QUESTION BUTTON
+                          if(answersList.isCorrectAnswerSelected()){
+                            return FilledButton(
+                                onPressed: () {
+                                  QuestionDetails newQuestion = currentQuizState.createNewQuestion();
                                   answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
                                   hintsNotifier.reset();
-                                  print("Right Answer");
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.black;
+                                    }
+                                    return Colors.white;
+                                  }),
+                                  foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.white;
+                                    }
+                                    return Colors.black;
+                                  }),
+                                  shape: MaterialStateProperty.resolveWith((states) {
+                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                  }),
+                                  animationDuration: const Duration(milliseconds: 1),
+                                  fixedSize: MaterialStateProperty.resolveWith((states) {
+                                    return Size(0, 50);
+                                  }),
+                                ),
+                                child: const Text("Nächste Frage")
+                            );
+                          } else {
+                            return FilledButton(
+                                onPressed: () {
+                                  // LOAD FINISH SCREEN
+                                  // TODO: load actual finish screen
+                                  Navigator.pushReplacement(context, SlideFromRightRoute(page: QuizSummaryRoute(finishedQuizstate: currentQuizState)));
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.black;
+                                    }
+                                    return Colors.white;
+                                  }),
+                                  foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.white;
+                                    }
+                                    return Colors.black;
+                                  }),
+                                  shape: MaterialStateProperty.resolveWith((states) {
+                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                  }),
+                                  animationDuration: const Duration(milliseconds: 1),
+                                  fixedSize: MaterialStateProperty.resolveWith((states) {
+                                    return Size(0, 50);
+                                  }),
+                                ),
+                                child: const Text("Runde beenden")
+                            );
+                          }
+                        } else {
+                          // SHOW ANSWER BUTTON
+                          return FilledButton(
+                              onPressed: () {
+                                if(answersList.isOneSelected()){
+                                  currentQuizState.revealCurrentQuestionAnswer();
+                                  if(answersList.isCorrectAnswerSelected()){
+                                    // RIGHT ANSWER
+                                    currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.rightAnswer);
+                                  } else {
+                                    // WRONG ANSWER
+                                    currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.wrongAnswer);
+                                  }
                                 } else {
-                                  print("Wrong Answer");
+                                  // NO ANSWER SELECTED
                                 }
-                              } else {
-                                print("No active Button");
-                              }
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.black;
-                                }
-                                return Colors.white;
-                              }),
-                              foregroundColor: MaterialStateProperty.resolveWith((states) {
-                                if (states.contains(MaterialState.pressed)) {
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.black;
+                                  }
                                   return Colors.white;
-                                }
-                                return Colors.black;
-                              }),
-                              shape: MaterialStateProperty.resolveWith((states) {
-                                return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                              }),
-                              animationDuration: const Duration(milliseconds: 1),
-                              fixedSize: MaterialStateProperty.resolveWith((states) {
-                                return Size(0, 50);
-                              }),
-                            ),
-                            child: Text("Antworten")
-                        );
+                                }),
+                                foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.white;
+                                  }
+                                  return Colors.black;
+                                }),
+                                shape: MaterialStateProperty.resolveWith((states) {
+                                  return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                }),
+                                animationDuration: const Duration(milliseconds: 1),
+                                fixedSize: MaterialStateProperty.resolveWith((states) {
+                                  return Size(0, 50);
+                                }),
+                              ),
+                              child: const Text("Antworten")
+                          );
+                        }
                       }
                   )
               )

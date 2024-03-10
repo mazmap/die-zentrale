@@ -1,14 +1,16 @@
-import 'package:flutter/material.dart';
+import 'Coord.dart';
 
-enum QuestionAnswerState { wrongAnswer, rightAnswer }
+enum AnswerState { wrongAnswer, rightAnswer, unanswered }
 
 class QuestionDetails {
   final int questionNumber;
   final List<String> answerStack;
   final int correctAnswerId;
   final String coverAssetPath;
-
-  late QuestionAnswerState questionAnswerState;
+  bool isRevealed = false;
+  List<CoordBox> hints = [];
+  AnswerState answerState = AnswerState.unanswered;
+  int possiblePoints = 20;
 
   QuestionDetails({
     required this.questionNumber,
