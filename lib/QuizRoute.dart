@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
 import 'package:quizzly/QuizSummaryRoute.dart';
+import 'package:quizzly/SlideFromTopDownRoute.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
 import 'AnswerSelector.dart';
 import 'AnswersList.dart';
 import 'CurrentQuizState.dart';
 import 'HintsNotifier.dart';
+import 'OngoingQuizSummaryRoute.dart';
 import 'QuestionDetails.dart';
 import 'TipButton.dart';
 
@@ -87,17 +89,22 @@ class _QuizRouteState extends State<QuizRoute> {
                       ),
                     ),
                     Expanded(
-                        child: Container(
-                            color: Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            child: Consumer<CurrentQuizState>(
-                                builder: (context, currentQuizState, child) {
-                                  return Text(
+                        child: Consumer<CurrentQuizState>(
+                          builder: (context, currentQuizState, child) {
+                            return GestureDetector(
+                              onTap: (){
+                                Navigator.push(context, SlideFromTopDownRoute(page: OngoingQuizSummaryRoute(currentQuizState: currentQuizState,)));
+                              },
+                              child: Container(
+                                  color: Colors.black,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  child: Text(
                                       "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/202",
                                       style: const TextStyle(color: Colors.white)
-                                  );
-                                }
-                            )
+                                  )
+                              ),
+                            );
+                          }
                         )
                     ),
                     Container(
@@ -221,13 +228,12 @@ class _QuizRouteState extends State<QuizRoute> {
                                     return Size(0, 50);
                                   }),
                                 ),
-                                child: const Text("Nächste Frage")
+                                child: const Text("Nächstes Cover")
                             );
                           } else {
                             return FilledButton(
                                 onPressed: () {
                                   // LOAD FINISH SCREEN
-                                  // TODO: load actual finish screen
                                   Navigator.pushReplacement(context, SlideFromRightRoute(page: QuizSummaryRoute(finishedQuizstate: currentQuizState)));
                                 },
                                 style: ButtonStyle(
@@ -270,6 +276,9 @@ class _QuizRouteState extends State<QuizRoute> {
                                   _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                                 } else {
                                   // NO ANSWER SELECTED
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Keine Antwort ausgewählt!"))
+                                  );
                                 }
                               },
                               style: ButtonStyle(
