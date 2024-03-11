@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
+import 'package:quizzly/LeaveRoundDialog.dart';
 import 'package:quizzly/QuizSummaryRoute.dart';
 import 'package:quizzly/SlideFromTopDownRoute.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
@@ -65,7 +66,15 @@ class _QuizRouteState extends State<QuizRoute> {
                       height: 50,
                       child: FilledButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          showGeneralDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierLabel: "popup_barrier",
+                              pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                                return LeaveRoundDialog(parent: context.widget);
+                              }
+                          );
+                          // Navigator.pop(context);
                         },
                         style: ButtonStyle(
                           alignment: Alignment.center,

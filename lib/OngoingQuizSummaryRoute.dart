@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/CurrentQuizState.dart';
+import 'package:quizzly/HomeRoute.dart';
+
+import 'LeaveRoundDialog.dart';
 
 class OngoingQuizSummaryRoute extends StatelessWidget {
   final CurrentQuizState currentQuizState;
@@ -122,8 +125,14 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: FilledButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    showGeneralDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        barrierLabel: "popup_barrier",
+                        pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                          return LeaveRoundDialog(parent: context.widget);
+                        }
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith((states) {
