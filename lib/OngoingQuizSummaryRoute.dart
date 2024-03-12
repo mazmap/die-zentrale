@@ -133,10 +133,7 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
                         barrierDismissible: true,
                         barrierLabel: "popup_barrier",
                         pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                          return LeaveRoundDialog(navigate: () {
-                            Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState,)), (route) => route.isFirst);
-                            //Navigator.pushReplacement(contextInternal, SlideOffToRight(target: HomeRoute(), parent: contextInternal.widget));
-                          });
+                          return LeaveRoundDialog(currentQuizState: currentQuizState,);
                         }
                     );
                   },

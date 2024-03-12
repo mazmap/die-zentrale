@@ -75,9 +75,7 @@ class _QuizRouteState extends State<QuizRoute> {
                                   barrierDismissible: true,
                                   barrierLabel: "popup_barrier",
                                   pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                                    return LeaveRoundDialog(navigate: () {
-                                      Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState,)), (route) => route.isFirst);
-                                    });
+                                    return LeaveRoundDialog(currentQuizState: currentQuizState,);
                                   }
                               );
                               // Navigator.pop(context);
