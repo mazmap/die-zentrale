@@ -25,8 +25,11 @@ class CoverDisplay extends StatefulWidget {
 }
 
 class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMixin{
-  late final AnimationController _animationController;
-  late final Animation _animation;
+  late final AnimationController _revealImageAnimationController;
+  late final Animation _revealImageAnimation;
+
+  late final AnimationController _hideOverlayAnimationController;
+  late final Animation _hideOverlayAnimation;
 
   late final Future<ui.Image> image = loadImage(widget.coverAssetPath, MediaQuery.of(context).size); // cannot be called in initState because of MediaQuery
 
@@ -37,18 +40,24 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    _revealImageAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     )..animateTo(1.0, curve: Curves.easeOut);
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _revealImageAnimation = Tween(begin: 0.0, end: 1.0).animate(_revealImageAnimationController);
+
+    _hideOverlayAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..animateTo(1.0, curve: Curves.elasticIn);
+    _hideOverlayAnimation = Tween(begin: 1.0, end: 0.0).animate(_hideOverlayAnimationController);
 
     print("Init State in CoverDisplay: ${widget.coverAssetPath}");
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _revealImageAnimationController.dispose();
     super.dispose();
   }
 
@@ -59,6 +68,11 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
         return currentQuizState.isCurrentQuestionRevealed();
       },
       builder: (BuildContext context, bool isCurrentQuestionRevealed, Widget? child) {
+        _revealImageAnimationController.reset();
+        _revealImageAnimationController.animateTo(1.0, curve: Curves.easeOut);
+        _hideOverlayAnimationController.reset();
+        _hideOverlayAnimationController.animateTo(1.0, curve: Curves.easeOut);
+
         return Consumer<AnswersList>(
           builder: (context, answersList, child) {
             Widget imageWithHints = Consumer<HintsNotifier>(
@@ -83,9 +97,9 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
                                   foregroundPainter: HintsMask(loadedImage!, hintsNotifier.hintCoords, isCurrentQuestionRevealed),
                                   size: Size(deviceWidth-32, deviceWidth-32),
                                   child: (!isCurrentQuestionRevealed) ? null : AnimatedBuilder(
-                                      animation: _animation,
+                                      animation: _revealImageAnimation,
                                       builder: (BuildContext context, Widget? child) {
-                                        return Opacity(opacity: _animation.value, child: child,);
+                                        return Opacity(opacity: _revealImageAnimation.value, child: child,);
                                       },
                                       child: Image.asset(
                                           widget.coverAssetPath,
@@ -116,51 +130,61 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
             if(isCurrentQuestionRevealed){
               bool isCorrect = answersList.isCorrectAnswerSelected();
 
-              if(_showOverlay){
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _showOverlay = !_showOverlay;
-                    });
-                  },
-                  child: IntrinsicHeight(
-                    child: Stack(
-                      children: [
-                        ClipRect( // ClipRect is necessary: https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html
-                          child: ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                                (isCorrect) ? const Color.fromRGBO(64, 255, 92, 1) : const Color.fromRGBO(255, 64, 110, 1),
-                                BlendMode.color
-                            ),
-                            child: imageWithHints,
-                          ),
+              double deviceWidth = MediaQuery.of(context).size.width;
+
+              return GestureDetector(
+                onTap: () {
+                  _hideOverlayAnimationController.animateTo(1.0, duration: Duration(milliseconds: 100));
+                },
+                child: IntrinsicHeight(
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            border: Border.all(color: Colors.black)
                         ),
-                        Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                color: Colors.white,
+                        child: Image.asset(
+                            widget.coverAssetPath,
+                            width: deviceWidth-32,
+                            height: deviceWidth-32
+                        ),
+                      ),
+                      AnimatedBuilder(
+                        animation: _hideOverlayAnimation,
+                        builder: (context, child){
+                          return Opacity(opacity: _hideOverlayAnimation.value, child: child);
+                        },
+                        child: Stack(
+                          children: [
+                            ClipRect( // ClipRect is necessary: https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html
+                              child: ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                    (isCorrect) ? const Color.fromRGBO(64, 255, 92, 1) : const Color.fromRGBO(255, 64, 110, 1),
+                                    BlendMode.color
+                                ),
+                                child: imageWithHints,
                               ),
-                              child: Text(
-                                (isCorrect) ? "Richtig!" : "Leider falsch :(",
-                              ),
+                            ),
+                            Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                    color: Colors.white,
+                                  ),
+                                  child: Text(
+                                    (isCorrect) ? "Richtig!" : "Leider falsch :(",
+                                  ),
+                                )
                             )
-                        )
-                      ],
-                    ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                );
-              } else {
-                return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _showOverlay = !_showOverlay;
-                      });
-                    },
-                    child: imageWithHints
-                );
-              }
+                ),
+              );
             } else {
               return imageWithHints;
             }
