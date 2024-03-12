@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
 import 'package:quizzly/LeaveRoundDialog.dart';
-import 'package:quizzly/QuizSummaryRoute.dart';
+import 'package:quizzly/FinishedQuizSummaryRoute.dart';
 import 'package:quizzly/SlideFromTopDownRoute.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
@@ -10,8 +10,10 @@ import 'AnswerSelector.dart';
 import 'AnswersList.dart';
 import 'CurrentQuizState.dart';
 import 'HintsNotifier.dart';
+import 'HomeRoute.dart';
 import 'OngoingQuizSummaryRoute.dart';
 import 'QuestionDetails.dart';
+import 'SlideOffToRight.dart';
 import 'TipButton.dart';
 
 class QuizRoute extends StatefulWidget {
@@ -64,37 +66,43 @@ class _QuizRouteState extends State<QuizRoute> {
                           )
                       ),
                       height: 50,
-                      child: FilledButton(
-                        onPressed: () {
-                          showGeneralDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              barrierLabel: "popup_barrier",
-                              pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                                return LeaveRoundDialog(parent: context.widget);
-                              }
+                      child: Consumer<CurrentQuizState>(
+                        builder: (context, currentQuizState, child){
+                          return FilledButton(
+                            onPressed: () {
+                              showGeneralDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  barrierLabel: "popup_barrier",
+                                  pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                                    return LeaveRoundDialog(navigate: () {
+                                      Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState,)), (route) => route.isFirst);
+                                    });
+                                  }
+                              );
+                              // Navigator.pop(context);
+                            },
+                            style: ButtonStyle(
+                              alignment: Alignment.center,
+                              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                return Colors.white;
+                              }),
+                              iconColor: MaterialStateProperty.resolveWith((states) {
+                                return Colors.black;
+                              }),
+                              surfaceTintColor: MaterialStateProperty.resolveWith((states) {
+                                return Colors.black;
+                              }),
+                              padding: MaterialStateProperty.resolveWith((states) {
+                                return const EdgeInsets.symmetric(horizontal: 5);
+                              }),
+                              minimumSize: MaterialStateProperty.resolveWith((states) {
+                                return const Size(10,10);
+                              }),
+                            ),
+                            child: const Icon(Icons.close_sharp, size:18),
                           );
-                          // Navigator.pop(context);
                         },
-                        style: ButtonStyle(
-                          alignment: Alignment.center,
-                          backgroundColor: MaterialStateProperty.resolveWith((states) {
-                            return Colors.white;
-                          }),
-                          iconColor: MaterialStateProperty.resolveWith((states) {
-                            return Colors.black;
-                          }),
-                          surfaceTintColor: MaterialStateProperty.resolveWith((states) {
-                            return Colors.black;
-                          }),
-                          padding: MaterialStateProperty.resolveWith((states) {
-                            return const EdgeInsets.symmetric(horizontal: 5);
-                          }),
-                          minimumSize: MaterialStateProperty.resolveWith((states) {
-                            return const Size(10,10);
-                          }),
-                        ),
-                        child: const Icon(Icons.arrow_back, size:18),
                       ),
                     ),
                     Expanded(
@@ -243,7 +251,7 @@ class _QuizRouteState extends State<QuizRoute> {
                             return FilledButton(
                                 onPressed: () {
                                   // LOAD FINISH SCREEN
-                                  Navigator.pushReplacement(context, SlideFromRightRoute(page: QuizSummaryRoute(finishedQuizstate: currentQuizState)));
+                                  Navigator.pushReplacement(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState)));
                                 },
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.resolveWith((states) {

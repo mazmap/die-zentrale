@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/HomeRoute.dart';
+import 'package:quizzly/FinishedQuizSummaryRoute.dart';
+import 'package:quizzly/SlideFromRightRoute.dart';
 
 import 'LeaveRoundDialog.dart';
+import 'SlideOffToRight.dart';
 
 class OngoingQuizSummaryRoute extends StatelessWidget {
   final CurrentQuizState currentQuizState;
@@ -130,7 +133,10 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
                         barrierDismissible: true,
                         barrierLabel: "popup_barrier",
                         pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                          return LeaveRoundDialog(parent: context.widget);
+                          return LeaveRoundDialog(navigate: () {
+                            Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState,)), (route) => route.isFirst);
+                            //Navigator.pushReplacement(contextInternal, SlideOffToRight(target: HomeRoute(), parent: contextInternal.widget));
+                          });
                         }
                     );
                   },

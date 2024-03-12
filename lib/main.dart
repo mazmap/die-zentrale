@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzly/HomeRoute.dart';
+import 'package:quizzly/PlayScreen.dart';
 
 void main() {
   runApp(const MyApp());

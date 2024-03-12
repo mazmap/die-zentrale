@@ -6,9 +6,9 @@ import 'package:quizzly/SlideFromLeftRoute.dart';
 import 'package:quizzly/SlideOffToRight.dart';
 
 class LeaveRoundDialog extends StatelessWidget {
-  final Widget parent;
+  final Function navigate;
 
-  const LeaveRoundDialog({super.key, required this.parent});
+  const LeaveRoundDialog({super.key, required this.navigate});
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +95,7 @@ class LeaveRoundDialog extends StatelessWidget {
                           child: FilledButton(
                               onPressed: (){
                                 Navigator.pop(context);
-                                // necessary as this dialog could also be above
-                                Navigator.pushReplacement(context, SlideOffToRight(target: HomeRoute(), parent: parent));
+                                navigate();
                               },
                               child: Text("Ja"),
                               style: ButtonStyle(
