@@ -44,286 +44,289 @@ class _QuizRouteState extends State<QuizRoute> {
         ChangeNotifierProvider(create: (context) => HintsNotifier()),
         ChangeNotifierProvider(create: (context) => AnswersList(initialQuestion.correctAnswerId))
       ],
-      child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(40), // Set this height
-            child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Colors.black,
-                                  width: 1
-                              ),
-                              right: BorderSide(
-                                  color: Colors.black,
-                                  width: 1
-                              )
-                          )
-                      ),
-                      height: 50,
-                      child: Consumer<CurrentQuizState>(
-                        builder: (context, currentQuizState, child){
-                          return FilledButton(
-                            onPressed: () {
-                              showGeneralDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  barrierLabel: "popup_barrier",
-                                  pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                                    return LeaveRoundDialog(currentQuizState: currentQuizState,);
-                                  }
-                              );
-                              // Navigator.pop(context);
-                            },
-                            style: ButtonStyle(
-                              alignment: Alignment.center,
-                              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                return Colors.white;
-                              }),
-                              iconColor: MaterialStateProperty.resolveWith((states) {
-                                return Colors.black;
-                              }),
-                              surfaceTintColor: MaterialStateProperty.resolveWith((states) {
-                                return Colors.black;
-                              }),
-                              padding: MaterialStateProperty.resolveWith((states) {
-                                return const EdgeInsets.symmetric(horizontal: 5);
-                              }),
-                              minimumSize: MaterialStateProperty.resolveWith((states) {
-                                return const Size(10,10);
-                              }),
-                            ),
-                            child: const Icon(Icons.close_sharp, size:18),
-                          );
-                        },
-                      ),
-                    ),
-                    Expanded(
-                        child: Consumer<CurrentQuizState>(
-                          builder: (context, currentQuizState, child) {
-                            return GestureDetector(
-                              onTap: (){
-                                Navigator.push(context, SlideFromTopDownRoute(page: OngoingQuizSummaryRoute(currentQuizState: currentQuizState,)));
-                              },
-                              child: Container(
-                                  color: Colors.black,
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                  child: Text(
-                                      "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/202",
-                                      style: const TextStyle(color: Colors.white)
-                                  )
-                              ),
-                            );
-                          }
-                        )
-                    ),
-                    Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(40), // Set this height
+              child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+                  child: Row(
+                    children: [
+                      Container(
                         decoration: const BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
                                     color: Colors.black,
                                     width: 1
                                 ),
-                                left: BorderSide(
+                                right: BorderSide(
                                     color: Colors.black,
                                     width: 1
                                 )
                             )
                         ),
-                        child: Selector<CurrentQuizState, int>(
-                        selector: (BuildContext context, CurrentQuizState currentQuizState) {
-                            return currentQuizState.getTotalPoints();
-                          },
-                          builder: (BuildContext context, int totalPoints, Widget? child) {
-                            return Text("$totalPoints");
-                          },
-                        )
-                    )
-                  ],
-                )
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
-            child: ListView(
-              controller: _listViewController,
-              children: <Widget>[
-                Selector<CurrentQuizState, String>(
-                  builder: (_, currentCoverAssetPath, __) {
-                    print("Init in Selector: $currentCoverAssetPath");
-                    return CoverDisplay(coverAssetPath: currentCoverAssetPath, key: UniqueKey()); // UniqueKey is neccessary for correct rendering: https://medium.com/flutter/keys-what-are-they-good-for-13cb51742e7d
-                  },
-                  selector: (_, currentQuizState) {
-                    print("Selector Method: ${currentQuizState.getLatestQuestionDetails().coverAssetPath}");
-                    return currentQuizState.getLatestQuestionDetails().coverAssetPath;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Expanded(
-                        child: TipButton()
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9.5),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black)
-                        ),
-                        child: Selector<CurrentQuizState, int>(
-                          selector: (BuildContext context, CurrentQuizState currentQuizState) {
-                            return currentQuizState.getCurrentlyPossiblePoints();
-                          },
-                          builder: (BuildContext context, int currentlyPossiblePoints, Widget? child) {
-                            return Text("$currentlyPossiblePoints");
-                          },
-                        )
-                    )
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Selector<CurrentQuizState, List<String>>(
-                  builder: (BuildContext context, List<String> value, Widget? child) {
-                    return AnswerSelector(possibleAnswers: value);
-                  },
-                  selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack,
-                )
-              ],
-            ),
-          ),
-          bottomNavigationBar: BottomAppBar(
-              elevation: 0,
-              height: 70,
-              padding: EdgeInsets.zero,
-              child: Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(
-                            color: Colors.black
-                        )
-                    ),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: Consumer3<AnswersList, CurrentQuizState, HintsNotifier>(
-                      builder: (context, answersList, currentQuizState, hintsNotifier, child) {
-                        if(currentQuizState.isCurrentQuestionRevealed()){
-                          // SHOW NEXT QUESTION BUTTON
-                          if(answersList.isCorrectAnswerSelected()){
+                        height: 50,
+                        child: Consumer<CurrentQuizState>(
+                          builder: (context, currentQuizState, child){
                             return FilledButton(
-                                onPressed: () {
-                                  QuestionDetails newQuestion = currentQuizState.createNewQuestion();
-                                  answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
-                                  hintsNotifier.reset();
-                                  _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                    if (states.contains(MaterialState.pressed)) {
-                                      return Colors.black;
-                                    }
-                                    return Colors.white;
-                                  }),
-                                  foregroundColor: MaterialStateProperty.resolveWith((states) {
-                                    if (states.contains(MaterialState.pressed)) {
-                                      return Colors.white;
-                                    }
-                                    return Colors.black;
-                                  }),
-                                  shape: MaterialStateProperty.resolveWith((states) {
-                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                                  }),
-                                  animationDuration: const Duration(milliseconds: 1),
-                                  fixedSize: MaterialStateProperty.resolveWith((states) {
-                                    return Size(0, 50);
-                                  }),
-                                ),
-                                child: const Text("Nächstes Cover")
-                            );
-                          } else {
-                            return FilledButton(
-                                onPressed: () {
-                                  // LOAD FINISH SCREEN
-                                  Navigator.pushReplacement(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState)));
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                    if (states.contains(MaterialState.pressed)) {
-                                      return Colors.black;
-                                    }
-                                    return Colors.white;
-                                  }),
-                                  foregroundColor: MaterialStateProperty.resolveWith((states) {
-                                    if (states.contains(MaterialState.pressed)) {
-                                      return Colors.white;
-                                    }
-                                    return Colors.black;
-                                  }),
-                                  shape: MaterialStateProperty.resolveWith((states) {
-                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                                  }),
-                                  animationDuration: const Duration(milliseconds: 1),
-                                  fixedSize: MaterialStateProperty.resolveWith((states) {
-                                    return Size(0, 50);
-                                  }),
-                                ),
-                                child: const Text("Runde beenden")
-                            );
-                          }
-                        } else {
-                          // SHOW ANSWER BUTTON
-                          return FilledButton(
                               onPressed: () {
-                                if(answersList.isOneSelected()){
-                                  currentQuizState.revealCurrentQuestionAnswer();
-                                  if(answersList.isCorrectAnswerSelected()){
-                                    // RIGHT ANSWER
-                                    currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.rightAnswer);
-                                  } else {
-                                    // WRONG ANSWER
-                                    currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.wrongAnswer);
-                                  }
-                                  _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                                } else {
-                                  // NO ANSWER SELECTED
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Keine Antwort ausgewählt!"))
-                                  );
-                                }
+                                showGeneralDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    barrierLabel: "popup_barrier",
+                                    pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                                      return LeaveRoundDialog(currentQuizState: currentQuizState,);
+                                    }
+                                );
+                                // Navigator.pop(context);
                               },
                               style: ButtonStyle(
+                                alignment: Alignment.center,
                                 backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.black;
-                                  }
                                   return Colors.white;
                                 }),
-                                foregroundColor: MaterialStateProperty.resolveWith((states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.white;
-                                  }
+                                iconColor: MaterialStateProperty.resolveWith((states) {
                                   return Colors.black;
                                 }),
-                                shape: MaterialStateProperty.resolveWith((states) {
-                                  return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                surfaceTintColor: MaterialStateProperty.resolveWith((states) {
+                                  return Colors.black;
                                 }),
-                                animationDuration: const Duration(milliseconds: 1),
-                                fixedSize: MaterialStateProperty.resolveWith((states) {
-                                  return Size(0, 50);
+                                padding: MaterialStateProperty.resolveWith((states) {
+                                  return const EdgeInsets.symmetric(horizontal: 5);
+                                }),
+                                minimumSize: MaterialStateProperty.resolveWith((states) {
+                                  return const Size(10,10);
                                 }),
                               ),
-                              child: const Text("Antworten")
-                          );
-                        }
-                      }
+                              child: const Icon(Icons.close_sharp, size:18),
+                            );
+                          },
+                        ),
+                      ),
+                      Expanded(
+                          child: Consumer<CurrentQuizState>(
+                            builder: (context, currentQuizState, child) {
+                              return GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context, SlideFromTopDownRoute(page: OngoingQuizSummaryRoute(currentQuizState: currentQuizState,)));
+                                },
+                                child: Container(
+                                    color: Colors.black,
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    child: Text(
+                                        "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/202",
+                                        style: const TextStyle(color: Colors.white)
+                                    )
+                                ),
+                              );
+                            }
+                          )
+                      ),
+                      Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Colors.black,
+                                      width: 1
+                                  ),
+                                  left: BorderSide(
+                                      color: Colors.black,
+                                      width: 1
+                                  )
+                              )
+                          ),
+                          child: Selector<CurrentQuizState, int>(
+                          selector: (BuildContext context, CurrentQuizState currentQuizState) {
+                              return currentQuizState.getTotalPoints();
+                            },
+                            builder: (BuildContext context, int totalPoints, Widget? child) {
+                              return Text("$totalPoints");
+                            },
+                          )
+                      )
+                    ],
                   )
-              )
-          )
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.only(left:15, right: 15, top: 15, bottom: 10),
+              child: ListView(
+                controller: _listViewController,
+                children: <Widget>[
+                  Selector<CurrentQuizState, String>(
+                    builder: (_, currentCoverAssetPath, __) {
+                      print("Init in Selector: $currentCoverAssetPath");
+                      return CoverDisplay(coverAssetPath: currentCoverAssetPath, key: UniqueKey()); // UniqueKey is neccessary for correct rendering: https://medium.com/flutter/keys-what-are-they-good-for-13cb51742e7d
+                    },
+                    selector: (_, currentQuizState) {
+                      print("Selector Method: ${currentQuizState.getLatestQuestionDetails().coverAssetPath}");
+                      return currentQuizState.getLatestQuestionDetails().coverAssetPath;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Expanded(
+                          child: TipButton()
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9.5),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black)
+                          ),
+                          child: Selector<CurrentQuizState, int>(
+                            selector: (BuildContext context, CurrentQuizState currentQuizState) {
+                              return currentQuizState.getCurrentlyPossiblePoints();
+                            },
+                            builder: (BuildContext context, int currentlyPossiblePoints, Widget? child) {
+                              return Text("$currentlyPossiblePoints");
+                            },
+                          )
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Selector<CurrentQuizState, List<String>>(
+                    builder: (BuildContext context, List<String> value, Widget? child) {
+                      return AnswerSelector(possibleAnswers: value);
+                    },
+                    selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack,
+                  )
+                ],
+              ),
+            ),
+            bottomNavigationBar: BottomAppBar(
+                elevation: 0,
+                height: 70,
+                padding: EdgeInsets.zero,
+                child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                          top: BorderSide(
+                              color: Colors.black
+                          )
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: Consumer3<AnswersList, CurrentQuizState, HintsNotifier>(
+                        builder: (context, answersList, currentQuizState, hintsNotifier, child) {
+                          if(currentQuizState.isCurrentQuestionRevealed()){
+                            // SHOW NEXT QUESTION BUTTON
+                            if(answersList.isCorrectAnswerSelected()){
+                              return FilledButton(
+                                  onPressed: () {
+                                    QuestionDetails newQuestion = currentQuizState.createNewQuestion();
+                                    answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
+                                    hintsNotifier.reset();
+                                    _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                      if (states.contains(MaterialState.pressed)) {
+                                        return Colors.black;
+                                      }
+                                      return Colors.white;
+                                    }),
+                                    foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                      if (states.contains(MaterialState.pressed)) {
+                                        return Colors.white;
+                                      }
+                                      return Colors.black;
+                                    }),
+                                    shape: MaterialStateProperty.resolveWith((states) {
+                                      return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                    }),
+                                    animationDuration: const Duration(milliseconds: 1),
+                                    fixedSize: MaterialStateProperty.resolveWith((states) {
+                                      return Size(0, 50);
+                                    }),
+                                  ),
+                                  child: const Text("Nächstes Cover")
+                              );
+                            } else {
+                              return FilledButton(
+                                  onPressed: () {
+                                    // LOAD FINISH SCREEN
+                                    Navigator.pushReplacement(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState)));
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                      if (states.contains(MaterialState.pressed)) {
+                                        return Colors.black;
+                                      }
+                                      return Colors.white;
+                                    }),
+                                    foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                      if (states.contains(MaterialState.pressed)) {
+                                        return Colors.white;
+                                      }
+                                      return Colors.black;
+                                    }),
+                                    shape: MaterialStateProperty.resolveWith((states) {
+                                      return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                    }),
+                                    animationDuration: const Duration(milliseconds: 1),
+                                    fixedSize: MaterialStateProperty.resolveWith((states) {
+                                      return Size(0, 50);
+                                    }),
+                                  ),
+                                  child: const Text("Runde beenden")
+                              );
+                            }
+                          } else {
+                            // SHOW ANSWER BUTTON
+                            return FilledButton(
+                                onPressed: () {
+                                  if(answersList.isOneSelected()){
+                                    currentQuizState.revealCurrentQuestionAnswer();
+                                    if(answersList.isCorrectAnswerSelected()){
+                                      // RIGHT ANSWER
+                                      currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.rightAnswer);
+                                    } else {
+                                      // WRONG ANSWER
+                                      currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.wrongAnswer);
+                                    }
+                                    _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                                  } else {
+                                    // NO ANSWER SELECTED
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Keine Antwort ausgewählt!"))
+                                    );
+                                  }
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.black;
+                                    }
+                                    return Colors.white;
+                                  }),
+                                  foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.white;
+                                    }
+                                    return Colors.black;
+                                  }),
+                                  shape: MaterialStateProperty.resolveWith((states) {
+                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                  }),
+                                  animationDuration: const Duration(milliseconds: 1),
+                                  fixedSize: MaterialStateProperty.resolveWith((states) {
+                                    return Size(0, 50);
+                                  }),
+                                ),
+                                child: const Text("Antworten")
+                            );
+                          }
+                        }
+                    )
+                )
+            )
+        ),
       ),
     );
   }
