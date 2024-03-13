@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:quizzly/PlayScreen.dart';
+import 'package:quizzly/SlideFromRightRoute.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final supabase = Supabase.instance.client;
 
   LoginScreen({super.key});
 
@@ -73,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 14
                         ),
-                        controller: _usernameController,
+                        controller: _passwordController,
                         decoration: const InputDecoration(
                             border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
                             enabledBorder: OutlineInputBorder(
@@ -92,12 +97,32 @@ class LoginScreen extends StatelessWidget {
                             fillColor: Colors.white,
                             filled: true,
                         ),
+                        obscureText: true,
                       ),
                     ],
                   ),
                   const SizedBox(height: 50),
                   FilledButton(
-                      onPressed: (){},
+                      onPressed: () async {
+                        print(supabase.auth.currentUser);
+                        try{
+                          final AuthResponse res = await supabase.auth.signInWithPassword(
+                              email: _usernameController.text,
+                              password: _passwordController.text
+                          );
+
+                          Navigator.pushReplacement(context, SlideFromRightRoute(page: PlayScreen()));
+
+                          // print(res.user);
+                        } on AuthException catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error.message),
+                                backgroundColor: Theme.of(context).colorScheme.error,
+                              )
+                          );
+                        }
+                      },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                             if (states.contains(MaterialState.pressed)) {
