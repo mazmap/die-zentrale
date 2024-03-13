@@ -24,6 +24,8 @@ class PlayScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text("Guten Morgen, @matteo! Mal wieder in der Laune einen Highscore zu knacken?"),
+            const SizedBox(height: 15),
             Expanded(
               child: QuizTile(
                 quizTitle: "DAS Drei ??? Cover Quiz",
