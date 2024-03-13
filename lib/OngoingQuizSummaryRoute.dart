@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/CurrentQuizState.dart';
+import 'package:quizzly/EpisodeQuizSummaryTile.dart';
 import 'package:quizzly/HomeRoute.dart';
 import 'package:quizzly/FinishedQuizSummaryRoute.dart';
+import 'package:quizzly/QuestionDetails.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
 import 'LeaveRoundDialog.dart';
@@ -95,14 +97,24 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
                   )
                 ]
             ),
+            const SizedBox(height: 15),
             Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.only(top: 15),
+              child: ListView.separated(
                   itemCount: currentQuizState.getNumberOfQuestions(),
+                  separatorBuilder: (context, index){
+                    return SizedBox(height: 10);
+                  },
                   itemBuilder: (context, index) {
                     int questionAmount = currentQuizState.getNumberOfQuestions();
+                    QuestionDetails question = currentQuizState.getNthQuestionDetails(index);
                     if(index < questionAmount-1){
-                      return Text(currentQuizState.getNthQuestionDetails(index).getCorrectAnswerTitle());
+                      print(question.getHintAmount());
+                      return EpisodeQuizSummaryTile(
+                          coverAssetPath: question.coverAssetPath,
+                          title: question.getCorrectAnswerTitle(),
+                          hints: question.getHintAmount(),
+                          points: question.possiblePoints
+                      );
                     } else {
                       // DIFFERENTIATE BETWEEN isRevealed + rightAnswer or wrongAnswer
                       return Text("?");

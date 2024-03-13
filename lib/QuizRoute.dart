@@ -41,7 +41,6 @@ class _QuizRouteState extends State<QuizRoute> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CurrentQuizState.initializeWith(initialQuestion)),
-        ChangeNotifierProvider(create: (context) => HintsNotifier()),
         ChangeNotifierProvider(create: (context) => AnswersList(initialQuestion.correctAnswerId))
       ],
       child: PopScope(
@@ -212,8 +211,8 @@ class _QuizRouteState extends State<QuizRoute> {
                       ),
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    child: Consumer3<AnswersList, CurrentQuizState, HintsNotifier>(
-                        builder: (context, answersList, currentQuizState, hintsNotifier, child) {
+                    child: Consumer2<AnswersList, CurrentQuizState>(
+                        builder: (context, answersList, currentQuizState, child) {
                           if(currentQuizState.isCurrentQuestionRevealed()){
                             // SHOW NEXT QUESTION BUTTON
                             if(answersList.isCorrectAnswerSelected()){
@@ -221,7 +220,6 @@ class _QuizRouteState extends State<QuizRoute> {
                                   onPressed: () {
                                     QuestionDetails newQuestion = currentQuizState.createNewQuestion();
                                     answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
-                                    hintsNotifier.reset();
                                     _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                                   },
                                   style: ButtonStyle(
@@ -285,10 +283,10 @@ class _QuizRouteState extends State<QuizRoute> {
                                     currentQuizState.revealCurrentQuestionAnswer();
                                     if(answersList.isCorrectAnswerSelected()){
                                       // RIGHT ANSWER
-                                      currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.rightAnswer);
+                                      currentQuizState.completeCurrentQuestion(AnswerState.rightAnswer);
                                     } else {
                                       // WRONG ANSWER
-                                      currentQuizState.completeCurrentQuestion(hintsNotifier.hintCoords, AnswerState.wrongAnswer);
+                                      currentQuizState.completeCurrentQuestion(AnswerState.wrongAnswer);
                                     }
                                     _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                                   } else {

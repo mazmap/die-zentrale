@@ -7,6 +7,7 @@ import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/utils.dart';
 
 import 'AnswersList.dart';
+import 'Coord.dart';
 import 'HintsMask.dart';
 import 'HintsNotifier.dart';
 
@@ -58,6 +59,7 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
   @override
   void dispose() {
     _revealImageAnimationController.dispose();
+    _hideOverlayAnimationController.dispose();
     super.dispose();
   }
 
@@ -75,56 +77,60 @@ class _CoverDisplayState extends State<CoverDisplay> with TickerProviderStateMix
 
         return Consumer<AnswersList>(
           builder: (context, answersList, child) {
-            Widget imageWithHints = Consumer<HintsNotifier>(
-                builder: (context, hintsNotifier, child) {
-                  return FutureBuilder<ui.Image>(
-                      future: image,
-                      builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
-                        double deviceWidth = MediaQuery.of(context).size.width;
-                        if(snapshot.hasData){
-                          loadedImage = snapshot.data;
-                        }
+            Widget imageWithHints = Selector<CurrentQuizState, List<CoordBox>>(
+              selector: (context, currentQuizState) {
+                return currentQuizState.getHintsOfCurrentQuestion();
+              },
+              builder: (context, hints, child) {
+                return FutureBuilder<ui.Image>(
+                    key: UniqueKey(),
+                    future: image,
+                    builder: (BuildContext context, AsyncSnapshot<ui.Image> snapshot) {
+                      double deviceWidth = MediaQuery.of(context).size.width;
+                      if(snapshot.hasData){
+                        loadedImage = snapshot.data;
+                      }
 
-                        if(loadedImage != null){
-                          return Container(
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                border: Border.all(color: Colors.black)
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: CustomPaint(
-                                  foregroundPainter: HintsMask(loadedImage!, hintsNotifier.hintCoords, isCurrentQuestionRevealed),
-                                  size: Size(deviceWidth-32, deviceWidth-32),
-                                  child: (!isCurrentQuestionRevealed) ? null : AnimatedBuilder(
-                                      animation: _revealImageAnimation,
-                                      builder: (BuildContext context, Widget? child) {
-                                        return Opacity(opacity: _revealImageAnimation.value, child: child,);
-                                      },
-                                      child: Image.asset(
-                                          widget.coverAssetPath,
-                                          width: deviceWidth-32,
-                                          height: deviceWidth-32
-                                      )
-                                  )
-                              ),
-                            ),
-                          );
-                        }
+                      if(loadedImage != null){
                         return Container(
-                            color: Colors.black,
-                            height: deviceWidth-30,
-                            width: deviceWidth-30,
-                            child: const Center(
-                                child: Text(
-                                  "Cover wird geladen...",
-                                  style: TextStyle(color: Colors.white),
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              border: Border.all(color: Colors.black)
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: CustomPaint(
+                                foregroundPainter: HintsMask(loadedImage!, hints, isCurrentQuestionRevealed),
+                                size: Size(deviceWidth-32, deviceWidth-32),
+                                child: (!isCurrentQuestionRevealed) ? null : AnimatedBuilder(
+                                    animation: _revealImageAnimation,
+                                    builder: (BuildContext context, Widget? child) {
+                                      return Opacity(opacity: _revealImageAnimation.value, child: child,);
+                                    },
+                                    child: Image.asset(
+                                        widget.coverAssetPath,
+                                        width: deviceWidth-32,
+                                        height: deviceWidth-32
+                                    )
                                 )
-                            )
+                            ),
+                          ),
                         );
                       }
-                  );
-                }
+                      return Container(
+                          color: Colors.black,
+                          height: deviceWidth-30,
+                          width: deviceWidth-30,
+                          child: const Center(
+                              child: Text(
+                                "Cover wird geladen...",
+                                style: TextStyle(color: Colors.white),
+                              )
+                          )
+                      );
+                    }
+                );
+              }
             );
 
             if(isCurrentQuestionRevealed){

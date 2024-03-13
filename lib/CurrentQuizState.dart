@@ -8,7 +8,7 @@ import 'Episodes.dart';
 import 'QuestionDetails.dart';
 
 class CurrentQuizState extends ChangeNotifier {
-  List<QuestionDetails> _questionHistory = [];
+  final List<QuestionDetails> _questionHistory = [];
 
   final Random _random = Random();
 
@@ -63,7 +63,7 @@ class CurrentQuizState extends ChangeNotifier {
       titlesForSelection.removeAt(randomIdx);
     }
 
-    int correctAnswer = _random.nextInt(5);
+    int correctAnswer = _random.nextInt(6);
     _leftTitles.remove(possibleAnswers[correctAnswer]);
 
     QuestionDetails newQuestion = QuestionDetails(
@@ -90,7 +90,7 @@ class CurrentQuizState extends ChangeNotifier {
       possibleAnswers.add(titles[randomIdx]);
     }
 
-    int correctAnswer = random.nextInt(5);
+    int correctAnswer = random.nextInt(6);
 
     QuestionDetails initialQuestion = QuestionDetails(
         answerStack: possibleAnswers,
@@ -102,13 +102,14 @@ class CurrentQuizState extends ChangeNotifier {
     return initialQuestion;
   }
 
-  void completeCurrentQuestion(List<CoordBox> hints, AnswerState answerState){
-    _questionHistory.last.hints = hints;
+  void completeCurrentQuestion(AnswerState answerState){
     _questionHistory.last.answerState = answerState;
+    notifyListeners();
   }
 
   void setCurrentQuestionAnswerState(AnswerState state){
     _questionHistory.last.answerState = state;
+    notifyListeners();
   }
 
   int getNumberOfQuestions(){
@@ -129,6 +130,20 @@ class CurrentQuizState extends ChangeNotifier {
   }
 
   int getTotalHintAmount(){
-    return _questionHistory.fold(0, (prev, elem) => prev + elem.hints.length);
+    return _questionHistory.fold(0, (prev, elem) => prev + elem.getHintAmount());
+  }
+
+  void addHintToCurrentQuestionWithSize(int size){
+    _questionHistory.last.addHintWithSize(size);
+    notifyListeners();
+  }
+
+  int getHintAmountOfCurrentQuestion(){
+    return _questionHistory.last.getHintAmount();
+  }
+
+  List<CoordBox> getHintsOfCurrentQuestion(){
+    // necessary for selectors to work
+    return [..._questionHistory.last.hints];
   }
 }
