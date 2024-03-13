@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: "Geist Mono Medium",
       ),
-      home: const HomeRoute(),
+      home: const PlayScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

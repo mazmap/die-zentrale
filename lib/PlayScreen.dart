@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:quizzly/ArchiveScreen.dart';
+import 'package:quizzly/BottomNavigationButton.dart';
+import 'package:quizzly/HomeRoute.dart';
+import 'package:quizzly/QuizTile.dart';
+import 'package:quizzly/SimpleTextButton.dart';
 
 import 'ProfileScreen.dart';
 
@@ -11,6 +15,31 @@ class PlayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
+        child: Container(color: Colors.white, height: MediaQuery.of(context).viewPadding.top,),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: QuizTile(
+                quizTitle: "DAS Drei ??? Cover Quiz",
+                quizScreen: HomeRoute(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: QuizTile(
+                quizTitle: "DAS Drei ??? Cover Quiz",
+                quizScreen: HomeRoute(),
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         height: 50,
@@ -33,32 +62,9 @@ class PlayScreen extends StatelessWidget {
                         right: BorderSide()
                       )
                     ),
-                    child: FilledButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => ArchiveScreen()));
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.black;
-                            }
-                            return Colors.white;
-                          }),
-                          foregroundColor: MaterialStateProperty.resolveWith((states) {
-                            if (states.contains(MaterialState.pressed)) {
-                              return Colors.white;
-                            }
-                            return Colors.black;
-                          }),
-                          shape: MaterialStateProperty.resolveWith((states) {
-                            return const ContinuousRectangleBorder();
-                          }),
-                          animationDuration: const Duration(milliseconds: 1),
-                          fixedSize: MaterialStateProperty.resolveWith((states) {
-                            return Size(0, 50);
-                          }),
-                        ),
-                        child: Text("Archiv")
+                    child: BottomNavigationButton(
+                      text: "Archiv",
+                      navigateTo: ArchiveScreen(),
                     ),
                   ),
                 ),
@@ -69,26 +75,9 @@ class PlayScreen extends StatelessWidget {
                               right: BorderSide()
                           )
                       ),
-                      child: FilledButton(
-                          onPressed: () {
-                            // ABSICHTLICH LEER
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith((states) {
-                              return Colors.black;
-                            }),
-                            foregroundColor: MaterialStateProperty.resolveWith((states) {
-                              return Colors.white;
-                            }),
-                            shape: MaterialStateProperty.resolveWith((states) {
-                              return const ContinuousRectangleBorder();
-                            }),
-                            animationDuration: const Duration(milliseconds: 1),
-                            fixedSize: MaterialStateProperty.resolveWith((states) {
-                              return Size(0, 50);
-                            }),
-                          ),
-                          child: Text("Spielen")
+                      child: BottomNavigationButton(
+                        text: "Spielen",
+                        activeLock: true,
                       )
                   ),
                 ),
@@ -99,32 +88,9 @@ class PlayScreen extends StatelessWidget {
                               right: BorderSide()
                           )
                       ),
-                      child: FilledButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (_, __, ___) => ProfileScreen()));
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.black;
-                              }
-                              return Colors.white;
-                            }),
-                            foregroundColor: MaterialStateProperty.resolveWith((states) {
-                              if (states.contains(MaterialState.pressed)) {
-                                return Colors.white;
-                              }
-                              return Colors.black;
-                            }),
-                            shape: MaterialStateProperty.resolveWith((states) {
-                              return const ContinuousRectangleBorder();
-                            }),
-                            animationDuration: const Duration(milliseconds: 1),
-                            fixedSize: MaterialStateProperty.resolveWith((states) {
-                              return Size(0, 50);
-                            }),
-                          ),
-                          child: Text("Profil")
+                      child: BottomNavigationButton(
+                        text: "Profil",
+                        navigateTo: ProfileScreen(),
                       )
                   ),
                 )

@@ -78,26 +78,26 @@ class _TipButtonState extends State<TipButton> {
               });
             },
             style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.black;
-                  }
-                  return Colors.white;
-                }),
-                foregroundColor: MaterialStateProperty.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return Colors.white;
-                  }
+              backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed)) {
                   return Colors.black;
-                }),
-                shape: MaterialStateProperty.resolveWith((states) {
-                  return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                }),
-                animationDuration: const Duration(milliseconds: 1),
-                alignment: Alignment.centerLeft,
-                padding: MaterialStateProperty.resolveWith((states) {
-                  return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
-                })
+                }
+                return Colors.white;
+              }),
+              foregroundColor: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return Colors.white;
+                }
+                return Colors.black;
+              }),
+              shape: MaterialStateProperty.resolveWith((states) {
+                return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+              }),
+              animationDuration: const Duration(milliseconds: 1),
+              alignment: Alignment.centerLeft,
+              padding: MaterialStateProperty.resolveWith((states) {
+                return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
+              }),
             ),
             child: Text(buttonText)
         );

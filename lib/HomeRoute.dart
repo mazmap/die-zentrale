@@ -4,6 +4,8 @@ import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/QuizRoute.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
+import 'LeaveRoundDialog.dart';
+
 class HomeRoute extends StatefulWidget {
   const HomeRoute({super.key});
 
@@ -19,7 +21,44 @@ class _HomeRouteState extends State<HomeRoute> {
         preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
         child: Container(
           color: Colors.black,
-          height: MediaQuery.of(context).viewPadding.top
+          padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+          child: Stack(
+            children: [
+              Container(
+                  color: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  alignment: Alignment.center,
+                  child: Text(
+                      "Quiz",
+                      style: const TextStyle(color: Colors.white)
+                  )
+              ),
+              Container(
+                height: 50,
+                child: FilledButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ButtonStyle(
+                    alignment: Alignment.center,
+                    backgroundColor: MaterialStateProperty.resolveWith((states) {
+                      return Colors.black;
+                    }),
+                    iconColor: MaterialStateProperty.resolveWith((states) {
+                      return Colors.white;
+                    }),
+                    padding: MaterialStateProperty.resolveWith((states) {
+                      return const EdgeInsets.symmetric(horizontal: 15);
+                    }),
+                    minimumSize: MaterialStateProperty.resolveWith((states) {
+                      return const Size(10,10);
+                    }),
+                  ),
+                  child: const Icon(Icons.arrow_back, size:18),
+                ),
+              ),
+            ],
+          )
         ),
       ),
       body: Column(

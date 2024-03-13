@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
@@ -49,17 +50,18 @@ class _QuizRouteState extends State<QuizRoute> {
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(40), // Set this height
               child: Container(
-                  color: Colors.white,
                   padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(color: Colors.black)
+                    )
+                  ),
                   child: Row(
                     children: [
                       Container(
                         decoration: const BoxDecoration(
                             border: Border(
-                                bottom: BorderSide(
-                                    color: Colors.black,
-                                    width: 1
-                                ),
                                 right: BorderSide(
                                     color: Colors.black,
                                     width: 1
@@ -127,10 +129,6 @@ class _QuizRouteState extends State<QuizRoute> {
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           decoration: const BoxDecoration(
                               border: Border(
-                                  bottom: BorderSide(
-                                      color: Colors.black,
-                                      width: 1
-                                  ),
                                   left: BorderSide(
                                       color: Colors.black,
                                       width: 1
