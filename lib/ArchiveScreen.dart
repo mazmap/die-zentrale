@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:quizzly/ArchiveEpisodeTile.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
 import 'package:quizzly/EpisodesService.dart';
 import 'package:quizzly/PlayScreen.dart';
@@ -15,14 +16,25 @@ class ArchiveScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(15),
-        child: ListView.builder(
-          itemCount: EpisodesService.getEpisodesAmount(),
-            itemBuilder: (context, index) {
-              return Text(EpisodesService.getNthEpisode(index).title);
-            }
-        )
+        padding: EdgeInsets.only(top: 15),
+        child: CupertinoScrollbar(
+          radius: Radius.zero,
+          radiusWhileDragging: Radius.zero,
+          child: Padding(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            child: ListView.separated(
+              itemCount: EpisodesService.getEpisodesAmount(),
+                addAutomaticKeepAlives: true,
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 10);
+                },
+                itemBuilder: (context, index) {
+                  return ArchiveEpisodeTile(episode: EpisodesService.getNthEpisode(index));
+                }
+            )
 
+          ),
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
