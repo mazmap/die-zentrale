@@ -15,7 +15,7 @@ class FinishedQuizSummaryRoute extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(40), // Set this height
           child: Container(
-              color: Colors.white,
+              color: Colors.black,
               padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
               child: Container(
                   color: Colors.black,

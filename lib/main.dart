@@ -25,7 +25,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.black,
+          selectionHandleColor: Colors.black,
+          selectionColor: Color.fromRGBO(255, 242, 0, 1)
+        ),
         fontFamily: "Geist Mono Medium",
       ),
       home: LoginScreen(),

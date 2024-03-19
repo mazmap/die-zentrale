@@ -57,7 +57,7 @@ class _QuizRouteState extends State<QuizRoute> {
               child: Container(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.black,
                     border: Border(
                       bottom: BorderSide(color: Colors.black)
                     )
@@ -65,15 +65,8 @@ class _QuizRouteState extends State<QuizRoute> {
                   child: Row(
                     children: [
                       Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                                right: BorderSide(
-                                    color: Colors.black,
-                                    width: 1
-                                )
-                            )
-                        ),
                         height: 50,
+                        width: 50,
                         child: Consumer<CurrentQuizState>(
                           builder: (context, currentQuizState, child){
                             return FilledButton(
@@ -91,10 +84,10 @@ class _QuizRouteState extends State<QuizRoute> {
                               style: ButtonStyle(
                                 alignment: Alignment.center,
                                 backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                  return Colors.white;
+                                  return Colors.black;
                                 }),
                                 iconColor: MaterialStateProperty.resolveWith((states) {
-                                  return Colors.black;
+                                  return Colors.white;
                                 }),
                                 surfaceTintColor: MaterialStateProperty.resolveWith((states) {
                                   return Colors.black;
@@ -105,6 +98,9 @@ class _QuizRouteState extends State<QuizRoute> {
                                 minimumSize: MaterialStateProperty.resolveWith((states) {
                                   return const Size(10,10);
                                 }),
+                                shape: MaterialStateProperty.all(
+                                  const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))
+                                )
                               ),
                               child: const Icon(Icons.close_sharp, size:18),
                             );
@@ -145,7 +141,7 @@ class _QuizRouteState extends State<QuizRoute> {
                               return currentQuizState.getTotalPoints();
                             },
                             builder: (BuildContext context, int totalPoints, Widget? child) {
-                              return Text("$totalPoints");
+                              return Text("$totalPoints", style: TextStyle(color: Colors.white));
                             },
                           )
                       )
