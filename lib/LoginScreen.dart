@@ -1,15 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:quizzly/EpisodesService.dart';
 import 'package:quizzly/PlayScreen.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final supabase = Supabase.instance.client;
 
   LoginScreen({super.key});
 
@@ -42,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("E-Mail Adresse"),
+                      Text("Benutzername"),
                       TextField(
                         style: TextStyle(
                             fontSize: 14
@@ -62,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                                 vertical: 15,
                                 horizontal: 20
                             ),
-                            hintText: "justus.jonas@gmail.com",
+                            hintText: "justusjonas",
                             fillColor: Colors.white,
                             filled: true
                         ),
@@ -103,25 +103,20 @@ class LoginScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 50),
                   FilledButton(
-                      onPressed: () async {
-                        print(supabase.auth.currentUser);
-                        try{
-                          final AuthResponse res = await supabase.auth.signInWithPassword(
-                              email: _usernameController.text,
-                              password: _passwordController.text
-                          );
-
-                          Navigator.pushReplacement(context, SlideFromRightRoute(page: PlayScreen()));
-
-                          // print(res.user);
-                        } on AuthException catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(error.message),
-                                backgroundColor: Theme.of(context).colorScheme.error,
-                              )
-                          );
-                        }
+                      onPressed: () {
+                        FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.value.text).get().then((value) {
+                          if(value.docs.isNotEmpty){
+                            FirebaseAuth.instance.signInWithEmailAndPassword(email: value.docs.elementAt(0).data()["email"] ?? "", password: _passwordController.value.text).then((value) {
+                              User? user = value.user;
+                              EpisodesService.loadEpisodes().then((value){
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => PlayScreen())
+                                );
+                              });
+                            });
+                          }
+                        });
                       },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {

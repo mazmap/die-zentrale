@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ import 'package:quizzly/SlideFromRightRoute.dart';
 import 'AnswerSelector.dart';
 import 'AnswersList.dart';
 import 'CurrentQuizState.dart';
+import 'Episode.dart';
 import 'HintsNotifier.dart';
 import 'HomeRoute.dart';
 import 'OngoingQuizSummaryRoute.dart';
@@ -27,6 +30,8 @@ class QuizRoute extends StatefulWidget {
 class _QuizRouteState extends State<QuizRoute> {
 
   late final QuestionDetails initialQuestion;
+
+  late final String quiz_round_id;
 
   final ScrollController _listViewController = ScrollController();
 
@@ -51,7 +56,7 @@ class _QuizRouteState extends State<QuizRoute> {
               preferredSize: const Size.fromHeight(40), // Set this height
               child: Container(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     border: Border(
                       bottom: BorderSide(color: Colors.black)
@@ -191,7 +196,7 @@ class _QuizRouteState extends State<QuizRoute> {
                     builder: (BuildContext context, List<String> value, Widget? child) {
                       return AnswerSelector(possibleAnswers: value);
                     },
-                    selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack,
+                    selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack.map((e) => e.title).toList(),
                   )
                 ],
               ),
@@ -276,7 +281,7 @@ class _QuizRouteState extends State<QuizRoute> {
                           } else {
                             // SHOW ANSWER BUTTON
                             return FilledButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if(answersList.isOneSelected()){
                                     currentQuizState.revealCurrentQuestionAnswer();
                                     if(answersList.isCorrectAnswerSelected()){
@@ -286,11 +291,24 @@ class _QuizRouteState extends State<QuizRoute> {
                                       // WRONG ANSWER
                                       currentQuizState.completeCurrentQuestion(AnswerState.wrongAnswer);
                                     }
-                                    _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    if(currentQuizState.getNumberOfQuestions() == 1){
+                                      await FirebaseFirestore.instance.collection("cover_quiz_rounds").add({
+                                        "user": FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid),
+                                        "total_points": currentQuizState.getTotalPoints(),
+                                        "hints_amount": currentQuizState.getTotalHintAmount(),
+                                        "created_at": DateTime.now()
+                                      }).then((value) => quiz_round_id = value.id);
+                                    }
+                                    // TODO: ADD QUESTION
+                                    await FirebaseFirestore.instance.collection("cover_quiz_rounds").doc(quiz_round_id).update({
+                                      "total_points": currentQuizState.getTotalPoints(),
+                                      "hints_amount": currentQuizState.getTotalHintAmount()
+                                    });
+                                    _listViewController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   } else {
                                     // NO ANSWER SELECTED
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Keine Antwort ausgewählt!"))
+                                      const SnackBar(content: Text("Keine Antwort ausgewählt!"))
                                     );
                                   }
                                 },

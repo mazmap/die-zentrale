@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:quizzly/utils.dart';
 
 import 'Coord.dart';
+import 'Episode.dart';
 import 'Episodes.dart';
+import 'EpisodesService.dart';
 import 'QuestionDetails.dart';
 
 class CurrentQuizState extends ChangeNotifier {
@@ -12,15 +14,15 @@ class CurrentQuizState extends ChangeNotifier {
 
   final Random _random = Random();
 
-  late List<String> _leftTitles;
+  late List<Episode> _leftTitles;
 
   CurrentQuizState(){
-    _leftTitles = Episodes.episodeTitles.getRange(0, 201).toList();
+    _leftTitles = Episodes.episodes.getRange(0, 201).toList();
     createNewQuestion();
   }
 
   CurrentQuizState.initializeWith(QuestionDetails initialQuestion){
-    _leftTitles = Episodes.episodeTitles.getRange(0, 201).toList();
+    _leftTitles = Episodes.episodes.getRange(0, 201).toList();
     _leftTitles.remove(initialQuestion.getCorrectAnswerTitle());
     _questionHistory.add(initialQuestion);
   }
@@ -53,8 +55,8 @@ class CurrentQuizState extends ChangeNotifier {
   }
 
   QuestionDetails createNewQuestion(){
-    List<String> possibleAnswers = [];
-    List<String> titlesForSelection = [..._leftTitles];
+    List<Episode> possibleAnswers = [];
+    List<Episode> titlesForSelection = [..._leftTitles];
 
     int randomIdx;
     for(int i=0; i<6; i++){
@@ -70,7 +72,7 @@ class CurrentQuizState extends ChangeNotifier {
       answerStack: possibleAnswers,
       correctAnswerId: correctAnswer,
       questionNumber: _questionHistory.length+1,
-      coverAssetPath: generateEpCoverAssetPath(possibleAnswers[correctAnswer])
+      coverAssetPath: possibleAnswers[correctAnswer].coverAssetPath
     );
 
     _questionHistory.add(newQuestion);
@@ -80,14 +82,14 @@ class CurrentQuizState extends ChangeNotifier {
   }
 
   static QuestionDetails createInitialQuestion(){
-    List<String> titles = Episodes.episodeTitles.getRange(0, 201).toList();
+    List<Episode> episodes = Episodes.episodes.getRange(0, 201).toList();
 
-    List<String> possibleAnswers = [];
+    List<Episode> possibleAnswers = [];
     Random random = Random();
     int randomIdx;
     for(int i=0; i<6; i++){
-      randomIdx = random.nextInt(titles.length-1-i);
-      possibleAnswers.add(titles[randomIdx]);
+      randomIdx = random.nextInt(episodes.length-1-i);
+      possibleAnswers.add(episodes[randomIdx]);
     }
 
     int correctAnswer = random.nextInt(6);
@@ -96,7 +98,7 @@ class CurrentQuizState extends ChangeNotifier {
         answerStack: possibleAnswers,
         correctAnswerId: correctAnswer,
         questionNumber: 1,
-        coverAssetPath: generateEpCoverAssetPath(possibleAnswers[correctAnswer])
+        coverAssetPath: possibleAnswers[correctAnswer].coverAssetPath
     );
 
     return initialQuestion;

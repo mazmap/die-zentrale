@@ -1,12 +1,13 @@
 import 'dart:math';
 
 import 'Coord.dart';
+import 'Episode.dart';
 
 enum AnswerState { wrongAnswer, rightAnswer, unanswered }
 
 class QuestionDetails {
   final int questionNumber;
-  final List<String> answerStack;
+  final List<Episode> answerStack;
   final int correctAnswerId;
   final String coverAssetPath;
   bool isRevealed = false;
@@ -27,7 +28,7 @@ class QuestionDetails {
   }
 
   String getCorrectAnswerTitle(){
-    return answerStack[correctAnswerId];
+    return answerStack[correctAnswerId].title;
   }
 
   void addHintWithSize(int size){

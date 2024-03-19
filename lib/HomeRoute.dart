@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/HomeTile.dart';
@@ -89,20 +90,48 @@ class _HomeRouteState extends State<HomeRoute> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: ListView(
-                children: const [
+                children: [
                   HomeTile(title: "Leaderboard", children: [
+                    FutureBuilder(
+                      future: FirebaseFirestore.instance.collection("cover_quiz_rounds").limit(10).get(),
+                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
+                        if(snapshot.hasData){
+                          var docs = snapshot.data!.docs;
+                          List<Widget> children = [];
+                          for(int i=0; i < docs.length; i++){
+                            children.add(Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                FutureBuilder(
+                                    future: docs.elementAt(i).data()["user"].get(),
+                                    builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot){
+                                      if(snapshot.hasData){
+                                        return Text(snapshot.data!.data()?["username"]);
+                                      }
+                                      return Text("justusjonas");
+                                    }
+                                ),
+                                Text(docs.elementAt(i).data()["hints_amount"].toString()),
+                                Text(docs.elementAt(i).data()["total_points"].toString())
+                              ]
+                            ));
+                          }
+                          return Column(
+                            children: children,
+                          );
+                        }
+                        return Text("loading...");
+                      }
+                    )
+                  ]),
+                  const SizedBox(height: 20),
+                  const HomeTile(title: "Mitteilungen", children: [
                     Center(
                         child: Text("to be continued...")
                     )
                   ]),
                   const SizedBox(height: 20),
-                  HomeTile(title: "Mitteilungen", children: [
-                    Center(
-                        child: Text("to be continued...")
-                    )
-                  ]),
-                  const SizedBox(height: 20),
-                  HomeTile(title: "History", children: [
+                  const HomeTile(title: "History", children: [
                     Center(
                         child: Text("to be continued...")
                     )
