@@ -7,7 +7,7 @@ import "dart:ui" as ui;
 
 import 'package:flutter/services.dart';
 
-import 'Coord.dart';
+import 'CoordBox.dart';
 
 class HintsMask extends CustomPainter {
   final ui.Image image;

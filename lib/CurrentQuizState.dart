@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:quizzly/utils.dart';
 
-import 'Coord.dart';
+import 'CoordBox.dart';
 import 'Episode.dart';
 import 'Episodes.dart';
 import 'EpisodesService.dart';
@@ -160,5 +160,9 @@ class CurrentQuizState extends ChangeNotifier {
 
   bool isQuizFinished(){
     return _leftTitles.isEmpty;
+  }
+
+  List<Episode> getCurrentlyPossibleAnswers(){
+    return _questionHistory.last.answerStack;
   }
 }

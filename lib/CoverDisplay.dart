@@ -7,7 +7,7 @@ import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/utils.dart';
 
 import 'AnswersList.dart';
-import 'Coord.dart';
+import 'CoordBox.dart';
 import 'HintsMask.dart';
 import 'HintsNotifier.dart';
 

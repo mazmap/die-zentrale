@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'Coord.dart';
+import 'CoordBox.dart';
 
 class HintsNotifier extends ChangeNotifier {
   List<CoordBox> hintCoords = [];

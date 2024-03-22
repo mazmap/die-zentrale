@@ -331,7 +331,16 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                       }).then((value) => quiz_round_id = value.id);
                                     }
                                     // TODO: ADD QUESTION
-
+                                    await FirebaseFirestore.instance.collection("answered_questions").add({
+                                      "cover_quiz_round_ref": FirebaseFirestore.instance.doc("cover_quiz_rounds/$quiz_round_id"),
+                                      "correct_answer_ref": FirebaseFirestore.instance.doc("episodes/${currentQuizState.getLatestQuestionDetails().getCorrectAnswerEpisode().id}"),
+                                      "achieved_points": currentQuizState.getCurrentlyPossiblePoints(),
+                                      "hints": currentQuizState.getHintsOfCurrentQuestion().map((e) => e.toFirestoreObj()),
+                                      "history_index": currentQuizState.getNumberOfQuestions()-1,
+                                      "possible_answers_refs": currentQuizState.getCurrentlyPossibleAnswers().map((e){
+                                        return FirebaseFirestore.instance.doc("episodes/${e.id}");
+                                      })
+                                    });
 
                                     await FirebaseFirestore.instance.collection("cover_quiz_rounds").doc(quiz_round_id).update({
                                       "total_points": currentQuizState.getTotalPoints(),

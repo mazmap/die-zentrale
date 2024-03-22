@@ -10,4 +10,12 @@ class CoordBox {
     // TODO: implement toString
     return "{x: $x, y: $y, h: $h}";
   }
+
+  Map<String, int> toFirestoreObj(){
+    return {
+      "x": x.toInt(),
+      "y": y.toInt(),
+      "h": h.toInt()
+    };
+  }
 }

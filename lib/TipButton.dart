@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzly/Coord.dart';
+import 'package:quizzly/CoordBox.dart';
 import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/HintsNotifier.dart';
 
