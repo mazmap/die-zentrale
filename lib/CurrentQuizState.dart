@@ -148,4 +148,8 @@ class CurrentQuizState extends ChangeNotifier {
     // necessary for selectors to work
     return [..._questionHistory.last.hints];
   }
+
+  bool isQuizFinished(){
+    return _leftTitles.isEmpty;
+  }
 }

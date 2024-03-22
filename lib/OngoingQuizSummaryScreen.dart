@@ -10,10 +10,10 @@ import 'package:quizzly/SlideFromRightRoute.dart';
 import 'LeaveRoundDialog.dart';
 import 'SlideOffToRight.dart';
 
-class OngoingQuizSummaryRoute extends StatelessWidget {
+class OngoingQuizSummaryScreen extends StatelessWidget {
   final CurrentQuizState currentQuizState;
 
-  const OngoingQuizSummaryRoute({super.key, required this.currentQuizState});
+  const OngoingQuizSummaryScreen({super.key, required this.currentQuizState});
 
   @override
   Widget build(BuildContext context) {

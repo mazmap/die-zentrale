@@ -15,7 +15,7 @@ import 'CurrentQuizState.dart';
 import 'Episode.dart';
 import 'HintsNotifier.dart';
 import 'CoverQuizHomeScreen.dart';
-import 'OngoingQuizSummaryRoute.dart';
+import 'OngoingQuizSummaryScreen.dart';
 import 'QuestionDetails.dart';
 import 'SlideOffToRight.dart';
 import 'TipButton.dart';
@@ -112,7 +112,7 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                             builder: (context, currentQuizState, child) {
                               return GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, SlideFromTopDownRoute(page: OngoingQuizSummaryRoute(currentQuizState: currentQuizState,)));
+                                  Navigator.push(context, SlideFromTopDownRoute(page: OngoingQuizSummaryScreen(currentQuizState: currentQuizState,)));
                                 },
                                 child: Container(
                                     color: Colors.black,
@@ -214,37 +214,71 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                         builder: (context, answersList, currentQuizState, child) {
                           if(currentQuizState.isCurrentQuestionRevealed()){
                             // SHOW NEXT QUESTION BUTTON
-                            if(answersList.isCorrectAnswerSelected()){
-                              return FilledButton(
-                                  onPressed: () {
-                                    QuestionDetails newQuestion = currentQuizState.createNewQuestion();
-                                    answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
-                                    _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                      if (states.contains(MaterialState.pressed)) {
-                                        return Colors.black;
-                                      }
-                                      return Colors.white;
-                                    }),
-                                    foregroundColor: MaterialStateProperty.resolveWith((states) {
-                                      if (states.contains(MaterialState.pressed)) {
+                            if(!currentQuizState.isQuizFinished()){
+                              if(answersList.isCorrectAnswerSelected()){
+                                return FilledButton(
+                                    onPressed: () {
+                                      QuestionDetails newQuestion = currentQuizState.createNewQuestion();
+                                      answersList.resetAndUpdateWith(newQuestion.correctAnswerId);
+                                      _listViewController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                        if (states.contains(MaterialState.pressed)) {
+                                          return Colors.black;
+                                        }
                                         return Colors.white;
-                                      }
-                                      return Colors.black;
-                                    }),
-                                    shape: MaterialStateProperty.resolveWith((states) {
-                                      return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                                    }),
-                                    animationDuration: const Duration(milliseconds: 1),
-                                    fixedSize: MaterialStateProperty.resolveWith((states) {
-                                      return Size(0, 50);
-                                    }),
-                                  ),
-                                  child: const Text("Nächstes Cover")
-                              );
+                                      }),
+                                      foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                        if (states.contains(MaterialState.pressed)) {
+                                          return Colors.white;
+                                        }
+                                        return Colors.black;
+                                      }),
+                                      shape: MaterialStateProperty.resolveWith((states) {
+                                        return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                      }),
+                                      animationDuration: const Duration(milliseconds: 1),
+                                      fixedSize: MaterialStateProperty.resolveWith((states) {
+                                        return Size(0, 50);
+                                      }),
+                                    ),
+                                    child: const Text("Nächstes Cover")
+                                );
+                              } else {
+                                return FilledButton(
+                                    onPressed: () {
+                                      // LOAD FINISH SCREEN
+                                      Navigator.pushReplacement(context, SlideFromRightRoute(page: FinishedQuizSummaryScreen(finishedQuizstate: currentQuizState)));
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                        if (states.contains(MaterialState.pressed)) {
+                                          return Colors.black;
+                                        }
+                                        return Colors.white;
+                                      }),
+                                      foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                        if (states.contains(MaterialState.pressed)) {
+                                          return Colors.white;
+                                        }
+                                        return Colors.black;
+                                      }),
+                                      shape: MaterialStateProperty.resolveWith((states) {
+                                        return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                      }),
+                                      animationDuration: const Duration(milliseconds: 1),
+                                      fixedSize: MaterialStateProperty.resolveWith((states) {
+                                        return Size(0, 50);
+                                      }),
+                                    ),
+                                    child: const Text("Runde beenden")
+                                );
+                              }
                             } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Du hast alle Cover einmal richtig zugeordnet, Glückwunsch!"))
+                              );
                               return FilledButton(
                                   onPressed: () {
                                     // LOAD FINISH SCREEN
