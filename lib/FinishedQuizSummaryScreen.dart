@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/CurrentQuizState.dart';
 
-class FinishedQuizSummaryRoute extends StatelessWidget {
+class FinishedQuizSummaryScreen extends StatelessWidget {
   final CurrentQuizState finishedQuizstate;
 
-  const FinishedQuizSummaryRoute({super.key, required this.finishedQuizstate});
+  const FinishedQuizSummaryScreen({super.key, required this.finishedQuizstate});
 
   @override
   Widget build(BuildContext context) {

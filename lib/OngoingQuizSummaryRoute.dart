@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/EpisodeQuizSummaryTile.dart';
 import 'package:quizzly/CoverQuizHomeScreen.dart';
-import 'package:quizzly/FinishedQuizSummaryRoute.dart';
+import 'package:quizzly/FinishedQuizSummaryScreen.dart';
 import 'package:quizzly/QuestionDetails.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 

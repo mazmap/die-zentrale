@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
 import 'package:quizzly/LeaveRoundDialog.dart';
-import 'package:quizzly/FinishedQuizSummaryRoute.dart';
+import 'package:quizzly/FinishedQuizSummaryScreen.dart';
 import 'package:quizzly/SlideFromTopDownRoute.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
@@ -20,14 +20,14 @@ import 'QuestionDetails.dart';
 import 'SlideOffToRight.dart';
 import 'TipButton.dart';
 
-class QuizRoute extends StatefulWidget {
-  const QuizRoute({super.key});
+class CoverQuizScreen extends StatefulWidget {
+  const CoverQuizScreen({super.key});
 
   @override
-  State<QuizRoute> createState() => _QuizRouteState();
+  State<CoverQuizScreen> createState() => _CoverQuizScreenState();
 }
 
-class _QuizRouteState extends State<QuizRoute> {
+class _CoverQuizScreenState extends State<CoverQuizScreen> {
 
   late final QuestionDetails initialQuestion;
 
@@ -248,7 +248,7 @@ class _QuizRouteState extends State<QuizRoute> {
                               return FilledButton(
                                   onPressed: () {
                                     // LOAD FINISH SCREEN
-                                    Navigator.pushReplacement(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState)));
+                                    Navigator.pushReplacement(context, SlideFromRightRoute(page: FinishedQuizSummaryScreen(finishedQuizstate: currentQuizState)));
                                   },
                                   style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -296,6 +296,8 @@ class _QuizRouteState extends State<QuizRoute> {
                                       }).then((value) => quiz_round_id = value.id);
                                     }
                                     // TODO: ADD QUESTION
+
+
                                     await FirebaseFirestore.instance.collection("cover_quiz_rounds").doc(quiz_round_id).update({
                                       "total_points": currentQuizState.getTotalPoints(),
                                       "hints_amount": currentQuizState.getTotalHintAmount()

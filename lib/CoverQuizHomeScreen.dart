@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/HomeTile.dart';
-import 'package:quizzly/QuizRoute.dart';
+import 'package:quizzly/CoverQuizScreen.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
 import 'LeaveRoundDialog.dart';
@@ -273,7 +273,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      SlideFromRightRoute(page: const QuizRoute())
+                      SlideFromRightRoute(page: const CoverQuizScreen())
                     ).then((value) => setState(() {
 
                     }));
