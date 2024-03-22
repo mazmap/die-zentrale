@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/CurrentQuizState.dart';
 import 'package:quizzly/EpisodeQuizSummaryTile.dart';
-import 'package:quizzly/HomeRoute.dart';
+import 'package:quizzly/CoverQuizHomeScreen.dart';
 import 'package:quizzly/FinishedQuizSummaryRoute.dart';
 import 'package:quizzly/QuestionDetails.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
@@ -21,7 +21,7 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(40), // Set this height
         child: Container(
-            color: Colors.white,
+            color: Colors.black,
             padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
             child: Row(
               children: [
@@ -39,6 +39,7 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
                       )
                   ),
                   height: 50,
+                  width: 50,
                   child: FilledButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -46,10 +47,10 @@ class OngoingQuizSummaryRoute extends StatelessWidget {
                     style: ButtonStyle(
                       alignment: Alignment.center,
                       backgroundColor: MaterialStateProperty.resolveWith((states) {
-                        return Colors.white;
+                        return Colors.black;
                       }),
                       iconColor: MaterialStateProperty.resolveWith((states) {
-                        return Colors.black;
+                        return Colors.white;
                       }),
                       surfaceTintColor: MaterialStateProperty.resolveWith((states) {
                         return Colors.black;

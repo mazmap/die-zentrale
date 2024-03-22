@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:quizzly/ArchiveScreen.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
-import 'package:quizzly/HomeRoute.dart';
+import 'package:quizzly/CoverQuizHomeScreen.dart';
 import 'package:quizzly/QuizTile.dart';
 import 'package:quizzly/SimpleTextButton.dart';
 
@@ -24,19 +24,19 @@ class PlayScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("Guten Morgen, @matteo! Mal wieder in der Laune einen Highscore zu knacken?"),
+            Text("Hallo werte/werter Detektiv-Kollegin/Kollege! Mal wieder in der Laune einen Highscore zu knacken?"),
             const SizedBox(height: 15),
             Expanded(
               child: QuizTile(
                 quizTitle: "DAS Drei ??? Cover Quiz",
-                quizScreen: HomeRoute(),
+                quizScreen: CoverQuizHomeScreen(),
               ),
             ),
             const SizedBox(height: 10),
             Expanded(
               child: QuizTile(
                 quizTitle: "DAS Drei ??? Cover Quiz",
-                quizScreen: HomeRoute(),
+                quizScreen: CoverQuizHomeScreen(),
               ),
             ),
           ],

@@ -14,7 +14,7 @@ import 'AnswersList.dart';
 import 'CurrentQuizState.dart';
 import 'Episode.dart';
 import 'HintsNotifier.dart';
-import 'HomeRoute.dart';
+import 'CoverQuizHomeScreen.dart';
 import 'OngoingQuizSummaryRoute.dart';
 import 'QuestionDetails.dart';
 import 'SlideOffToRight.dart';

@@ -31,6 +31,10 @@ class QuestionDetails {
     return answerStack[correctAnswerId].title;
   }
 
+  Episode getCorrectAnswerEpisode(){
+    return answerStack[correctAnswerId];
+  }
+
   void addHintWithSize(int size){
     Random random = Random();
     double x = random.nextInt(350-size).toDouble();

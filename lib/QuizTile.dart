@@ -17,7 +17,7 @@ class QuizTile extends StatelessWidget {
         onTap: (){
           Navigator.push(
               context,
-              SlideFromRightRoute(page: quizScreen)
+              SlideFromRightRoute(page: quizScreen, routeSettings: RouteSettings(name: "CoverQuizHome"))
           );
         },
         splashFactory: InkSparkle.splashFactory,

@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzly/HomeRoute.dart';
+import 'package:quizzly/CoverQuizHomeScreen.dart';
 import 'package:quizzly/LoginScreen.dart';
 import 'package:quizzly/PlayScreen.dart';
 

@@ -23,7 +23,7 @@ class CurrentQuizState extends ChangeNotifier {
 
   CurrentQuizState.initializeWith(QuestionDetails initialQuestion){
     _leftTitles = Episodes.episodes.getRange(0, 201).toList();
-    _leftTitles.remove(initialQuestion.getCorrectAnswerTitle());
+    _leftTitles.remove(initialQuestion.getCorrectAnswerEpisode());
     _questionHistory.add(initialQuestion);
   }
 

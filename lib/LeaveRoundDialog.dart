@@ -20,7 +20,9 @@ class LeaveRoundDialog extends StatelessWidget {
         acceptText: "Ja",
         declineText: "Nein",
         onAccept: () {
-          return Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState,)), (route) => route.isFirst);
+          return Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryRoute(finishedQuizstate: currentQuizState,)), (route) {
+            return route.settings.name == "CoverQuizHome";
+          });
         },
         onDecline: () {}
     );

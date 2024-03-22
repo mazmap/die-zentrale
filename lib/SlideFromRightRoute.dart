@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class SlideFromRightRoute extends PageRouteBuilder {
   final Widget page;
+  final RouteSettings? routeSettings;
 
-  SlideFromRightRoute({required this.page})
+  SlideFromRightRoute({required this.page, this.routeSettings})
       : super(
     pageBuilder: (
         BuildContext context,
@@ -22,5 +23,6 @@ class SlideFromRightRoute extends PageRouteBuilder {
         ).animate(animation),
         child: child,
       ),
+    settings: routeSettings
   );
 }
