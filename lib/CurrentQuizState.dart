@@ -130,6 +130,17 @@ class CurrentQuizState extends ChangeNotifier {
   }
 
   int getTotalHintAmount(){
+    int totalHintsAmount = 0;
+
+    QuestionDetails element;
+    for(int i=0; i<_questionHistory.length; i++){
+      element = _questionHistory[i];
+      if(element.answerState == AnswerState.rightAnswer){
+        totalHintsAmount += element.getHintAmount();
+      }
+    }
+
+    return totalHintsAmount;
     return _questionHistory.fold(0, (prev, elem) => prev + elem.getHintAmount());
   }
 

@@ -118,15 +118,14 @@ class OngoingQuizSummaryScreen extends StatelessWidget {
                       );
                     } else {
                       // DIFFERENTIATE BETWEEN isRevealed + rightAnswer or wrongAnswer
-                      if(question.isRevealed){
-                        return EpisodeQuizSummaryTile(
-                            coverAssetPath: question.coverAssetPath,
-                            title: question.getCorrectAnswerTitle(),
-                            hints: question.getHintAmount(),
-                            points: question.possiblePoints
-                        );
-                      }
-                      return Text("?");
+                      return EpisodeQuizSummaryTile(
+                          coverAssetPath: question.coverAssetPath,
+                          title: question.getCorrectAnswerTitle(),
+                          hints: question.getHintAmount(),
+                          points: question.possiblePoints,
+                        isCurrent: true,
+                        isRevealed: question.isRevealed,
+                      );
                     }
                   }
               ),

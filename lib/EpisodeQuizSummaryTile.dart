@@ -1,20 +1,25 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:quizzly/HintsMask.dart';
 
 class EpisodeQuizSummaryTile extends StatelessWidget {
   final String coverAssetPath;
   final String title;
   final int hints;
   final int points;
+  final bool isCurrent;
+  final bool isRevealed;
 
-  const EpisodeQuizSummaryTile({super.key, required this.coverAssetPath, required this.title, required this.hints, required this.points});
+  const EpisodeQuizSummaryTile({super.key, required this.coverAssetPath, required this.title, required this.hints, required this.points, this.isCurrent = false, this.isRevealed = true});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all()
+          color: Colors.white,
+        border: Border.all(color: Colors.black),
       ),
       height: 50,
       child: Row(
@@ -31,15 +36,21 @@ class EpisodeQuizSummaryTile extends StatelessWidget {
                           right: BorderSide()
                       )
                   ),
-                  child: Image.asset(
+                  child: (isRevealed) ? Image.asset(
                     coverAssetPath,
                     height: 48,
                     width: 48,
+                  ) : Container(
+                    height: 48,
+                    width: 48,
+                    color: Colors.grey,
+                    alignment: Alignment.center,
+                    child: Text("?")
                   ),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
-                  child: Text(title, overflow: TextOverflow.fade, softWrap: false,)
+                  child: (isRevealed) ? Text(title, overflow: TextOverflow.fade, softWrap: false,) : Text("?")
                 ),
               ],
             ),
