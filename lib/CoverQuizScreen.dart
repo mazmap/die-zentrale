@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -119,7 +120,7 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                     color: Colors.black,
                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                     child: Text(
-                                        "Frage ${currentQuizState.getNumberOfQuestions()+1}/${EpisodesService.getEpisodesAmount()}",
+                                        "Frage ${currentQuizState.getNumberOfQuestions()}/${EpisodesService.getEpisodesAmount()}",
                                         style: const TextStyle(color: Colors.white)
                                     )
                                 ),
@@ -130,19 +131,25 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                       Container(
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           decoration: const BoxDecoration(
+                            color: Colors.white,
                               border: Border(
                                   left: BorderSide(
                                       color: Colors.black,
                                       width: 1
-                                  )
-                              )
+                                  ),
+                                top: BorderSide(
+                                    color: Colors.black,
+                                    width: 1
+                                ),
+                              ),
+
                           ),
                           child: Selector<CurrentQuizState, int>(
                           selector: (BuildContext context, CurrentQuizState currentQuizState) {
                               return currentQuizState.getTotalPoints();
                             },
                             builder: (BuildContext context, int totalPoints, Widget? child) {
-                              return Text("$totalPoints", style: TextStyle(color: Colors.white));
+                              return Text("$totalPoints");
                             },
                           )
                       )

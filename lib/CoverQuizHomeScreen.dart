@@ -72,7 +72,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
               children: [
                 // Image.asset("assets/images/covers.png", width: (MediaQuery.of(context).size.width/4)*3),
                 const Text(
-                  "Das Drei Fragezeichen Cover Quiz",
+                  "DAS Drei Fragezeichen Cover Quiz",
                   style: TextStyle(
                     color: Colors. white
                   )
@@ -88,7 +88,11 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
           ),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () async {},
+              onRefresh: () async {
+                setState(() {});
+              },
+              color: Colors.black,
+              displacement: 15,
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: ListView(
@@ -184,7 +188,9 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                             if(snapshot.hasData){
                               var docs = snapshot.data!.docs;
                               List<Widget> children = [];
+                              var currentDoc;
                               for(int i=0; i < docs.length; i++){
+                                currentDoc = docs.elementAt(i);
                                 children.add(Container(
                                   height: 35,
                                   decoration: BoxDecoration(
@@ -194,18 +200,38 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          padding: EdgeInsets.only(left: 10),
-                                          child: FutureBuilder(
-                                              future: docs.elementAt(i).data()["user"].get(),
-                                              builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot){
-                                                if(snapshot.hasData){
-                                                  return Text(snapshot.data!.data()?["username"]);
-                                                }
-                                                return Text("justusjonas");
-                                              }
-                                          ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 55,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    border: Border(
+                                                        right: BorderSide(color: Colors.black)
+                                                    )
+                                                ),
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children:[
+                                                    Text("${currentDoc.get("created_at").toDate().day}.${currentDoc.get("created_at").toDate().month}", style: TextStyle(height: 0.85)),
+                                                    Text("${currentDoc.get("created_at").toDate().hour}:${currentDoc.get("created_at").toDate().minute}", style: TextStyle(height: 0.95)),
+                                                  ]
+                                                )
+                                            ),
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              padding: EdgeInsets.only(left: 10),
+                                              child: FutureBuilder(
+                                                  future: docs.elementAt(i).data()["user"].get(),
+                                                  builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot){
+                                                    if(snapshot.hasData){
+                                                      return Text(snapshot.data!.data()?["username"]);
+                                                    }
+                                                    return Text("justusjonas");
+                                                  }
+                                              ),
+                                            ),
+                                          ]
                                         ),
                                         Row(
                                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -274,9 +300,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                     Navigator.push(
                       context,
                       SlideFromRightRoute(page: const CoverQuizScreen())
-                    ).then((value) => setState(() {
-
-                    }));
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith((states) {

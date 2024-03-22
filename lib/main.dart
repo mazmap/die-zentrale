@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
           selectionColor: Color.fromRGBO(255, 242, 0, 1)
         ),
         fontFamily: "Geist Mono Medium",
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: Colors.black
+        )
       ),
       home: LoginScreen(),
       debugShowCheckedModeBanner: false,
