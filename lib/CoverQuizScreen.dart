@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
+import 'package:quizzly/EpisodesService.dart';
 import 'package:quizzly/LeaveRoundDialog.dart';
 import 'package:quizzly/FinishedQuizSummaryScreen.dart';
 import 'package:quizzly/SlideFromTopDownRoute.dart';
@@ -118,7 +119,7 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                     color: Colors.black,
                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                     child: Text(
-                                        "Frage ${currentQuizState.getLatestQuestionDetails().questionNumber}/202",
+                                        "Frage ${currentQuizState.getNumberOfQuestions()+1}/${EpisodesService.getEpisodesAmount()}",
                                         style: const TextStyle(color: Colors.white)
                                     )
                                 ),

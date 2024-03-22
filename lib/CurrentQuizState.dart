@@ -22,7 +22,7 @@ class CurrentQuizState extends ChangeNotifier {
   }
 
   CurrentQuizState.initializeWith(QuestionDetails initialQuestion){
-    _leftTitles = Episodes.episodes.getRange(0, 201).toList();
+    _leftTitles = [...Episodes.episodes];
     _leftTitles.remove(initialQuestion.getCorrectAnswerEpisode());
     _questionHistory.add(initialQuestion);
   }
@@ -82,14 +82,12 @@ class CurrentQuizState extends ChangeNotifier {
   }
 
   static QuestionDetails createInitialQuestion(){
-    List<Episode> episodes = Episodes.episodes.getRange(0, 201).toList();
-
     List<Episode> possibleAnswers = [];
     Random random = Random();
     int randomIdx;
     for(int i=0; i<6; i++){
-      randomIdx = random.nextInt(episodes.length-1-i);
-      possibleAnswers.add(episodes[randomIdx]);
+      randomIdx = random.nextInt(EpisodesService.getEpisodesAmount()-1-i);
+      possibleAnswers.add(EpisodesService.getNthEpisode(randomIdx));
     }
 
     int correctAnswer = random.nextInt(6);

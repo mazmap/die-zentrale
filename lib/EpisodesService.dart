@@ -16,7 +16,7 @@ class EpisodesService {
       for(int i=0; i<value.size; i++){
         episodes.add(Episode.fromFirestore(value.docs.elementAt(i)));
       }
-      return episodes;
+      return episodes.getRange(0, 201).toList();
     });
   }
 
