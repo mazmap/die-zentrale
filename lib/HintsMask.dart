@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import "dart:ui" as ui;
@@ -30,7 +31,8 @@ class HintsMask extends CustomPainter {
 
     canvas.clipPath(path);
 
-    canvas.drawImage(image, const Offset(0, 0), paint);
+    paintImage(canvas: canvas, rect: Rect.fromLTWH(0, 0, size.width, size.height), image: image, filterQuality: FilterQuality.low);
+    //canvas.drawImage(image, const Offset(0,0), paint); <- upper method MUST be used, otherwise pixelation occurs
 
     if(!reveal) {
       Paint borderPaint = Paint();

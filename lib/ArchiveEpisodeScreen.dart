@@ -14,14 +14,14 @@ class ArchiveEpisodeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
+        preferredSize: const Size.fromHeight(40),
         child: Container(
             color: Colors.black,
             padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
             child: Stack(
               children: [
                 Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     alignment: Alignment.center,
                     child: Text(
                         "Archiv-Kartei",

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/CoverDisplay.dart';
 import 'package:quizzly/EpisodesService.dart';
@@ -173,27 +174,30 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                     },
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      const Expanded(
-                          child: TipButton()
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9.5),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black)
-                          ),
-                          child: Selector<CurrentQuizState, int>(
-                            selector: (BuildContext context, CurrentQuizState currentQuizState) {
-                              return currentQuizState.getCurrentlyPossiblePoints();
-                            },
-                            builder: (BuildContext context, int currentlyPossiblePoints, Widget? child) {
-                              return Text("$currentlyPossiblePoints");
-                            },
-                          )
-                      )
-                    ],
+                  IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        const Expanded(
+                            child: TipButton()
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black, strokeAlign: -1.0)
+                            ),
+                            alignment: Alignment.center,
+                            child: Selector<CurrentQuizState, int>(
+                              selector: (BuildContext context, CurrentQuizState currentQuizState) {
+                                return currentQuizState.getCurrentlyPossiblePoints();
+                              },
+                              builder: (BuildContext context, int currentlyPossiblePoints, Widget? child) {
+                                return Text("$currentlyPossiblePoints");
+                              },
+                            )
+                        )
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Selector<CurrentQuizState, List<String>>(
@@ -329,6 +333,7 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                       // WRONG ANSWER
                                       currentQuizState.completeCurrentQuestion(AnswerState.wrongAnswer);
                                     }
+                                    _listViewController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                     if(currentQuizState.getNumberOfQuestions() == 1){
                                       await FirebaseFirestore.instance.collection("cover_quiz_rounds").add({
                                         "user": FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid),
@@ -353,7 +358,6 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                       "total_points": currentQuizState.getTotalPoints(),
                                       "hints_amount": currentQuizState.getTotalHintAmount()
                                     });
-                                    _listViewController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                   } else {
                                     // NO ANSWER SELECTED
                                     ScaffoldMessenger.of(context).showSnackBar(

@@ -111,20 +111,13 @@ class OngoingQuizSummaryScreen extends StatelessWidget {
                     if(index < questionAmount-1){
                       print(question.getHintAmount());
                       return EpisodeQuizSummaryTile(
-                          coverAssetPath: question.coverAssetPath,
-                          title: question.getCorrectAnswerTitle(),
-                          hints: question.getHintAmount(),
-                          points: question.possiblePoints
+                          questionDetails: question,
                       );
                     } else {
                       // DIFFERENTIATE BETWEEN isRevealed + rightAnswer or wrongAnswer
                       return EpisodeQuizSummaryTile(
-                          coverAssetPath: question.coverAssetPath,
-                          title: question.getCorrectAnswerTitle(),
-                          hints: question.getHintAmount(),
-                          points: question.possiblePoints,
+                        questionDetails: question,
                         isCurrent: true,
-                        isRevealed: question.isRevealed,
                       );
                     }
                   }

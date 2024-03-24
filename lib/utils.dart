@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'Episodes.dart';
@@ -7,10 +8,10 @@ import 'EpisodesService.dart';
 
 Future<ui.Image> loadImage(String imageAssetPath, Size? size) async {
   final ByteData data = await rootBundle.load(imageAssetPath);
+
   final codec = await ui.instantiateImageCodec(
     data.buffer.asUint8List(),
-    targetHeight: (size == null) ? 0 : size.width.toInt()-30,
-    targetWidth: (size == null) ? 0 : size.width.toInt()-30,
+    allowUpscaling: false
   );
   var frame = await codec.getNextFrame();
   return frame.image;

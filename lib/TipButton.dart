@@ -96,7 +96,7 @@ class _TipButtonState extends State<TipButton> {
               animationDuration: const Duration(milliseconds: 1),
               alignment: Alignment.centerLeft,
               padding: MaterialStateProperty.resolveWith((states) {
-                return const EdgeInsets.symmetric(horizontal: 20, vertical: 10);
+                return const EdgeInsets.symmetric(horizontal: 20, vertical: 13);
               }),
             ),
             child: Text(buttonText)
