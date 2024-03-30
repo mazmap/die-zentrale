@@ -166,8 +166,7 @@ class CurrentQuizState extends ChangeNotifier {
     return _questionHistory.last.answerStack;
   }
 
-  void endEarly(){
-    _questionHistory.removeLast();
-    notifyListeners();
+  int getNumberOfAnsweredQuestions(){
+    return _questionHistory.fold(0, (previousValue, element) => previousValue + ((element.answerState != AnswerState.unanswered) ? 1 : 0));
   }
 }

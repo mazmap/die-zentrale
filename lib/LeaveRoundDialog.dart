@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:quizzly/AcceptDeclineDialog.dart';
 import 'package:quizzly/CurrentQuizState.dart';
+import 'package:quizzly/QuestionDetails.dart';
 
 import 'FinishedQuizSummaryScreen.dart';
 import 'SlideFromRightRoute.dart';
@@ -20,8 +21,7 @@ class LeaveRoundDialog extends StatelessWidget {
         acceptText: "Ja",
         declineText: "Nein",
         onAccept: () {
-          currentQuizState.endEarly();
-          return Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryScreen(finishedQuizstate: currentQuizState,)), (route) {
+          Navigator.pushAndRemoveUntil(context, SlideFromRightRoute(page: FinishedQuizSummaryScreen(finishedQuizstate: currentQuizState,)), (route) {
             return route.settings.name == "CoverQuizHome";
           });
         },

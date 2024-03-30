@@ -66,7 +66,7 @@ class FinishedQuizSummaryScreen extends StatelessWidget {
                           child: Column(
                             children:[
                               Text(
-                                  "${finishedQuizstate.getNumberOfQuestions() - ((finishedQuizstate.getLatestQuestionDetails().answerState == AnswerState.wrongAnswer) ? 1 : 0)}",
+                                  "${finishedQuizstate.getNumberOfAnsweredQuestions()}",
                                   style: TextStyle(
                                       fontSize: 36,
                                       fontWeight: FontWeight.bold
@@ -106,7 +106,7 @@ class FinishedQuizSummaryScreen extends StatelessWidget {
                 ]
               ),
               Expanded(
-                child: ListView.separated(
+                child: (finishedQuizstate.getNumberOfAnsweredQuestions() != 0) ? ListView.separated(
                     itemCount: finishedQuizstate.getNumberOfQuestions(),
                     separatorBuilder: (context, index){
                       return SizedBox(height: 10);
@@ -120,12 +120,15 @@ class FinishedQuizSummaryScreen extends StatelessWidget {
                         );
                       } else {
                         // DIFFERENTIATE BETWEEN isRevealed + rightAnswer or wrongAnswer
-                        print(question.answerState);
-                        return EpisodeQuizSummaryTile(
-                          questionDetails: question,
-                        );
+                        if(question.isRevealed){
+                          return EpisodeQuizSummaryTile(
+                            questionDetails: question,
+                          );
+                        }
                       }
                     }
+                ) : Text(
+                  "Du hast in dieser Runde noch kein Cover geraten. Deshalb wird sie auch nicht gespeichert und demnach auch nicht in den \"Aktuellsten Spielen\" aufgeführt. Du brauchst dich deshalb also nicht zu wundern :)"
                 ),
               ),
             ],
