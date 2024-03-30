@@ -72,27 +72,42 @@ class ArchiveEpisodeScreen extends StatelessWidget {
                     children: [
                       TableRow(
                         children: [
-                          Text("Titel"),
+                          Text(
+                              "Titel",
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.5)
+                            )
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 10),
+                            padding: const EdgeInsets.only(left: 20),
                             child: SelectableText(episode.title),
                           )
                         ]
                       ),
                       TableRow(
                           children: [
-                            Text("Nummer"),
+                            Text(
+                                "Nummer",
+                                style: TextStyle(
+                                    color: Color.fromRGBO(0, 0, 0, 0.5)
+                                )
+                            ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: EdgeInsets.only(left: 20),
                                 child: SelectableText(episode.number)
                             )
                           ]
                       ),
                       TableRow(
                           children: [
-                            Text("Erschienen"),
+                            Text(
+                              "Erschienen",
+                                style: TextStyle(
+                                    color: Color.fromRGBO(0, 0, 0, 0.5)
+                                )
+                            ),
                             Padding(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: EdgeInsets.only(left: 20),
                                 child: SelectableText(episode.releaseDate))
                           ]
                       )
