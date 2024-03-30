@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +26,25 @@ class PlayScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("Hallo werte/werter Detektiv-Kollegin/Kollege! Mal wieder in der Laune einen Highscore zu knacken?"),
+            FutureBuilder<String>(
+                future: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).get().then((value) => value.get("username")),
+                builder: (context, AsyncSnapshot<String> snapshot){
+                  if(snapshot.hasData){
+                    return RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                        text: "Hallo ",
+                        children: [
+                          TextSpan(text: "@${snapshot.data}", style: TextStyle(backgroundColor: Color.fromRGBO(255, 242, 0, 1))),
+                          TextSpan(text: "! Mal wieder in der Laune einen Highscore zu knacken?")
+                        ]
+                      ),
+                    );
+                  } else {
+                    return Text("Hallo @justusjonas! Mal wieder in Laune einen Highscore zu knacken?");
+                  }
+                }
+            ),
             const SizedBox(height: 15),
             Expanded(
               child: QuizTile(
