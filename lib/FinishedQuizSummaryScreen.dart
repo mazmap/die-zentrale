@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:quizzly/CurrentQuizState.dart';
+
+import 'EpisodeQuizSummaryTile.dart';
+import 'QuestionDetails.dart';
 
 class FinishedQuizSummaryScreen extends StatelessWidget {
   final CurrentQuizState finishedQuizstate;
@@ -30,29 +34,98 @@ class FinishedQuizSummaryScreen extends StatelessWidget {
             children: [
               Column(
                 children: [
+                  Container(
+                    color: Colors.black,
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Expanded(child: Text("Gesamtpunktzahl", style: TextStyle(color: Colors.white), softWrap: true,)),
+                        Text(
+                            "${finishedQuizstate.getTotalPoints()}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 64,
+                            height: .8,
+                            fontWeight: FontWeight.bold
+                          ),
+                        )
+                      ]
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Gesamtpunktzahl der Runde:"),
-                      Text("${finishedQuizstate.getTotalPoints()}")
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black)
+                          ),
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            children:[
+                              Text(
+                                  "${finishedQuizstate.getNumberOfQuestions() - ((finishedQuizstate.getLatestQuestionDetails().answerState == AnswerState.wrongAnswer) ? 1 : 0)}",
+                                  style: TextStyle(
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.bold
+                                  )
+                              ),
+                              const Text("Erratene Cover")
+                            ]
+                          )
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black)
+                            ),
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                                children:[
+                                  Text(
+                                    "${finishedQuizstate.getTotalHintAmount()}",
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.bold
+                                    )
+                                  ),
+                                  const Text("Verwendete Tips")
+                                ]
+                            )
+                        ),
+                      )
                     ]
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Insgesamt verwendete Tips:"),
-                      Text("${finishedQuizstate.getTotalHintAmount()}")
-                    ]
-                  )
+                  const SizedBox(height: 20),
+                  Text("Die Cover dieser Runde:"),
+                  const SizedBox(height: 10),
                 ]
               ),
               Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(top: 15),
-                  itemCount: finishedQuizstate.getNumberOfQuestions(),
-                  itemBuilder: (context, index) {
-                    return Text(finishedQuizstate.getNthQuestionDetails(index).getCorrectAnswerTitle());
-                  }
+                child: ListView.separated(
+                    itemCount: finishedQuizstate.getNumberOfQuestions(),
+                    separatorBuilder: (context, index){
+                      return SizedBox(height: 10);
+                    },
+                    itemBuilder: (context, index) {
+                      int questionAmount = finishedQuizstate.getNumberOfQuestions();
+                      QuestionDetails question = finishedQuizstate.getNthQuestionDetails(index);
+                      if(index < questionAmount-1){
+                        return EpisodeQuizSummaryTile(
+                          questionDetails: question,
+                        );
+                      } else {
+                        // DIFFERENTIATE BETWEEN isRevealed + rightAnswer or wrongAnswer
+                        print(question.answerState);
+                        return EpisodeQuizSummaryTile(
+                          questionDetails: question,
+                        );
+                      }
+                    }
                 ),
               ),
             ],
@@ -96,7 +169,7 @@ class FinishedQuizSummaryScreen extends StatelessWidget {
                         return Size(0, 50);
                       }),
                     ),
-                    child: Text("Zurück zu Home")
+                    child: Text("Zurück zur Quiz-Seite")
                 )
             )
         ),

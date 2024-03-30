@@ -165,4 +165,9 @@ class CurrentQuizState extends ChangeNotifier {
   List<Episode> getCurrentlyPossibleAnswers(){
     return _questionHistory.last.answerStack;
   }
+
+  void endEarly(){
+    _questionHistory.removeLast();
+    notifyListeners();
+  }
 }
