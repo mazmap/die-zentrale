@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzly/CoverQuizLeaderboardEntryTile.dart';
 import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/CoverQuizScreen.dart';
+import 'package:quizzly/LatestQuizEntryTile.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
 import 'LeaveRoundDialog.dart';
@@ -149,86 +150,33 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                     ]),
                     const SizedBox(height: 20),
                     HomeTile(title: "Aktuellste Spiele", children: [
-                      FutureBuilder(
-                          future: FirebaseFirestore.instance.collection("cover_quiz_rounds").orderBy("created_at", descending: true).limit(8).get(),
-                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){
+                      FutureBuilder<List<Map<String, dynamic>>>(
+                          future: FirebaseFirestore.instance.collection("cover_quiz_rounds").orderBy("created_at", descending: true).limit(8).get().then((querySnapshot) async {
+                            List<Map<String, dynamic>> latestGamesEntries = [];
+                            for(int i=0; i<querySnapshot.docs.length; i++){
+                              latestGamesEntries.add(
+                                  await querySnapshot.docs.elementAt(i).data()["user"].get().then((user) {
+                                    return {
+                                      ...querySnapshot.docs.elementAt(i).data(),
+                                      "username": user.data()?["username"]
+                                    };
+                                  })
+                              );
+                            }
+                            return latestGamesEntries;
+                          }),
+                          builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot){
                             if(snapshot.hasData){
-                              var docs = snapshot.data!.docs;
+                              var docs = snapshot.data!;
                               List<Widget> children = [];
                               var currentDoc;
                               for(int i=0; i < docs.length; i++){
                                 currentDoc = docs.elementAt(i);
-                                children.add(Container(
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                      border: Border.all()
-                                  ),
-                                  child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 55,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                    border: Border(
-                                                        right: BorderSide(color: Colors.black)
-                                                    )
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  children:[
-                                                    Text("${currentDoc.get("created_at").toDate().day}.${currentDoc.get("created_at").toDate().month}", style: TextStyle(height: 0.85)),
-                                                    Text("${currentDoc.get("created_at").toDate().hour}:${currentDoc.get("created_at").toDate().minute}", style: TextStyle(height: 0.95)),
-                                                  ]
-                                                )
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              padding: EdgeInsets.only(left: 10),
-                                              child: FutureBuilder(
-                                                  future: docs.elementAt(i).data()["user"].get(),
-                                                  builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot){
-                                                    if(snapshot.hasData){
-                                                      return Text(snapshot.data!.data()?["username"]);
-                                                    }
-                                                    return Text("justusjonas");
-                                                  }
-                                              ),
-                                            ),
-                                          ]
-                                        ),
-                                        Row(
-                                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                                            children:[
-                                              Container(
-                                                  width: 60,
-                                                  decoration: BoxDecoration(
-                                                      border: Border(
-                                                          left: BorderSide(color: Colors.black)
-                                                      )
-                                                  ),
-                                                  alignment: Alignment.centerRight,
-                                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                                  child: Text(docs.elementAt(i).data()["hints_amount"].toString())
-                                              ),
-                                              Container(
-                                                  width: 60,
-                                                  decoration: BoxDecoration(
-                                                      border: Border(
-                                                          left: BorderSide(color: Colors.black)
-                                                      )
-                                                  ),
-                                                  alignment: Alignment.centerRight,
-                                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                                  child: Text(docs.elementAt(i).data()["total_points"].toString())
-                                              )
-                                            ]
-                                        )
-                                      ]
-                                  ),
+                                children.add(LatestQuizEntryTile(
+                                  username: currentDoc["username"],
+                                  totalPoints: currentDoc["total_points"],
+                                  numberOfAnsweredQuestions: 29,
+                                  hints: currentDoc["hints_amount"],
                                 ));
                                 if(i != docs.length-1){
                                   children.add(const SizedBox(height: 10));
