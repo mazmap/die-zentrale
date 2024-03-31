@@ -54,6 +54,11 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
       ],
       child: PopScope(
         canPop: false,
+        onPopInvoked: (didPop) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Hier gibt's kein zurück. Mit dem Kreuz oben links lässt sich allerdings die Runde vorzeitig beenden :)"))
+          );
+        },
         child: Scaffold(
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(40), // Set this height
