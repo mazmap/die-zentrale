@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzly/CoverQuizLeaderboardEntryTile.dart';
 import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/CoverQuizScreen.dart';
+import 'package:quizzly/InfoPopup.dart';
 import 'package:quizzly/LatestQuizEntryTile.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 
@@ -21,8 +22,9 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Color.fromRGBO(250, 244, 237, 1.0),
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
+        preferredSize: const Size.fromHeight(40),
         child: Container(
           color: Colors.black,
           padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
@@ -33,34 +35,97 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   alignment: Alignment.center,
                   child: Text(
-                      "Quiz",
+                      "Cover Quiz",
                       style: const TextStyle(color: Colors.white)
                   )
               ),
-              Container(
-                height: 50,
-                child: FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    alignment: Alignment.center,
-                    backgroundColor: MaterialStateProperty.resolveWith((states) {
-                      return Colors.black;
-                    }),
-                    iconColor: MaterialStateProperty.resolveWith((states) {
-                      return Colors.white;
-                    }),
-                    padding: MaterialStateProperty.resolveWith((states) {
-                      return const EdgeInsets.symmetric(horizontal: 15);
-                    }),
-                    minimumSize: MaterialStateProperty.resolveWith((states) {
-                      return const Size(10,10);
-                    }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 50,
+                    child: FilledButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ButtonStyle(
+                        alignment: Alignment.center,
+                        backgroundColor: MaterialStateProperty.resolveWith((states) {
+                          return Colors.black;
+                        }),
+                        iconColor: MaterialStateProperty.resolveWith((states) {
+                          return Colors.white;
+                        }),
+                        padding: MaterialStateProperty.resolveWith((states) {
+                          return const EdgeInsets.symmetric(horizontal: 15);
+                        }),
+                        minimumSize: MaterialStateProperty.resolveWith((states) {
+                          return const Size(10,10);
+                        }),
+                      ),
+                      child: const Icon(Icons.arrow_back, size:18),
+                    ),
                   ),
-                  child: const Icon(Icons.arrow_back, size:18),
-                ),
-              ),
+                  Container(
+                    height: 50,
+                    child: FilledButton(
+                      onPressed: () {
+                        showGeneralDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            barrierLabel: "popup_barrier",
+                            pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                              return InfoPopup(
+                                  title: "Cover Quiz Beschreibung",
+                                  infoWidget: RichText(
+                                    text: const TextSpan(
+                                        style: TextStyle(
+                                          fontFamily: "Geist Mono Medium",
+                                          color: Colors.black
+                                        ),
+                                        text: "DAS Drei Fragezeichen Cover Quiz. In diesem Quiz kannst du alle Drei Fragezeichen Hörspiel Cover ",
+                                        children: [
+                                          TextSpan(
+                                              text: "bis Folge 200",
+                                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)
+                                          ),
+                                          TextSpan(
+                                              text: " anhand kleiner Ausschnitte erraten. Dafür stehen dir "
+                                          ),
+                                          TextSpan(
+                                              text: "pro Cover 8 Tips",
+                                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)
+                                          ),
+                                          TextSpan(
+                                              text: " zur Verfügung."
+                                          )
+                                        ]
+                                    ),
+                                  ),
+                              );
+                            }
+                        );
+                      },
+                      style: ButtonStyle(
+                        alignment: Alignment.center,
+                        backgroundColor: MaterialStateProperty.resolveWith((states) {
+                          return Colors.black;
+                        }),
+                        iconColor: MaterialStateProperty.resolveWith((states) {
+                          return Colors.white;
+                        }),
+                        padding: MaterialStateProperty.resolveWith((states) {
+                          return const EdgeInsets.symmetric(horizontal: 15);
+                        }),
+                        minimumSize: MaterialStateProperty.resolveWith((states) {
+                          return const Size(10,10);
+                        }),
+                      ),
+                      child: const Icon(Icons.info_outlined, size:18),
+                    ),
+                  ),
+                ],
+              )
             ],
           )
         ),
@@ -68,27 +133,6 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            color: Colors.black,
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Column(
-              children: [
-                // Image.asset("assets/images/covers.png", width: (MediaQuery.of(context).size.width/4)*3),
-                const Text(
-                  "DAS Drei Fragezeichen Cover Quiz",
-                  style: TextStyle(
-                    color: Colors. white
-                  )
-                ),
-                const Text(
-                  "Folge 1 bis 202",
-                  style: TextStyle(
-                      color: Colors. white
-                  )
-                )
-              ]
-            )
-          ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -97,7 +141,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
               color: Colors.black,
               displacement: 15,
               child: Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: ListView(
                   children: [
                     HomeTile(title: "Leaderboard", children: [
@@ -178,7 +222,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                                   numberOfAnsweredQuestions: 29,
                                   hints: currentDoc["hints_amount"],
                                 ));
-                                if(i != docs.length-1){
+                                if(i < docs.length-1){
                                   children.add(const SizedBox(height: 10));
                                 }
                               }

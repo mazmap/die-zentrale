@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class HomeTile extends StatelessWidget {
   final String title;
@@ -11,7 +12,18 @@ class HomeTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(title),
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Icon(Icons.arrow_downward_sharp, size: 18),
+              Text(title),
+              Icon(Icons.arrow_downward_sharp, size: 18),
+            ],
+          )
+        ),
+        const SizedBox(height: 5),
         ...children
       ]
     );
