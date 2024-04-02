@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:quizzly/ArchiveScreen.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
 import 'package:quizzly/CoverQuizHomeScreen.dart';
+import 'package:quizzly/CoverQuizTile.dart';
 import 'package:quizzly/QuizTile.dart';
 import 'package:quizzly/SimpleTextButton.dart';
 
@@ -47,18 +48,12 @@ class PlayScreen extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             Expanded(
-              child: QuizTile(
-                quizTitle: "DAS Drei ??? Cover Quiz",
-                quizScreen: CoverQuizHomeScreen(),
+              child: ListView(
+                children: [
+                  CoverQuizTile(),
+                ],
               ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: QuizTile(
-                quizTitle: "DAS Drei ??? Cover Quiz",
-                quizScreen: CoverQuizHomeScreen(),
-              ),
-            ),
+            )
           ],
         ),
       ),

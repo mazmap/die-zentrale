@@ -5,8 +5,9 @@ import 'SlideFromRightRoute.dart';
 class QuizTile extends StatelessWidget {
   final String quizTitle;
   final Widget quizScreen;
+  final Widget? quizCover;
 
-  const QuizTile({super.key, required this.quizTitle, required this.quizScreen});
+  const QuizTile({super.key, required this.quizTitle, required this.quizScreen, this.quizCover});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +27,19 @@ class QuizTile extends StatelessWidget {
             left: 15,
             right: 15,
             bottom: 15,
-            top: 75
+            top: 15
           ),
           alignment: Alignment.bottomLeft,
-          child: Text(quizTitle, style: TextStyle(color: Colors.white))
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              quizCover ?? const SizedBox(height: 100),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(quizTitle, style: const TextStyle(color: Colors.white), textAlign: TextAlign.start,),
+              ),
+            ],
+          )
         ),
       ),
     );
