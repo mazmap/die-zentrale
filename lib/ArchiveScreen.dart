@@ -15,6 +15,10 @@ class ArchiveScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
+          child: Container(color: Colors.white, height: MediaQuery.of(context).viewPadding.top,),
+        ),
       body: Padding(
         padding: EdgeInsets.only(top: 15),
         child: CupertinoScrollbar(

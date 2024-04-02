@@ -23,9 +23,9 @@ class CoverQuizTile extends StatelessWidget {
     int r = random.nextInt(episodes.length);
     episodes.removeAt(r);
 
-    leftCoverPath = EpisodesService.getNthEpisode(l).coverAssetPath;
-    middleCoverPath = EpisodesService.getNthEpisode(m).coverAssetPath;
-    rightCoverPath = EpisodesService.getNthEpisode(r).coverAssetPath;
+    leftCoverPath = episodes.elementAt(l).coverAssetPath;
+    middleCoverPath = episodes.elementAt(m).coverAssetPath;
+    rightCoverPath = episodes.elementAt(r).coverAssetPath;
   }
 
   @override
@@ -45,6 +45,7 @@ class CoverQuizTile extends StatelessWidget {
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
+                    color: Colors.white,
                     image: DecorationImage(
                         image: AssetImage(leftCoverPath)
                     ),
@@ -62,6 +63,7 @@ class CoverQuizTile extends StatelessWidget {
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
+                      color: Colors.white,
                       image: DecorationImage(
                           image: AssetImage(rightCoverPath)
                       ),
@@ -81,6 +83,7 @@ class CoverQuizTile extends StatelessWidget {
               height: 125,
               width: 125,
               decoration: BoxDecoration(
+                  color: Colors.white,
                 image: DecorationImage(
                   image: AssetImage(middleCoverPath)
                 ),

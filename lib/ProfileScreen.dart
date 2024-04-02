@@ -11,6 +11,36 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).viewPadding.top),
+        child: Container(color: Colors.white, height: MediaQuery.of(context).viewPadding.top,),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            Container(
+              color: Colors.black,
+              padding: EdgeInsets.all(10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      "@matteo",
+                    style: TextStyle(color: Colors.white)
+                  ),
+                  Container(
+                    color: Colors.white,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    child: Text("?"),
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
         height: 50,
