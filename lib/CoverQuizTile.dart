@@ -17,15 +17,14 @@ class CoverQuizTile extends StatelessWidget {
     Random random = Random();
     List<Episode> episodes = [...Episodes.episodes];
     int l = random.nextInt(episodes.length);
+    leftCoverPath = episodes.elementAt(l).coverAssetPath;
     episodes.removeAt(l);
     int m = random.nextInt(episodes.length);
+    middleCoverPath = episodes.elementAt(m).coverAssetPath;
     episodes.removeAt(m);
     int r = random.nextInt(episodes.length);
-    episodes.removeAt(r);
-
-    leftCoverPath = episodes.elementAt(l).coverAssetPath;
-    middleCoverPath = episodes.elementAt(m).coverAssetPath;
     rightCoverPath = episodes.elementAt(r).coverAssetPath;
+    episodes.removeAt(r);
   }
 
   @override

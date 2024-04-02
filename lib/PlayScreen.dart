@@ -12,8 +12,31 @@ import 'package:quizzly/SimpleTextButton.dart';
 
 import 'ProfileScreen.dart';
 
-class PlayScreen extends StatelessWidget {
+class PlayScreen extends StatefulWidget {
   const PlayScreen({super.key});
+
+  @override
+  State<PlayScreen> createState() => _PlayScreenState();
+}
+
+class _PlayScreenState extends State<PlayScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 150),
+    vsync: this,
+  )..animateTo(1);
+  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
+    begin: const Offset(0.0, 1.0),
+    end: Offset.zero,
+  ).animate(CurvedAnimation(
+    curve: Curves.easeOutQuart,
+      parent: _controller
+  ));
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,37 +47,40 @@ class PlayScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            FutureBuilder<String>(
-                future: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).get().then((value) => value.get("username")),
-                builder: (context, AsyncSnapshot<String> snapshot){
-                  if(snapshot.hasData){
-                    return RichText(
-                      text: TextSpan(
-                          style: DefaultTextStyle.of(context).style,
-                        text: "Hallo ",
-                        children: [
-                          TextSpan(text: "@${snapshot.data}", style: TextStyle(backgroundColor: Color.fromRGBO(255, 242, 0, 1))),
-                          TextSpan(text: "! Mal wieder in der Laune einen Highscore zu knacken?")
-                        ]
-                      ),
-                    );
-                  } else {
-                    return Text("Hallo @justusjonas! Mal wieder in Laune einen Highscore zu knacken?");
+        child: SlideTransition(
+          position: _offsetAnimation,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              FutureBuilder<String>(
+                  future: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).get().then((value) => value.get("username")),
+                  builder: (context, AsyncSnapshot<String> snapshot){
+                    if(snapshot.hasData){
+                      return RichText(
+                        text: TextSpan(
+                            style: DefaultTextStyle.of(context).style,
+                          text: "Hallo ",
+                          children: [
+                            TextSpan(text: "@${snapshot.data}", style: TextStyle(backgroundColor: Color.fromRGBO(255, 242, 0, 1))),
+                            TextSpan(text: "! Mal wieder in der Laune einen Highscore zu knacken?")
+                          ]
+                        ),
+                      );
+                    } else {
+                      return Text("Hallo @justusjonas! Mal wieder in Laune einen Highscore zu knacken?");
+                    }
                   }
-                }
-            ),
-            const SizedBox(height: 15),
-            Expanded(
-              child: ListView(
-                children: [
-                  CoverQuizTile(),
-                ],
               ),
-            )
-          ],
+              const SizedBox(height: 15),
+              Expanded(
+                child: ListView(
+                  children: [
+                    CoverQuizTile(),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
