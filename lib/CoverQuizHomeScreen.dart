@@ -7,6 +7,7 @@ import 'package:quizzly/CoverQuizScreen.dart';
 import 'package:quizzly/InfoPopup.dart';
 import 'package:quizzly/LatestQuizEntryTile.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'LeaveRoundDialog.dart';
 
@@ -161,8 +162,8 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                           return leaderBoardEntries;
                         }),
                         builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot){
+                          List<Widget> children = [];
                           if(snapshot.hasData){
-                            List<Widget> children = [];
                             children.add(CoverQuizLeaderboardEntryTile(
                                 isFirst: true,
                               hints: snapshot.data!.first["hints_amount"],
@@ -184,11 +185,35 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                                 children.add(const SizedBox(height: 10));
                               }
                             }
-                            return Column(
-                              children: children,
-                            );
+                          } else {
+                            children.add(CoverQuizLeaderboardEntryTile(
+                              isFirst: true,
+                              hints: 120,
+                              numberOfAnsweredQuestions: 120,
+                              totalPoints: 1000,
+                              username: "justusjonas",
+                            ));
+
+                            children.add(const SizedBox(height: 10));
+                            for(int i=1; i < 5; i++){
+                              children.add(CoverQuizLeaderboardEntryTile(
+                                hints: 120,
+                                numberOfAnsweredQuestions: 120,
+                                totalPoints: 1000,
+                                username: "justusjonas",
+                                place: i+1,
+                              ));
+                              if(i != 4){
+                                children.add(const SizedBox(height: 10));
+                              }
+                            }
                           }
-                          return Text("loading...");
+                          return Skeletonizer(
+                            enabled: !snapshot.hasData,
+                            child: Column(
+                              children: children,
+                            ),
+                          );
                         }
                       )
                     ]),
@@ -210,9 +235,9 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                             return latestGamesEntries;
                           }),
                           builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot){
+                            List<Widget> children = [];
                             if(snapshot.hasData){
                               var docs = snapshot.data!;
-                              List<Widget> children = [];
                               var currentDoc;
                               for(int i=0; i < docs.length; i++){
                                 currentDoc = docs.elementAt(i);
@@ -226,11 +251,25 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                                   children.add(const SizedBox(height: 10));
                                 }
                               }
-                              return Column(
-                                children: children,
-                              );
+                            } else {
+                              for(int i=0; i < 8; i++){
+                                children.add(LatestQuizEntryTile(
+                                  username: "justusjonas",
+                                  totalPoints: 1000,
+                                  numberOfAnsweredQuestions: 29,
+                                  hints: 120,
+                                ));
+                                if(i < 7){
+                                  children.add(const SizedBox(height: 10));
+                                }
+                              }
                             }
-                            return Text("loading...");
+                            return Skeletonizer(
+                              enabled: !snapshot.hasData,
+                              child: Column(
+                                children: children,
+                              ),
+                            );
                           }
                       )
                     ]),

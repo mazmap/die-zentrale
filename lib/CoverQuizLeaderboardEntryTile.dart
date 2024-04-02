@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CoverQuizLeaderboardEntryTile extends StatelessWidget {
   final bool isFirst;
@@ -31,14 +32,16 @@ class CoverQuizLeaderboardEntryTile extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: Stack(
         children: [
-          Text(
-            "$place.",
-              style: TextStyle(
-                  color: (isFirst) ? Color.fromRGBO(255, 255, 255, 0.2) : Color.fromRGBO(0, 0, 0, 0.2),
-                fontSize: 48,
-                height: .8,
-                fontWeight: FontWeight.bold
-              )
+          Skeleton.ignore(
+            child: Text(
+              "$place.",
+                style: TextStyle(
+                    color: (isFirst) ? Color.fromRGBO(255, 255, 255, 0.2) : Color.fromRGBO(0, 0, 0, 0.2),
+                  fontSize: 48,
+                  height: .8,
+                  fontWeight: FontWeight.bold
+                )
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
