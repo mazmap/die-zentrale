@@ -209,7 +209,7 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                     builder: (BuildContext context, List<String> value, Widget? child) {
                       return AnswerSelector(possibleAnswers: value);
                     },
-                    selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack.map((e) => e.title).toList(),
+                    selector: (_, currentQuizState) => currentQuizState.getLatestQuestionDetails().answerStack.map((e) => "${e.title} (${e.number})").toList(),
                   )
                 ],
               ),
