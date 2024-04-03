@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -340,15 +342,17 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                     }
                                     _listViewController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
                                     if(currentQuizState.getNumberOfQuestions() == 1){
-                                      await FirebaseFirestore.instance.collection("cover_quiz_rounds").add({
+                                      DocumentReference newQuizRound = FirebaseFirestore.instance.collection("cover_quiz_rounds").doc();
+                                      quiz_round_id = newQuizRound.id;
+                                      newQuizRound.set({
                                         "user": FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid),
                                         "total_points": currentQuizState.getTotalPoints(),
                                         "hints_amount": currentQuizState.getTotalHintAmount(),
                                         "created_at": DateTime.now()
-                                      }).then((value) => quiz_round_id = value.id);
+                                      });
                                     }
-                                    // TODO: ADD QUESTION
-                                    await FirebaseFirestore.instance.collection("answered_questions").add({
+
+                                    FirebaseFirestore.instance.collection("answered_questions").add({
                                       "cover_quiz_round_ref": FirebaseFirestore.instance.doc("cover_quiz_rounds/$quiz_round_id"),
                                       "correct_answer_ref": FirebaseFirestore.instance.doc("episodes/${currentQuizState.getLatestQuestionDetails().getCorrectAnswerEpisode().id}"),
                                       "achieved_points": currentQuizState.getCurrentlyPossiblePoints(),
@@ -359,7 +363,8 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                       })
                                     });
 
-                                    await FirebaseFirestore.instance.collection("cover_quiz_rounds").doc(quiz_round_id).update({
+                                    FirebaseFirestore.instance.collection("cover_quiz_rounds").doc(quiz_round_id).update({
+                                      "createdAt": FieldValue.serverTimestamp(),
                                       "total_points": currentQuizState.getTotalPoints(),
                                       "hints_amount": currentQuizState.getTotalHintAmount()
                                     });

@@ -160,6 +160,12 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                             );
                           }
                           return leaderBoardEntries;
+                        }).onError((error, stackTrace) {
+                          return [{
+                            "username": "matteo",
+                            "hints_amount": 120,
+                            "total_amount": 9999
+                          }];
                         }),
                         builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot){
                           List<Widget> children = [];
