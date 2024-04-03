@@ -38,4 +38,8 @@ class AnswersList extends ChangeNotifier {
   bool isActiveId(int id){
     return id == _activeId;
   }
+
+  int getActiveId(){
+    return _activeId;
+  }
 }

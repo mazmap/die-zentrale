@@ -27,7 +27,8 @@ class LatestQuizEntryTile extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  height: .8
+                  height: .8,
+                    color: Color.fromRGBO(0, 0, 0, .5)
                 )
               ),
               const SizedBox(width: 10,),
@@ -37,7 +38,6 @@ class LatestQuizEntryTile extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       height: .8,
-                    color: Color.fromRGBO(0, 0, 0, .5)
                   )
               ),
               const SizedBox(width: 10),

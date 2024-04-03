@@ -169,4 +169,7 @@ class CurrentQuizState extends ChangeNotifier {
   int getNumberOfAnsweredQuestions(){
     return _questionHistory.fold(0, (previousValue, element) => previousValue + ((element.answerState != AnswerState.unanswered) ? 1 : 0));
   }
+  int getNumberOfCorrectlyAnsweredQuestions(){
+    return _questionHistory.fold(0, (previousValue, element) => previousValue + ((element.answerState == AnswerState.rightAnswer) ? 1 : 0));
+  }
 }

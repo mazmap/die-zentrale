@@ -173,7 +173,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                             children.add(CoverQuizLeaderboardEntryTile(
                                 isFirst: true,
                               hints: snapshot.data!.first["hints_amount"],
-                              numberOfAnsweredQuestions: 120,
+                              numberOfAnsweredQuestions: snapshot.data!.first["correctly_answered_amount"],
                               totalPoints: snapshot.data!.first["total_points"],
                               username: snapshot.data!.first["username"],
                             ));
@@ -182,7 +182,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                             for(int i=1; i < snapshot.data!.length; i++){
                               children.add(CoverQuizLeaderboardEntryTile(
                                 hints: snapshot.data!.elementAt(i)["hints_amount"],
-                                numberOfAnsweredQuestions: 120,
+                                numberOfAnsweredQuestions: snapshot.data!.elementAt(i)["correctly_answered_amount"],
                                 totalPoints: snapshot.data!.elementAt(i)["total_points"],
                                 username: snapshot.data!.elementAt(i)["username"],
                                 place: i+1,
@@ -250,7 +250,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                                 children.add(LatestQuizEntryTile(
                                   username: currentDoc["username"],
                                   totalPoints: currentDoc["total_points"],
-                                  numberOfAnsweredQuestions: 29,
+                                  numberOfAnsweredQuestions: currentDoc["correctly_answered_amount"],
                                   hints: currentDoc["hints_amount"],
                                 ));
                                 if(i < docs.length-1){

@@ -58,6 +58,7 @@ class CoverQuizLeaderboardEntryTile extends StatelessWidget {
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                             "$hints",

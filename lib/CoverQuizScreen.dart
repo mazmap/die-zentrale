@@ -348,6 +348,7 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                         "user": FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid),
                                         "total_points": currentQuizState.getTotalPoints(),
                                         "hints_amount": currentQuizState.getTotalHintAmount(),
+                                        "correctly_answered_amount": currentQuizState.getNumberOfCorrectlyAnsweredQuestions(),
                                         "created_at": DateTime.now()
                                       });
                                     }
@@ -356,6 +357,8 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                       "cover_quiz_round_ref": FirebaseFirestore.instance.doc("cover_quiz_rounds/$quiz_round_id"),
                                       "correct_answer_ref": FirebaseFirestore.instance.doc("episodes/${currentQuizState.getLatestQuestionDetails().getCorrectAnswerEpisode().id}"),
                                       "achieved_points": currentQuizState.getCurrentlyPossiblePoints(),
+                                      "correctly_answered": answersList.isCorrectAnswerSelected(),
+                                      "currently_selected_answer": answersList.getActiveId(),
                                       "hints": currentQuizState.getHintsOfCurrentQuestion().map((e) => e.toFirestoreObj()),
                                       "history_index": currentQuizState.getNumberOfQuestions()-1,
                                       "possible_answers_refs": currentQuizState.getCurrentlyPossibleAnswers().map((e){
@@ -364,7 +367,8 @@ class _CoverQuizScreenState extends State<CoverQuizScreen> {
                                     });
 
                                     FirebaseFirestore.instance.collection("cover_quiz_rounds").doc(quiz_round_id).update({
-                                      "createdAt": FieldValue.serverTimestamp(),
+                                      "updated_at": FieldValue.serverTimestamp(),
+                                      "correctly_answered_amount": currentQuizState.getNumberOfCorrectlyAnsweredQuestions(),
                                       "total_points": currentQuizState.getTotalPoints(),
                                       "hints_amount": currentQuizState.getTotalHintAmount()
                                     });
