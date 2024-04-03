@@ -30,7 +30,24 @@ class MyApp extends StatelessWidget {
           selectionHandleColor: Colors.black,
           selectionColor: Color.fromRGBO(255, 242, 0, 1)
         ),
-        fontFamily: "Geist Mono Medium",
+        fontFamily: "Geist Mono",
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(
+            fontVariations: [
+              FontVariation.weight(100)
+            ]
+          ),
+          labelLarge: TextStyle(
+              fontVariations: [
+                FontVariation.weight(100)
+              ]
+          ),
+          titleMedium: TextStyle(
+              fontVariations: [
+                FontVariation.weight(100)
+              ]
+          ),
+        ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: Colors.black
         )

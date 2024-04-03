@@ -55,7 +55,7 @@ class ArchiveEpisodeTile extends StatelessWidget {
                                 episode.title,
                                 overflow: TextOverflow.fade,
                                 softWrap: false,
-                                style: TextStyle(fontWeight: FontWeight.bold)
+                                style: TextStyle(fontVariations: [FontVariation.weight(200)])
                               )
                           ),
                           SizedBox(width: 5),

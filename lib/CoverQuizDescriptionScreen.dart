@@ -59,27 +59,33 @@ class CoverQuizDescriptionScreen extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: ListView(
           children: [
-            RichText(
-              text: TextSpan(
+            Text.rich(
+              TextSpan(
                   style: TextStyle(
-                      fontFamily: "Geist Mono Medium",
                       color: Colors.white
                   ),
                   text: "DAS Drei Fragezeichen Cover Quiz. In diesem Quiz kannst du alle Drei Fragezeichen Hörspiel Cover ",
                   children: [
                     TextSpan(
                         text: "bis Folge ${EpisodesService.getEpisodesAmount()}",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)
+                        style: const TextStyle(fontVariations: [FontVariation.weight(500),])
                     ),
                     TextSpan(
                         text: " anhand kleiner Ausschnitte erraten. Dafür stehen dir "
                     ),
                     TextSpan(
                         text: "pro Cover 8 Tips",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)
+                        style: const TextStyle(fontVariations: [FontVariation.weight(500),])
                     ),
                     TextSpan(
-                        text: " zur Verfügung. Der erste Ausschnitt zählt dabei nicht als Tip. Pro Runde kannst du maximal 20 Punkte bekommen. Jeder Tip kostet Punkte, d.h. je weniger Tips du benutzt, desto mehr Punkte hast du."
+                        text: " zur Verfügung. Der erste Ausschnitt zählt dabei nicht als Tip. Pro Cover kannst du "
+                    ),
+                    TextSpan(
+                      text: "maximal 20 Punkte",
+                        style: const TextStyle(fontVariations: [FontVariation.weight(500),])
+                    ),
+                    TextSpan(
+                      text: " bekommen. Jeder Tip kostet Punkte, d.h. je weniger Tips du benutzt, desto mehr Punkte hast du."
                     )
                   ]
               ),
