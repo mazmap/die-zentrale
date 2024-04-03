@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzly/CoverQuizDescriptionScreen.dart';
 import 'package:quizzly/CoverQuizLeaderboardEntryTile.dart';
+import 'package:quizzly/EpisodesService.dart';
 import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/CoverQuizScreen.dart';
 import 'package:quizzly/InfoPopup.dart';
@@ -71,40 +73,9 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
                     height: 50,
                     child: FilledButton(
                       onPressed: () {
-                        showGeneralDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            barrierLabel: "popup_barrier",
-                            pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                              return InfoPopup(
-                                  title: "Cover Quiz Beschreibung",
-                                  infoWidget: RichText(
-                                    text: const TextSpan(
-                                        style: TextStyle(
-                                          fontFamily: "Geist Mono Medium",
-                                          color: Colors.black
-                                        ),
-                                        text: "DAS Drei Fragezeichen Cover Quiz. In diesem Quiz kannst du alle Drei Fragezeichen Hörspiel Cover ",
-                                        children: [
-                                          TextSpan(
-                                              text: "bis Folge 200",
-                                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)
-                                          ),
-                                          TextSpan(
-                                              text: " anhand kleiner Ausschnitte erraten. Dafür stehen dir "
-                                          ),
-                                          TextSpan(
-                                              text: "pro Cover 8 Tips",
-                                              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic)
-                                          ),
-                                          TextSpan(
-                                              text: " zur Verfügung."
-                                          )
-                                        ]
-                                    ),
-                                  ),
-                              );
-                            }
+                        Navigator.push(
+                            context,
+                            SlideFromRightRoute(page: const CoverQuizDescriptionScreen())
                         );
                       },
                       style: ButtonStyle(
