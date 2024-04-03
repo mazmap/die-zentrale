@@ -118,27 +118,30 @@ class ArchiveEpisodeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             ArchiveEpisodeScreenTile(
                 title: "Cover",
-                child: InkWell(
-                  onTap: () {
-                    showGeneralDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        barrierLabel: "image_zoom_popup",
-                        pageBuilder: (context, primaryAnimation, secondaryAnimation){
-                      return Dialog(
-                          shape: const ContinuousRectangleBorder(),
-                          insetPadding: const EdgeInsets.all(15),
-                        child: InteractiveViewer(
-                          maxScale: 10,
-                          child: Image.asset(episode.coverAssetPath)
-                        )
-                      );
-                    });
-                  },
-                  splashFactory: InkSparkle.splashFactory,
-                  child: Ink.image(
-                    height: MediaQuery.of(context).size.width-32,
-                      image: AssetImage(episode.coverAssetPath)
+                child: Material( // the material is necessary! otherwise the cover "overscrolls" on the top (ignoring the padding)
+                  child: InkWell(
+                    onTap: () {
+                      showGeneralDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          barrierLabel: "image_zoom_popup",
+                          pageBuilder: (context, primaryAnimation, secondaryAnimation){
+                        return Dialog(
+                            shape: const ContinuousRectangleBorder(),
+                            insetPadding: const EdgeInsets.all(15),
+                          child: InteractiveViewer(
+                            maxScale: 10,
+                            child: Image.asset(episode.coverAssetPath)
+                          )
+                        );
+                      });
+                    },
+                    splashFactory: InkSparkle.splashFactory,
+                    child: Ink.image(
+                      fit: BoxFit.fill,
+                      height: MediaQuery.of(context).size.width-32,
+                        image: AssetImage(episode.coverAssetPath)
+                    ),
                   ),
                 )
             ),

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:quizzly/ArchiveEpisodeTile.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
+import 'package:quizzly/ArchiveEpisodesSearchList.dart';
 import 'package:quizzly/EpisodesService.dart';
 import 'package:quizzly/PlayScreen.dart';
 import 'package:quizzly/ProfileScreen.dart';
 
+import 'Episode.dart';
 import 'Episodes.dart';
 
 class ArchiveScreen extends StatefulWidget {
@@ -46,24 +48,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> with SingleTickerProvider
         position: _offsetAnimation,
         child: Padding(
           padding: EdgeInsets.only(top: 15),
-          child: CupertinoScrollbar(
-            radius: Radius.zero,
-            radiusWhileDragging: Radius.zero,
-            child: Padding(
-              padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
-              child: ListView.separated(
-                itemCount: EpisodesService.getEpisodesAmount(),
-                  addAutomaticKeepAlives: true,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 10);
-                  },
-                  itemBuilder: (context, index) {
-                    return ArchiveEpisodeTile(episode: EpisodesService.getNthEpisode(index));
-                  }
-              )
-
-            ),
-          ),
+          child: ArchiveEpisodesSearchList(),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
