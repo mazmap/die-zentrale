@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:quizzly/Episodes.dart';
 
 import 'ArchiveEpisodeTile.dart';
@@ -45,9 +44,10 @@ class _ArchiveEpisodesSearchListState extends State<ArchiveEpisodesSearchList> {
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
+          isDense: true,
           contentPadding: EdgeInsets.symmetric(
-              vertical: 15,
-              horizontal: 20
+              vertical: 10,
+              horizontal: 15
           ),
           hintText: "Nach Episoden suchen...",
           fillColor: Colors.white,
@@ -61,7 +61,7 @@ class _ArchiveEpisodesSearchListState extends State<ArchiveEpisodesSearchList> {
         setState(() {
           _episodes = [...Episodes.episodes];
         });
-      }, icon: Icon(Icons.close_sharp, size: 18),));
+      }, icon: Icon(Icons.close_sharp, size: 16), visualDensity: VisualDensity.compact,));
     }
     return Column(
       children: [

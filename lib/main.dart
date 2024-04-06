@@ -1,8 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzly/CoverQuizHomeScreen.dart';
 import 'package:quizzly/LoginScreen.dart';
-import 'package:quizzly/PlayScreen.dart';
 
 import 'firebase_options.dart';
 
@@ -31,7 +29,7 @@ class MyApp extends StatelessWidget {
           selectionColor: Color.fromRGBO(255, 242, 0, 1)
         ),
         fontFamily: "Geist Mono",
-        textTheme: const TextTheme(
+        textTheme: TextTheme(
           bodyMedium: TextStyle(
             fontVariations: [
               FontVariation.weight(100)
@@ -47,10 +45,16 @@ class MyApp extends StatelessWidget {
                 FontVariation.weight(100)
               ]
           ),
+          bodyLarge: TextStyle(
+        fontVariations: [
+        FontVariation.weight(100)
+          ]
+      )
         ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: Colors.black
-        )
+        ),
+        scaffoldBackgroundColor: Colors.white
       ),
       home: LoginScreen(),
       debugShowCheckedModeBanner: false,

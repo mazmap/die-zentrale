@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:quizzly/ArchiveScreen.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
+import 'package:quizzly/NavigateToPageButton.dart';
 import 'package:quizzly/PlayScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -50,16 +49,37 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                        "@matteo",
-                      style: TextStyle(color: Colors.white)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Text(
+                          "@matteo",
+                        style: TextStyle(color: Colors.white)
+                      ),
                     ),
                     Container(
                       color: Colors.white,
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      child: Text("?"),
+                      child: Text("?", style: TextStyle(fontVariations: [FontVariation.weight(1000)])),
                     )
+                  ]
+                )
+              ),
+              const SizedBox(height: 10),
+              Text("Seit dem 31.03.2023 in der Zentrale dabei."),
+              const SizedBox(height: 10),
+              Expanded(
+                child: ListView(
+                  children: [
+                    NavigateToPageButton(text: "Detektivfarbe ändern"),
+                    const SizedBox(height: 10),
+                    NavigateToPageButton(text: "Detektivnamen ändern"),
+                    const SizedBox(height: 10),
+                    NavigateToPageButton(text: "Benutzernamen ändern"),
+                    const SizedBox(height: 10),
+                    NavigateToPageButton(text: "Passwort ändern"),
+                    const SizedBox(height: 40),
+                    NavigateToPageButton(text: "Gefährliche Operationen")
                   ]
                 )
               )

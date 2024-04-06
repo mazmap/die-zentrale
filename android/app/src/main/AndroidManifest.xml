@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.diedu.quizzly">
    <application
-        android:label="Quiz Zentrale"
+        android:label="Die Zentrale"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
