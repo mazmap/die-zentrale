@@ -80,6 +80,8 @@ flutter:
   assets:
     - assets/images/covers.png
     - assets/images/dreifragezeichen.png
+    - assets/images/episodes-grid.png
+    - assets/icon/ddf_logo.png
     - assets/illustrations/illustration-folge-001.png
     - assets/illustrations/illustration-folge-002.png
     - assets/illustrations/illustration-folge-003.png

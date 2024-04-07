@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzly/LoginScreen.dart';
+import 'package:quizzly/RootScreen.dart';
 
 import 'firebase_options.dart';
 
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white
       ),
-      home: LoginScreen(),
+      home: RootScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

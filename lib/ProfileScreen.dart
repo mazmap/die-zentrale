@@ -3,6 +3,7 @@ import 'package:quizzly/ArchiveScreen.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
 import 'package:quizzly/NavigateToPageButton.dart';
 import 'package:quizzly/PlayScreen.dart';
+import 'package:quizzly/SimpleTextButton.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -79,6 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     const SizedBox(height: 10),
                     NavigateToPageButton(text: "Passwort ändern"),
                     const SizedBox(height: 40),
+                    SimpleTextButton(text: "Ausloggen"),
+                    const SizedBox(height: 10),
                     NavigateToPageButton(text: "Gefährliche Operationen")
                   ]
                 )

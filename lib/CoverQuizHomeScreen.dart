@@ -1,17 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/CoverQuizDescriptionScreen.dart';
 import 'package:quizzly/CoverQuizLeaderboardEntryTile.dart';
-import 'package:quizzly/EpisodesService.dart';
-import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/CoverQuizScreen.dart';
-import 'package:quizzly/InfoPopup.dart';
+import 'package:quizzly/HomeTile.dart';
 import 'package:quizzly/LatestQuizEntryTile.dart';
 import 'package:quizzly/SlideFromRightRoute.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-import 'LeaveRoundDialog.dart';
 
 class CoverQuizHomeScreen extends StatefulWidget {
   const CoverQuizHomeScreen({super.key});
@@ -45,7 +40,7 @@ class _CoverQuizHomeScreenState extends State<CoverQuizHomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: FilledButton(
                       onPressed: () {

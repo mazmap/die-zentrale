@@ -1,15 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzly/EpisodesService.dart';
-import 'package:quizzly/PlayScreen.dart';
 
-class LoginScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
+  RegisterScreen({super.key});
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  LoginScreen({super.key});
+  final TextEditingController _passwordConfirmController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,43 +33,43 @@ class LoginScreen extends StatelessWidget {
                   height: 50,
                   color: Colors.black,
                   child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Text("Login", style: TextStyle(color: Colors.white)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            height: 50,
-                            child: FilledButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              style: ButtonStyle(
-                                alignment: Alignment.center,
-                                backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                  return Colors.black;
-                                }),
-                                iconColor: MaterialStateProperty.resolveWith((states) {
-                                  return Colors.white;
-                                }),
-                                padding: MaterialStateProperty.resolveWith((states) {
-                                  return const EdgeInsets.symmetric(horizontal: 15);
-                                }),
-                                minimumSize: MaterialStateProperty.resolveWith((states) {
-                                  return const Size(10,10);
-                                }),
+                      alignment: Alignment.center,
+                      children: [
+                        Text("Registrierung", style: TextStyle(color: Colors.white)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              height: 50,
+                              child: FilledButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: ButtonStyle(
+                                  alignment: Alignment.center,
+                                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                    return Colors.black;
+                                  }),
+                                  iconColor: MaterialStateProperty.resolveWith((states) {
+                                    return Colors.white;
+                                  }),
+                                  padding: MaterialStateProperty.resolveWith((states) {
+                                    return const EdgeInsets.symmetric(horizontal: 15);
+                                  }),
+                                  minimumSize: MaterialStateProperty.resolveWith((states) {
+                                    return const Size(10,10);
+                                  }),
+                                ),
+                                child: const Icon(Icons.arrow_back, size:18),
                               ),
-                              child: const Icon(Icons.arrow_back, size:18),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                            child: Image.asset("assets/icon/ddf_logo.png"),
-                          )
-                        ],
-                      ),
-                    ]
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                              child: Image.asset("assets/icon/ddf_logo.png"),
+                            )
+                          ],
+                        ),
+                      ]
                   )
               ),
               const SizedBox(height: 15),
@@ -86,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text("Hallo, Kollege/Kollegin! Deine Login-Daten bitte. "),
+                          Text("Prima, du möchtest also der Zentrale beitreten. Denk dir dafür ersteinmal einen tollen Benutzernamen und ein sicheres Passwort aus."),
                           const SizedBox(height: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,22 +147,42 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Passwort wiederholen"),
+                              TextField(
+                                style: TextStyle(
+                                    fontSize: 14
+                                ),
+                                controller: _passwordConfirmController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.zero,
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.zero,
+                                      borderSide: BorderSide(color: Colors.black)
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 15,
+                                      horizontal: 20
+                                  ),
+                                  hintText: "******",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                                obscureText: true,
+                              ),
+                            ],
+                          ),
                           const SizedBox(height: 30),
                           FilledButton(
                               onPressed: () {
-                                FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.value.text).get().then((value) {
-                                  if(value.docs.isNotEmpty){
-                                    FirebaseAuth.instance.signInWithEmailAndPassword(email: value.docs.elementAt(0).data()["email"] ?? "", password: _passwordController.value.text).then((value) {
-                                      User? user = value.user;
-                                      EpisodesService.loadEpisodes().then((value){
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => PlayScreen())
-                                        );
-                                      });
-                                    });
-                                  }
-                                });
+
                               },
                               style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -190,7 +207,7 @@ class LoginScreen extends StatelessWidget {
                                   }),
                                   overlayColor: MaterialStateProperty.all(Color.fromRGBO(0, 0, 0, 0.1))
                               ),
-                              child: Text("Login")
+                              child: Text("Registrieren")
                           ),
                         ],
                       ),
