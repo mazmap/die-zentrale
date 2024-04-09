@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzly/LoadingScreen.dart';
 
 import 'EpisodesService.dart';
-import 'PlayScreen.dart';
 
 class LoginTabView extends StatefulWidget {
   final TabController tabController;
@@ -193,17 +193,32 @@ class _LoginTabViewState extends State<LoginTabView> {
                                     if(value.docs.isNotEmpty){
                                       FirebaseAuth.instance.signInWithEmailAndPassword(email: value.docs.elementAt(0).data()["email"] ?? "", password: _passwordController.value.text).then((value) {
                                         User? user = value.user;
-                                        EpisodesService.loadEpisodes().then((value){
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => PlayScreen())
-                                          );
-                                        });
+
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => LoadingScreen(
+                                              waitFor: (displayMessage, displayErrorMessage) async {
+                                                try{
+                                                  displayMessage("Lade Episoden...");
+                                                  await EpisodesService.loadEpisodes();
+                                                } catch (e) {
+                                                  displayErrorMessage("Keine Internetverbindung!");
+                                                }
+                                              },
+                                            ))
+                                        );
                                       }).catchError((error){
-                                        setState(() {
-                                          _errorMessage = "Benutzername oder Passwort ist falsch.";
-                                          _processMessage = "";
-                                        });
+                                        if(error.code == "network-request-failed"){
+                                          setState(() {
+                                            _errorMessage = "Internetverbindung fehlgeschlagen. Für die Anmeldung ist ein Internetzugang erforderlich.";
+                                            _processMessage = "";
+                                          });
+                                        } else if (error.code == "invalid-credential"){
+                                          setState(() {
+                                            _errorMessage = "Benutzername oder Passwort ist falsch.";
+                                            _processMessage = "";
+                                          });
+                                        }
                                       });
                                     } else {
                                       setState(() {
@@ -211,7 +226,7 @@ class _LoginTabViewState extends State<LoginTabView> {
                                         _processMessage = "";
                                       });
                                     }
-                                  }).onError((error, stacktrace){
+                                  }).catchError((error){
                                     setState(() {
                                       _errorMessage = "Internet-Verbindung fehlgeschlagen.";
                                       _processMessage = "";

@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/extensions/string_validator.dart';
 
+import 'EpisodesService.dart';
+import 'LoadingScreen.dart';
+
 class RegisterTabView extends StatefulWidget {
   final TabController tabController;
 
@@ -301,10 +304,30 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                                               _errorMessage = "";
                                               _processMessage = "Erfolgreich registriert!";
                                             });
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => LoadingScreen(
+                                                  waitFor: (displayMessage, displayErrorMessage) async {
+                                                    try{
+                                                      displayMessage("Lade Episoden...");
+                                                      await EpisodesService.loadEpisodes();
+                                                    } on FirebaseException catch (e) {
+                                                      if(e.code == "network-request-failed"){
+                                                        displayErrorMessage("Keine Internetverbindung!");
+                                                      }
+                                                    }
+                                                  },
+                                                ))
+                                            );
                                           } on FirebaseAuthException catch(e) {
                                             if(e.code == "email-already-in-use"){
                                               setState(() {
                                                 _errorMessage = "Es existiert bereits ein Account zu dieser Email-Adresse.";
+                                                _processMessage = "";
+                                              });
+                                            } else if(e.code == "network-request-failed"){
+                                              setState(() {
+                                                _errorMessage = "Internetverbindung fehlgeschlagen. Für die Registrierung wird ein Internetzugang benötigt.";
                                                 _processMessage = "";
                                               });
                                             } else {
@@ -314,6 +337,13 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                                               });
                                             }
                                           }
+                                        }
+                                      }).catchError((error){
+                                        if(error.code == "network-request-failed"){
+                                          setState(() {
+                                            _errorMessage = "Internetverbindung fehlgeschlagen.";
+                                            _processMessage = "";
+                                          });
                                         }
                                       });
                                     }

@@ -7,7 +7,6 @@ import 'package:quizzly/NavigateToPageButton.dart';
 import 'package:quizzly/PlayScreen.dart';
 import 'package:quizzly/RootScreen.dart';
 import 'package:quizzly/SimpleTextButton.dart';
-import 'package:quizzly/SlideFromRightRoute.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -98,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                   acceptText: "Ja",
                                   declineText: "Nein",
                                   onAccept: () async {
-                                    await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushAndRemoveUntil(SlideFromRightRoute(page: RootScreen()),(route) => false));
+                                    await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>RootScreen()),(route) => false));
                                   },
                                   onDecline: (){}
                               );
