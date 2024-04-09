@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzly/AcceptDeclineDialog.dart';
 import 'package:quizzly/ArchiveScreen.dart';
 import 'package:quizzly/BottomNavigationButton.dart';
 import 'package:quizzly/NavigateToPageButton.dart';
 import 'package:quizzly/PlayScreen.dart';
+import 'package:quizzly/RootScreen.dart';
 import 'package:quizzly/SimpleTextButton.dart';
+import 'package:quizzly/SlideFromRightRoute.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -80,7 +84,28 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     const SizedBox(height: 10),
                     NavigateToPageButton(text: "Passwort ändern"),
                     const SizedBox(height: 40),
-                    SimpleTextButton(text: "Ausloggen"),
+                    SimpleTextButton(
+                        text: "Ausloggen",
+                      onPressed: (){
+                        showGeneralDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            barrierLabel: "popup_barrier",
+                            pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                              return AcceptDeclineDialog(
+                                  title: "Achtung",
+                                  infoText: "Du bist dabei, dich auszuloggen. Um diese App weiter zu nutzen, musst du dich danach also wieder anmelden. Möchtest du fortfahren?",
+                                  acceptText: "Ja",
+                                  declineText: "Nein",
+                                  onAccept: () async {
+                                    await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushAndRemoveUntil(SlideFromRightRoute(page: RootScreen()),(route) => false));
+                                  },
+                                  onDecline: (){}
+                              );
+                            }
+                        );
+                      },
+                    ),
                     const SizedBox(height: 10),
                     NavigateToPageButton(text: "Gefährliche Operationen")
                   ]

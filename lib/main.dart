@@ -46,10 +46,15 @@ class MyApp extends StatelessWidget {
               ]
           ),
           bodyLarge: TextStyle(
-        fontVariations: [
-        FontVariation.weight(100)
-          ]
-      )
+            fontVariations: [
+            FontVariation.weight(100)
+              ],
+          ),
+          bodySmall: TextStyle(
+              fontVariations: [
+                FontVariation.weight(100)
+              ]
+          ),
         ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: Colors.black
