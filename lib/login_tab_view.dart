@@ -93,30 +93,70 @@ class _LoginTabViewState extends State<LoginTabView> {
                   child: Container(
                     color: Colors.white,
                     padding: EdgeInsets.all(15.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text("Hallo, Kollege/Kollegin! Deine Login-Daten bitte. "),
-                          const SizedBox(height: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Benutzername"),
-                              TextFormField(
-                                validator: (text){
-                                  if (text == null || text.isEmpty) {
-                                    return "Der Benutzername kann nicht leer sein!";
-                                  }
-                                  return null;
-                                },
-                                style: TextStyle(
-                                    fontSize: 14
+                    child: AutofillGroup(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text("Hallo, Kollege/Kollegin! Deine Login-Daten bitte. "),
+                            const SizedBox(height: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Benutzername"),
+                                TextFormField(
+                                  validator: (text){
+                                    if (text == null || text.isEmpty) {
+                                      return "Der Benutzername kann nicht leer sein!";
+                                    }
+                                    return null;
+                                  },
+                                  style: TextStyle(
+                                      fontSize: 14
+                                  ),
+                                  autofillHints: const [AutofillHints.username],
+                                  controller: _usernameController,
+                                  canRequestFocus: true,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.zero,
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.zero,
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 15,
+                                          horizontal: 20
+                                      ),
+                                      hintText: "justusjonas",
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                  ),
                                 ),
-                                controller: _usernameController,
-                                canRequestFocus: true,
-                                decoration: const InputDecoration(
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Passwort"),
+                                TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 14
+                                  ),
+                                  validator: (text){
+                                    if (text == null || text.isEmpty) {
+                                      return "Das Passwort kann nicht leer sein!";
+                                    }
+                                    return null;
+                                  },
+                                  autofillHints: const [AutofillHints.password],
+                                  controller: _passwordController,
+                                  decoration: const InputDecoration(
                                     border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.zero,
@@ -130,152 +170,116 @@ class _LoginTabViewState extends State<LoginTabView> {
                                         vertical: 15,
                                         horizontal: 20
                                     ),
-                                    hintText: "justusjonas",
+                                    hintText: "******",
                                     fillColor: Colors.white,
                                     filled: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Passwort"),
-                              TextFormField(
-                                style: TextStyle(
-                                    fontSize: 14
-                                ),
-                                validator: (text){
-                                  if (text == null || text.isEmpty) {
-                                    return "Das Passwort kann nicht leer sein!";
-                                  }
-                                  return null;
-                                },
-                                controller: _passwordController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.zero,
-                                      borderSide: BorderSide(color: Colors.black)
                                   ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.zero,
-                                      borderSide: BorderSide(color: Colors.black)
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 15,
-                                      horizontal: 20
-                                  ),
-                                  hintText: "******",
-                                  fillColor: Colors.white,
-                                  filled: true,
+                                  obscureText: true,
                                 ),
-                                obscureText: true,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          Container(
-                              child: (_errorMessage.isNotEmpty) ? Text(_errorMessage, style: TextStyle(color: Colors.red[800]),) : null
-                          ),
-                          Container(
-                              child: (_processMessage.isNotEmpty) ? Text(_processMessage, style: TextStyle(color: Colors.black),) : null
-                          ),
-                          const SizedBox(height: 15),
-                          FilledButton(
-                              onPressed: () {
-                                FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
-                                if(_formKey.currentState!.validate()){
-                                  setState(() {
-                                    _errorMessage = "";
-                                    _processMessage = "Anmeldedaten werden überprüft...";
-                                  });
-                                  FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.value.text).limit(1).get().then((value) {
-                                    if(value.docs.isNotEmpty){
-                                      Map<String, dynamic> userData = value.docs.elementAt(0).data();
-                                      FirebaseAuth.instance.signInWithEmailAndPassword(email: value.docs.elementAt(0).data()["email"] ?? "", password: _passwordController.value.text).then((value) {
-                                        User? user = value.user;
-                                        print(userData["isRegistrationComplete"]);
-                                        UserService.initLUWithLoginData(
-                                            email: user!.email!,
-                                            username: _usernameController.text,
-                                            firebaseUID: user.uid,
-                                          isRegistrationComplete: userData["isRegistrationComplete"] ?? false
-                                        );
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            Container(
+                                child: (_errorMessage.isNotEmpty) ? Text(_errorMessage, style: TextStyle(color: Colors.red[800]),) : null
+                            ),
+                            Container(
+                                child: (_processMessage.isNotEmpty) ? Text(_processMessage, style: TextStyle(color: Colors.black),) : null
+                            ),
+                            const SizedBox(height: 15),
+                            FilledButton(
+                                onPressed: () {
+                                  FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
+                                  if(_formKey.currentState!.validate()){
+                                    setState(() {
+                                      _errorMessage = "";
+                                      _processMessage = "Anmeldedaten werden überprüft...";
+                                    });
+                                    FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.value.text).limit(1).get().then((value) {
+                                      if(value.docs.isNotEmpty){
+                                        Map<String, dynamic> userData = value.docs.elementAt(0).data();
+                                        FirebaseAuth.instance.signInWithEmailAndPassword(email: value.docs.elementAt(0).data()["email"] ?? "", password: _passwordController.value.text).then((value) {
+                                          User? user = value.user;
+                                          print(userData["isRegistrationComplete"]);
+                                          UserService.initLUWithLoginData(
+                                              email: user!.email!,
+                                              username: _usernameController.text,
+                                              firebaseUID: user.uid,
+                                            isRegistrationComplete: userData["isRegistrationComplete"] ?? false
+                                          );
 
-                                        if(userData["isRegistrationComplete"] ?? false){
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => LoadingScreen(
-                                                waitFor: (displayMessage, displayErrorMessage) async {
-                                                  try{
-                                                    displayMessage("Lade Episoden...");
-                                                    await EpisodesService.loadEpisodes();
-                                                  } catch (e) {
-                                                    displayErrorMessage("Keine Internetverbindung!");
-                                                  }
-                                                },
-                                              ))
-                                          );
-                                        } else {
-                                          Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
-                                          );
-                                        }
-                                      }).catchError((error){
-                                        if(error.code == "network-request-failed"){
-                                          setState(() {
-                                            _errorMessage = "Internetverbindung fehlgeschlagen. Für die Anmeldung ist ein Internetzugang erforderlich.";
-                                            _processMessage = "";
-                                          });
-                                        } else if (error.code == "invalid-credential"){
-                                          setState(() {
-                                            _errorMessage = "Benutzername oder Passwort ist falsch.";
-                                            _processMessage = "";
-                                          });
-                                        } else {
-                                          setState(() {
-                                            _errorMessage = "Ein Fehler ist aufgetreten.";
-                                            _processMessage = "";
-                                          });
-                                        }
-                                      });
-                                    } else {
+                                          if(userData["isRegistrationComplete"] ?? false){
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => LoadingScreen(
+                                                  waitFor: (displayMessage, displayErrorMessage) async {
+                                                    try{
+                                                      displayMessage("Lade Episoden...");
+                                                      await EpisodesService.loadEpisodes();
+                                                    } catch (e) {
+                                                      displayErrorMessage("Keine Internetverbindung!");
+                                                    }
+                                                  },
+                                                ))
+                                            );
+                                          } else {
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
+                                            );
+                                          }
+                                        }).catchError((error){
+                                          if(error.code == "network-request-failed"){
+                                            setState(() {
+                                              _errorMessage = "Internetverbindung fehlgeschlagen. Für die Anmeldung ist ein Internetzugang erforderlich.";
+                                              _processMessage = "";
+                                            });
+                                          } else if (error.code == "invalid-credential"){
+                                            setState(() {
+                                              _errorMessage = "Benutzername oder Passwort ist falsch.";
+                                              _processMessage = "";
+                                            });
+                                          } else {
+                                            setState(() {
+                                              _errorMessage = "Ein Fehler ist aufgetreten.";
+                                              _processMessage = "";
+                                            });
+                                          }
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _errorMessage = "Es existiert kein Nutzer mit diesem Benutzernamen.";
+                                          _processMessage = "";
+                                        });
+                                      }
+                                    }).catchError((error){
                                       setState(() {
-                                        _errorMessage = "Es existiert kein Nutzer mit diesem Benutzernamen.";
+                                        _errorMessage = "Internet-Verbindung fehlgeschlagen.";
                                         _processMessage = "";
                                       });
-                                    }
-                                  }).catchError((error){
+                                    });
+                                  } else {
                                     setState(() {
-                                      _errorMessage = "Internet-Verbindung fehlgeschlagen.";
+                                      _errorMessage = "";
                                       _processMessage = "";
                                     });
-                                  });
-                                } else {
-                                  setState(() {
-                                    _errorMessage = "";
-                                    _processMessage = "";
-                                  });
-                                }
-                              },
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.black),
-                                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                                  shape: MaterialStateProperty.resolveWith((states) {
-                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                                  }),
-                                  alignment: Alignment.center,
-                                  padding: MaterialStateProperty.resolveWith((states) {
-                                    return const EdgeInsets.symmetric(horizontal: 20, vertical: 15);
-                                  }),
-                                  overlayColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 0.2))
-                              ),
-                              child: Text("Login")
-                          ),
-                        ],
+                                  }
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.black),
+                                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                                    shape: MaterialStateProperty.resolveWith((states) {
+                                      return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                    }),
+                                    alignment: Alignment.center,
+                                    padding: MaterialStateProperty.resolveWith((states) {
+                                      return const EdgeInsets.symmetric(horizontal: 20, vertical: 15);
+                                    }),
+                                    overlayColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 0.2))
+                                ),
+                                child: Text("Login")
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

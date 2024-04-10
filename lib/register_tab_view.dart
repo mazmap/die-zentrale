@@ -95,29 +95,115 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                   child: Container(
                     color: Colors.white,
                     padding: EdgeInsets.all(15.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text("Prima, du möchtest also der Zentrale beitreten. Denk dir dafür ersteinmal einen tollen Benutzernamen und ein sicheres Passwort aus."),
-                          const SizedBox(height: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Email-Adresse"),
-                              TextFormField(
-                                style: TextStyle(
-                                    fontSize: 14
+                    child: AutofillGroup(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text("Prima, du möchtest also der Zentrale beitreten. Denk dir dafür ersteinmal einen tollen Benutzernamen und ein sicheres Passwort aus."),
+                            const SizedBox(height: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Email-Adresse"),
+                                TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 14
+                                  ),
+                                  validator: (text){
+                                    if(!(text?.isValidEmail ?? false)){
+                                      return "Gib eine richtige Email-Adresse an.";
+                                    }
+                                    return null;
+                                  },
+                                  autofillHints: [AutofillHints.email],
+                                  controller: _emailController,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.zero,
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.zero,
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 15,
+                                          horizontal: 20
+                                      ),
+                                      hintText: "justus.jonas@gmail.com",
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                    errorMaxLines: 10,
+                                  ),
                                 ),
-                                validator: (text){
-                                  if(!(text?.isValidEmail ?? false)){
-                                    return "Gib eine richtige Email-Adresse an.";
-                                  }
-                                  return null;
-                                },
-                                controller: _emailController,
-                                decoration: const InputDecoration(
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Benutzername"),
+                                TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 14
+                                  ),
+                                  validator: (text){
+                                    if(!(text?.isAtLeast3Long ?? false)){
+                                      return "Der Benutzername muss mindestens 3 Zeichen lang sein.";
+                                    } else if(!(text?.isMax20Long ?? false)){
+                                      return "Der Benutzername darf maximal 20 Zeichen lang sein.";
+                                    } else if(!(text?.isValidUsername ?? false)){
+                                      return "Der Benutzername darf nur Klein- und Großbuchstaben, sowie die Zeichen _ . und ? enthalten.";
+                                    }
+                                    return null;
+                                  },
+                                  autofillHints: const [AutofillHints.newUsername],
+                                  controller: _usernameController,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.zero,
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.zero,
+                                          borderSide: BorderSide(color: Colors.black)
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 15,
+                                          horizontal: 20
+                                      ),
+                                      hintText: "justusjonas",
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                    errorMaxLines: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Passwort"),
+                                TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 14
+                                  ),
+                                  validator: (text){
+                                    if(text != null && text.isEmpty){
+                                      return "Das Passwort darf nicht leer sein.";
+                                    } else if(!(text?.isAtLeastNLong(6) ?? false)){
+                                      return "Das Passwort muss mindestens 6 Zeichen lang sein.";
+                                    }
+                                    return null;
+                                  },
+                                  autofillHints: [AutofillHints.password, AutofillHints.newPassword],
+                                  controller: _passwordController,
+                                  decoration: const InputDecoration(
                                     border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.zero,
@@ -131,35 +217,32 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                                         vertical: 15,
                                         horizontal: 20
                                     ),
-                                    hintText: "justus.jonas@gmail.com",
+                                    hintText: "******",
                                     fillColor: Colors.white,
                                     filled: true,
-                                  errorMaxLines: 10,
+                                    errorMaxLines: 10,
+                                  ),
+                                  obscureText: true,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Benutzername"),
-                              TextFormField(
-                                style: TextStyle(
-                                    fontSize: 14
-                                ),
-                                validator: (text){
-                                  if(!(text?.isAtLeast3Long ?? false)){
-                                    return "Der Benutzername muss mindestens 3 Zeichen lang sein.";
-                                  } else if(!(text?.isMax20Long ?? false)){
-                                    return "Der Benutzername darf maximal 20 Zeichen lang sein.";
-                                  } else if(!(text?.isValidUsername ?? false)){
-                                    return "Der Benutzername darf nur Klein- und Großbuchstaben, sowie die Zeichen _ . und ? enthalten.";
-                                  }
-                                  return null;
-                                },
-                                controller: _usernameController,
-                                decoration: const InputDecoration(
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Passwort wiederholen"),
+                                TextFormField(
+                                  style: TextStyle(
+                                      fontSize: 14
+                                  ),
+                                  validator: (text) {
+                                    if(_passwordController.text != text){
+                                      return "Die Passwörter stimmen nicht überein.";
+                                    }
+                                    return null;
+                                  },
+                                  controller: _passwordConfirmController,
+                                  decoration: const InputDecoration(
                                     border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.zero,
@@ -173,205 +256,127 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                                         vertical: 15,
                                         horizontal: 20
                                     ),
-                                    hintText: "justusjonas",
+                                    hintText: "******",
                                     fillColor: Colors.white,
                                     filled: true,
-                                  errorMaxLines: 10,
+                                    errorMaxLines: 10,
+                                  ),
+                                  obscureText: true,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Passwort"),
-                              TextFormField(
-                                style: TextStyle(
-                                    fontSize: 14
-                                ),
-                                validator: (text){
-                                  if(text != null && text.isEmpty){
-                                    return "Das Passwort darf nicht leer sein.";
-                                  } else if(!(text?.isAtLeastNLong(6) ?? false)){
-                                    return "Das Passwort muss mindestens 6 Zeichen lang sein.";
-                                  }
-                                  return null;
-                                },
-                                controller: _passwordController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.zero,
-                                      borderSide: BorderSide(color: Colors.black)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.zero,
-                                      borderSide: BorderSide(color: Colors.black)
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 15,
-                                      horizontal: 20
-                                  ),
-                                  hintText: "******",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorMaxLines: 10,
-                                ),
-                                obscureText: true,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Passwort wiederholen"),
-                              TextFormField(
-                                style: TextStyle(
-                                    fontSize: 14
-                                ),
-                                validator: (text) {
-                                  if(_passwordController.text != text){
-                                    return "Die Passwörter stimmen nicht überein.";
-                                  }
-                                  return null;
-                                },
-                                controller: _passwordConfirmController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: Colors.black)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.zero,
-                                      borderSide: BorderSide(color: Colors.black)
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.zero,
-                                      borderSide: BorderSide(color: Colors.black)
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 15,
-                                      horizontal: 20
-                                  ),
-                                  hintText: "******",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  errorMaxLines: 10,
-                                ),
-                                obscureText: true,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          Container(
-                              child: (_errorMessage.isNotEmpty) ? Text(_errorMessage, style: TextStyle(color: Colors.red[800]),) : null
-                          ),
-                          Container(
-                              child: (_processMessage.isNotEmpty) ? Text(_processMessage, style: TextStyle(color: Colors.black),) : null
-                          ),
-                          const SizedBox(height: 15),
-                          FilledButton(
-                              onPressed: () async {
-                                FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
-                                if(_formKey.currentState!.validate()){
-                                  setState(() {
-                                    _errorMessage = "";
-                                    _processMessage = "Registriere neuen Nutzer...";
-                                  });
-                                  FirebaseFirestore.instance.collection("users").where("email", isEqualTo: _emailController.text).limit(1).get().then((data) async {
-                                    if(data.docs.length == 1){
-                                      setState(() {
-                                        _errorMessage = "Es existiert bereits ein Account zu dieser Email-Adresse.";
-                                        _processMessage = "";
-                                      });
-                                    } else {
-                                      await FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.text).limit(1).get().then((data) async {
-                                        if(data.docs.length == 1){
-                                          setState(() {
-                                            _errorMessage = "Es existiert bereits ein Account mit diesem Benutzernamen.";
-                                            _processMessage = "";
-                                          });
-                                        } else {
-                                          try{
-                                            UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                                email: _emailController.text,
-                                                password: _passwordController.text
-                                            );
-                                            await FirebaseFirestore.instance.collection("users").doc(userCredential.user?.uid).set({
-                                              "email": _emailController.text,
-                                              "username": _usernameController.text,
-                                              "isRegistrationComplete": false
-                                            });
-                                            UserService.initLUWithLoginData(
-                                                email: _emailController.text,
-                                                username: _usernameController.text,
-                                                firebaseUID: userCredential.user!.uid,
-                                              isRegistrationComplete: false
-                                            );
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            Container(
+                                child: (_errorMessage.isNotEmpty) ? Text(_errorMessage, style: TextStyle(color: Colors.red[800]),) : null
+                            ),
+                            Container(
+                                child: (_processMessage.isNotEmpty) ? Text(_processMessage, style: TextStyle(color: Colors.black),) : null
+                            ),
+                            const SizedBox(height: 15),
+                            FilledButton(
+                                onPressed: () async {
+                                  FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
+                                  if(_formKey.currentState!.validate()){
+                                    setState(() {
+                                      _errorMessage = "";
+                                      _processMessage = "Registriere neuen Nutzer...";
+                                    });
+                                    FirebaseFirestore.instance.collection("users").where("email", isEqualTo: _emailController.text).limit(1).get().then((data) async {
+                                      if(data.docs.length == 1){
+                                        setState(() {
+                                          _errorMessage = "Es existiert bereits ein Account zu dieser Email-Adresse.";
+                                          _processMessage = "";
+                                        });
+                                      } else {
+                                        await FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.text).limit(1).get().then((data) async {
+                                          if(data.docs.length == 1){
                                             setState(() {
-                                              _errorMessage = "";
-                                              _processMessage = "Erfolgreich registriert!";
+                                              _errorMessage = "Es existiert bereits ein Account mit diesem Benutzernamen.";
+                                              _processMessage = "";
                                             });
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
-                                            );
-                                          } on FirebaseAuthException catch(e) {
-                                            if(e.code == "email-already-in-use"){
-                                              setState(() {
-                                                _errorMessage = "Es existiert bereits ein Account zu dieser Email-Adresse.";
-                                                _processMessage = "";
+                                          } else {
+                                            try{
+                                              UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                                  email: _emailController.text,
+                                                  password: _passwordController.text
+                                              );
+                                              await FirebaseFirestore.instance.collection("users").doc(userCredential.user?.uid).set({
+                                                "email": _emailController.text,
+                                                "username": _usernameController.text,
+                                                "isRegistrationComplete": false
                                               });
-                                            } else if(e.code == "network-request-failed"){
+                                              UserService.initLUWithLoginData(
+                                                  email: _emailController.text,
+                                                  username: _usernameController.text,
+                                                  firebaseUID: userCredential.user!.uid,
+                                                isRegistrationComplete: false
+                                              );
                                               setState(() {
-                                                _errorMessage = "Internetverbindung fehlgeschlagen. Für die Registrierung wird ein Internetzugang benötigt.";
-                                                _processMessage = "";
+                                                _errorMessage = "";
+                                                _processMessage = "Erfolgreich registriert!";
                                               });
-                                            } else {
-                                              setState(() {
-                                                _errorMessage = "Ein Fehler ist aufgetreten";
-                                                _processMessage = "";
-                                              });
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
+                                              );
+                                            } on FirebaseAuthException catch(e) {
+                                              if(e.code == "email-already-in-use"){
+                                                setState(() {
+                                                  _errorMessage = "Es existiert bereits ein Account zu dieser Email-Adresse.";
+                                                  _processMessage = "";
+                                                });
+                                              } else if(e.code == "network-request-failed"){
+                                                setState(() {
+                                                  _errorMessage = "Internetverbindung fehlgeschlagen. Für die Registrierung wird ein Internetzugang benötigt.";
+                                                  _processMessage = "";
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _errorMessage = "Ein Fehler ist aufgetreten";
+                                                  _processMessage = "";
+                                                });
+                                              }
                                             }
                                           }
-                                        }
-                                      }).catchError((error){
-                                        if(error.code == "network-request-failed"){
-                                          setState(() {
-                                            _errorMessage = "Internetverbindung fehlgeschlagen.";
-                                            _processMessage = "";
-                                          });
-                                        }
-                                      });
-                                    }
-                                  });
-                                }
-                              },
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                                    if (states.contains(MaterialState.pressed)) {
-                                      return Colors.white;
-                                    }
-                                    return Colors.black;
-                                  }),
-                                  foregroundColor: MaterialStateProperty.resolveWith((states) {
-                                    if (states.contains(MaterialState.pressed)) {
+                                        }).catchError((error){
+                                          if(error.code == "network-request-failed"){
+                                            setState(() {
+                                              _errorMessage = "Internetverbindung fehlgeschlagen.";
+                                              _processMessage = "";
+                                            });
+                                          }
+                                        });
+                                      }
+                                    });
+                                  }
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                                      if (states.contains(MaterialState.pressed)) {
+                                        return Colors.white;
+                                      }
                                       return Colors.black;
-                                    }
-                                    return Colors.white;
-                                  }),
-                                  shape: MaterialStateProperty.resolveWith((states) {
-                                    return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
-                                  }),
-                                  animationDuration: const Duration(milliseconds: 1),
-                                  alignment: Alignment.center,
-                                  padding: MaterialStateProperty.resolveWith((states) {
-                                    return const EdgeInsets.symmetric(horizontal: 20, vertical: 15);
-                                  }),
-                                  overlayColor: MaterialStateProperty.all(Color.fromRGBO(0, 0, 0, 0.1))
-                              ),
-                              child: Text("Registrieren")
-                          ),
-                        ],
+                                    }),
+                                    foregroundColor: MaterialStateProperty.resolveWith((states) {
+                                      if (states.contains(MaterialState.pressed)) {
+                                        return Colors.black;
+                                      }
+                                      return Colors.white;
+                                    }),
+                                    shape: MaterialStateProperty.resolveWith((states) {
+                                      return const ContinuousRectangleBorder(side: BorderSide(color: Colors.black));
+                                    }),
+                                    animationDuration: const Duration(milliseconds: 1),
+                                    alignment: Alignment.center,
+                                    padding: MaterialStateProperty.resolveWith((states) {
+                                      return const EdgeInsets.symmetric(horizontal: 20, vertical: 15);
+                                    }),
+                                    overlayColor: MaterialStateProperty.all(Color.fromRGBO(0, 0, 0, 0.1))
+                                ),
+                                child: Text("Registrieren")
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
