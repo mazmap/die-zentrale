@@ -5,7 +5,7 @@ import 'package:quizzly/cover_quiz_leaderboard_entry_tile.dart';
 import 'package:quizzly/cover_quiz_screen.dart';
 import 'package:quizzly/home_tile.dart';
 import 'package:quizzly/latest_quiz_entry_tile.dart';
-import 'package:quizzly/slide_from_right_route.dart';
+import 'package:quizzly/route_transitions/slide_from_right_route.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CoverQuizHomeScreen extends StatefulWidget {

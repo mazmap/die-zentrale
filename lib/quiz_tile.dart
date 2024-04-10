@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'slide_from_right_route.dart';
+import 'route_transitions/slide_from_right_route.dart';
 
 class QuizTile extends StatelessWidget {
   final String quizTitle;

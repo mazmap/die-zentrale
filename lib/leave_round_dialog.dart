@@ -5,7 +5,7 @@ import 'package:quizzly/accept_decline_dialog.dart';
 import 'package:quizzly/current_quiz_state.dart';
 
 import 'finished_quiz_summary_screen.dart';
-import 'slide_from_right_route.dart';
+import 'route_transitions/slide_from_right_route.dart';
 
 class LeaveRoundDialog extends StatelessWidget {
   final CurrentQuizState currentQuizState;

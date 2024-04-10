@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzly/archive_episode_screen.dart';
-import 'package:quizzly/slide_from_right_route.dart';
+import 'package:quizzly/route_transitions/slide_from_right_route.dart';
 
 import 'episode.dart';
 

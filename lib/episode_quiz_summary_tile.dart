@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzly/ongoing_quiz_answered_question_screen.dart';
 import 'package:quizzly/question_details.dart';
 
-import 'slide_from_right_route.dart';
+import 'route_transitions/slide_from_right_route.dart';
 
 class EpisodeQuizSummaryTile extends StatelessWidget {
   final bool isCurrent;

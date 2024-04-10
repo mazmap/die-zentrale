@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'slide_from_right_route.dart';
+import 'route_transitions/slide_from_right_route.dart';
 
 class NavigateToPageButton extends StatelessWidget {
   final String text;

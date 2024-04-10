@@ -4,7 +4,7 @@ import 'package:quizzly/ongoing_quiz_aq_state.dart';
 
 import 'archive_episode_screen.dart';
 import 'episode.dart';
-import 'slide_from_right_route.dart';
+import 'route_transitions/slide_from_right_route.dart';
 
 class OngoingQuizReviewAnswerTile extends StatelessWidget {
   final List<Episode> possibleAnswers;

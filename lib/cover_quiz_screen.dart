@@ -6,8 +6,8 @@ import 'package:quizzly/cover_display.dart';
 import 'package:quizzly/episodes_service.dart';
 import 'package:quizzly/finished_quiz_summary_screen.dart';
 import 'package:quizzly/leave_round_dialog.dart';
-import 'package:quizzly/slide_from_right_route.dart';
-import 'package:quizzly/slide_from_top_down_route.dart';
+import 'package:quizzly/route_transitions/slide_from_right_route.dart';
+import 'package:quizzly/route_transitions/slide_from_top_down_route.dart';
 
 import 'answer_selector.dart';
 import 'answers_list.dart';
