@@ -15,7 +15,6 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
   }
@@ -97,7 +96,7 @@ class _RootScreenState extends State<RootScreen> with SingleTickerProviderStateM
                 ),
               ),
               LoginTabView(tabController: _tabController,),
-              RegisterTabView(tabController: _tabController)
+              RegisterTabView(tabController: _tabController),
             ],
           ),
         ),

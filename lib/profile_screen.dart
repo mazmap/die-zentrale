@@ -8,6 +8,8 @@ import 'package:quizzly/play_screen.dart';
 import 'package:quizzly/root_screen.dart';
 import 'package:quizzly/simple_text_button.dart';
 
+import 'auth/local_user.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -56,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(
-                          "@matteo",
+                          "@${LocalUser.username}",
                         style: TextStyle(color: Colors.white)
                       ),
                     ),

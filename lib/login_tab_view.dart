@@ -2,14 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzly/complete_registration_screen.dart';
 import 'package:quizzly/loading_screen.dart';
 
+import 'auth/user_service.dart';
 import 'episodes_service.dart';
 
 class LoginTabView extends StatefulWidget {
   final TabController tabController;
 
-  LoginTabView({super.key, required this.tabController});
+  const LoginTabView({super.key, required this.tabController});
 
   @override
   State<LoginTabView> createState() => _LoginTabViewState();
@@ -189,24 +191,39 @@ class _LoginTabViewState extends State<LoginTabView> {
                                     _errorMessage = "";
                                     _processMessage = "Anmeldedaten werden überprüft...";
                                   });
-                                  FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.value.text).get().then((value) {
+                                  FirebaseFirestore.instance.collection("users").where("username", isEqualTo: _usernameController.value.text).limit(1).get().then((value) {
                                     if(value.docs.isNotEmpty){
+                                      Map<String, dynamic> userData = value.docs.elementAt(0).data();
                                       FirebaseAuth.instance.signInWithEmailAndPassword(email: value.docs.elementAt(0).data()["email"] ?? "", password: _passwordController.value.text).then((value) {
                                         User? user = value.user;
-
-                                        Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => LoadingScreen(
-                                              waitFor: (displayMessage, displayErrorMessage) async {
-                                                try{
-                                                  displayMessage("Lade Episoden...");
-                                                  await EpisodesService.loadEpisodes();
-                                                } catch (e) {
-                                                  displayErrorMessage("Keine Internetverbindung!");
-                                                }
-                                              },
-                                            ))
+                                        print(userData["isRegistrationComplete"]);
+                                        UserService.initLUWithLoginData(
+                                            email: user!.email!,
+                                            username: _usernameController.text,
+                                            firebaseUID: user.uid,
+                                          isRegistrationComplete: userData["isRegistrationComplete"] ?? false
                                         );
+
+                                        if(userData["isRegistrationComplete"] ?? false){
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => LoadingScreen(
+                                                waitFor: (displayMessage, displayErrorMessage) async {
+                                                  try{
+                                                    displayMessage("Lade Episoden...");
+                                                    await EpisodesService.loadEpisodes();
+                                                  } catch (e) {
+                                                    displayErrorMessage("Keine Internetverbindung!");
+                                                  }
+                                                },
+                                              ))
+                                          );
+                                        } else {
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
+                                          );
+                                        }
                                       }).catchError((error){
                                         if(error.code == "network-request-failed"){
                                           setState(() {
@@ -216,6 +233,11 @@ class _LoginTabViewState extends State<LoginTabView> {
                                         } else if (error.code == "invalid-credential"){
                                           setState(() {
                                             _errorMessage = "Benutzername oder Passwort ist falsch.";
+                                            _processMessage = "";
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _errorMessage = "Ein Fehler ist aufgetreten.";
                                             _processMessage = "";
                                           });
                                         }

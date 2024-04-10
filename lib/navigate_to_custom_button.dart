@@ -25,7 +25,11 @@ class NavigateToCustomButton extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(text, overflow: TextOverflow.fade, style: TextStyle(color: (isPrimary)? Colors.white : Colors.black)),
+                  child: Text(
+                      text,
+                      overflow: TextOverflow.fade,
+                      style: TextStyle(color: (isPrimary)? Colors.white : Colors.black)
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Icon(Icons.arrow_forward, size: 18, color: (isPrimary) ? Colors.white : Colors.black,)

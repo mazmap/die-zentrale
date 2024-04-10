@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzly/auth/user_service.dart';
 import 'package:quizzly/extensions/string_validator.dart';
 
-import 'episodes_service.dart';
-import 'loading_screen.dart';
+import 'complete_registration_screen.dart';
 
 class RegisterTabView extends StatefulWidget {
   final TabController tabController;
@@ -298,26 +298,22 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                                             );
                                             await FirebaseFirestore.instance.collection("users").doc(userCredential.user?.uid).set({
                                               "email": _emailController.text,
-                                              "username": _usernameController.text
+                                              "username": _usernameController.text,
+                                              "isRegistrationComplete": false
                                             });
+                                            UserService.initLUWithLoginData(
+                                                email: _emailController.text,
+                                                username: _usernameController.text,
+                                                firebaseUID: userCredential.user!.uid,
+                                              isRegistrationComplete: false
+                                            );
                                             setState(() {
                                               _errorMessage = "";
                                               _processMessage = "Erfolgreich registriert!";
                                             });
                                             Navigator.pushReplacement(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => LoadingScreen(
-                                                  waitFor: (displayMessage, displayErrorMessage) async {
-                                                    try{
-                                                      displayMessage("Lade Episoden...");
-                                                      await EpisodesService.loadEpisodes();
-                                                    } on FirebaseException catch (e) {
-                                                      if(e.code == "network-request-failed"){
-                                                        displayErrorMessage("Keine Internetverbindung!");
-                                                      }
-                                                    }
-                                                  },
-                                                ))
+                                                MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
                                             );
                                           } on FirebaseAuthException catch(e) {
                                             if(e.code == "email-already-in-use"){
