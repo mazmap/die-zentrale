@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:quizzly/play_screen.dart';
 
-class LoadingScreen extends StatefulWidget {
-  final Future<void> Function(void Function(String msg) displayMessage, void Function(String msg) displayErrorMessage) waitFor;
+class LoadingScreen<T> extends StatefulWidget {
+  final Future<T> Function(void Function(String msg) displayMessage, void Function(String msg) displayErrorMessage) waitFor;
+  final Widget Function(T result) navigateTo;
 
-  const LoadingScreen({super.key, required this.waitFor});
+  const LoadingScreen({super.key, required this.waitFor, required this.navigateTo});
 
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
+  State<LoadingScreen> createState() => _LoadingScreenState<T>();
 }
 
-class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderStateMixin{
+class _LoadingScreenState<T> extends State<LoadingScreen<T>> with SingleTickerProviderStateMixin{
   late final AnimationController _pulsingLogoAnimationController;
   late final Animation _pulsingLogoAnimation;
 
@@ -28,12 +28,13 @@ class _LoadingScreenState extends State<LoadingScreen> with SingleTickerProvider
 
     Future.wait([
       widget.waitFor(displayMessage, displayErrorMessage),
-      Future.delayed(Duration(seconds: 2)) // so that the loading screen does not just pop off (like flickering)
-    ]).then((value){
+      Future.delayed(const Duration(seconds: 2)) // so that the loading screen does not just pop off (like flickering)
+    ]).then((futureResList){
+      T result = futureResList.elementAt(0); // always works, as waitFor returns T and is at Index 0
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => PlayScreen())
+            MaterialPageRoute(builder: (context) => widget.navigateTo(result))
         );
       });
     });

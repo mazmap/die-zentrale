@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzly/complete_registration_screen.dart';
 import 'package:quizzly/loading_screen.dart';
+import 'package:quizzly/play_screen.dart';
 
 import 'auth/user_service.dart';
 import 'episodes_service.dart';
@@ -219,6 +220,7 @@ class _LoginTabViewState extends State<LoginTabView> {
                                                       displayErrorMessage("Keine Internetverbindung!");
                                                     }
                                                   },
+                                                  navigateTo: (res)=>const PlayScreen(),
                                                 ))
                                             );
                                           } else {

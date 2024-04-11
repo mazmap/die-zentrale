@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizzly/auth/user_service.dart';
 import 'package:quizzly/cr_select_color.dart';
+import 'package:quizzly/play_screen.dart';
 
 import 'episodes_service.dart';
 import 'loading_screen.dart';
@@ -132,6 +133,7 @@ class _CompleteRegistration2State extends State<CompleteRegistration2> with Auto
                                         displayErrorMessage("Keine Internetverbindung!");
                                       }
                                     },
+                                    navigateTo: (result) => const PlayScreen(),
                                   ))
                               );
                             } else {
