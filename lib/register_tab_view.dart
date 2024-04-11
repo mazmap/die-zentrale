@@ -317,7 +317,7 @@ class _RegisterTabViewState extends State<RegisterTabView> {
                                               });
                                               Navigator.pushReplacement(
                                                   context,
-                                                  MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
+                                                  MaterialPageRoute(builder: (context) => const CompleteRegistrationScreen())
                                               );
                                             } on FirebaseAuthException catch(e) {
                                               if(e.code == "email-already-in-use"){

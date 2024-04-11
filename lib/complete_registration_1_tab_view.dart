@@ -17,11 +17,11 @@ class _CompleteRegistration1State extends State<CompleteRegistration1> with Auto
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop){
-        FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
-        widget.tabController.animateTo(0);
+        // TODO: decide on what to do?
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 0),
@@ -124,7 +124,7 @@ class _CompleteRegistration1State extends State<CompleteRegistration1> with Auto
                             FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
                             if(_formKey.currentState?.validate() ?? false){
                               UserService.setDetectiveName(_nameController.text);
-                              widget.tabController.animateTo(1);
+                              widget.tabController.animateTo(2);
                             }
                           },
                           splashFactory: InkSparkle.splashFactory,
@@ -150,7 +150,7 @@ class _CompleteRegistration1State extends State<CompleteRegistration1> with Auto
           ],
         ),
       ),
-    );;
+    );
   }
 
   @override

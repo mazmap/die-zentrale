@@ -214,7 +214,7 @@ class _LoginTabViewState extends State<LoginTabView> {
                                                 MaterialPageRoute(builder: (context) => LoadingScreen(
                                                   waitFor: (displayMessage, displayErrorMessage) async {
                                                     try{
-                                                      displayMessage("Lade Episoden...");
+                                                      displayMessage("Lade neue Episoden");
                                                       await EpisodesService.loadEpisodes();
                                                     } catch (e) {
                                                       displayErrorMessage("Keine Internetverbindung!");
@@ -226,7 +226,7 @@ class _LoginTabViewState extends State<LoginTabView> {
                                           } else {
                                             Navigator.pushReplacement(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => CompleteRegistrationScreen())
+                                                MaterialPageRoute(builder: (context) => const CompleteRegistrationScreen(startOnMessage: true,))
                                             );
                                           }
                                         }).catchError((error){

@@ -35,10 +35,6 @@ class RootWrapper extends StatelessWidget {
               );
             });
             return LocalUser.isRegistrationComplete;
-
-            // TODO: load after completed registration
-            displayMessage("Lade die neusten Episoden");
-            await EpisodesService.loadEpisodes();
           },
         navigateTo: (isRegistrationComplete){
             if(isRegistrationComplete){
@@ -54,7 +50,7 @@ class RootWrapper extends StatelessWidget {
                 navigateTo: (res)=>const PlayScreen(),
               );
             } else {
-              return const CompleteRegistrationScreen();
+              return const CompleteRegistrationScreen(startOnMessage: true,);
             }
         },
       );

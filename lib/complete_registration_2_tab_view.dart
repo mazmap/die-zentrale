@@ -27,8 +27,7 @@ class _CompleteRegistration2State extends State<CompleteRegistration2> with Auto
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop){
-        FocusScope.of(context).unfocus(disposition: UnfocusDisposition.scope);
-        widget.tabController.animateTo(0);
+        widget.tabController.animateTo(1);
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15, top: 0),
@@ -50,7 +49,7 @@ class _CompleteRegistration2State extends State<CompleteRegistration2> with Auto
                         children: [
                           FilledButton(
                             onPressed: () {
-                              widget.tabController.animateTo(0);
+                              widget.tabController.animateTo(1);
                             },
                             style: ButtonStyle(
                               alignment: Alignment.center,
@@ -127,7 +126,7 @@ class _CompleteRegistration2State extends State<CompleteRegistration2> with Auto
                                   MaterialPageRoute(builder: (context) => LoadingScreen(
                                     waitFor: (displayMessage, displayErrorMessage) async {
                                       try{
-                                        displayMessage("Lade Episoden...");
+                                        displayMessage("Lade neue Episoden");
                                         await EpisodesService.loadEpisodes();
                                       } catch (e) {
                                         displayErrorMessage("Keine Internetverbindung!");

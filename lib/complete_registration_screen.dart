@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:quizzly/complete_registration_msg_tab_view.dart';
 
 import 'complete_registration_1_tab_view.dart';
 import 'complete_registration_2_tab_view.dart';
 
 class CompleteRegistrationScreen extends StatefulWidget {
-  const CompleteRegistrationScreen({super.key});
+  final bool startOnMessage;
+
+  const CompleteRegistrationScreen({super.key, this.startOnMessage=false});
 
   @override
   State<CompleteRegistrationScreen> createState() => _CompleteRegistrationScreenState();
@@ -16,7 +19,7 @@ class _CompleteRegistrationScreenState extends State<CompleteRegistrationScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: (widget.startOnMessage) ? 0 : 1);
   }
 
   @override
@@ -34,6 +37,7 @@ class _CompleteRegistrationScreenState extends State<CompleteRegistrationScreen>
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
+              CompleteRegistrationMsgTabView(tabController: _tabController),
               CompleteRegistration1(tabController: _tabController),
               CompleteRegistration2(tabController: _tabController)
             ],
