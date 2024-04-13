@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzly/root_wrapper.dart';
+import 'package:quizzly/screens/boarding/root_wrapper.dart';
 
 import 'firebase_options.dart';
 
