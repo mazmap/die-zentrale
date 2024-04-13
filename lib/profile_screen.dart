@@ -52,23 +52,37 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               Container(
                 color: Colors.black,
                 padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text(
-                          "@${LocalUser.username}",
-                        style: TextStyle(color: Colors.white)
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if(LocalUser.isRegistrationComplete)
+                                Text(
+                                  LocalUser.detectiveName,
+                                  style: TextStyle(color: Colors.white)
+                                ),
+                              Text(
+                                  "@${LocalUser.username}",
+                                  style: TextStyle(color: Colors.white)
+                              )
+                            ]
+                          ),
+                        ),
                       ),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                      child: Text("?", style: TextStyle(fontVariations: [FontVariation.weight(1000)])),
-                    )
-                  ]
+                      Container(
+                        color: LocalUser.detectiveColor,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        child: Text("?")
+                      )
+                    ]
+                  ),
                 )
               ),
               const SizedBox(height: 10),

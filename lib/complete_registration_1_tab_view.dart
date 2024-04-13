@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quizzly/auth/user_service.dart';
 
+import 'auth/local_user.dart';
+
 class CompleteRegistration1 extends StatefulWidget {
   final TabController tabController;
 
@@ -54,7 +56,7 @@ class _CompleteRegistration1State extends State<CompleteRegistration1> with Auto
                     children: [
                       Text("Hallo, Kollege/Kollegin! Damit du ein vollwertiges Mitglied der Zentrale werden kannst, müssen wir noch ein paar Dinge von dir wissen. "),
                       const SizedBox(height: 10),
-                      Text("Wie würdest du denn gerne als Detektiv genannt werden?"),
+                      Text("Wie würdest du denn gerne als Detektiv unter dem Account zu ${LocalUser.email}, bzw. @${LocalUser.username} genannt werden?"),
                       const SizedBox(height: 10),
                       Form(
                         key: _formKey,

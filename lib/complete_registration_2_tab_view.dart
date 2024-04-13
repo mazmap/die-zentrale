@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzly/auth/user_data_field.dart';
 import 'package:quizzly/auth/user_service.dart';
 import 'package:quizzly/cr_select_color.dart';
 import 'package:quizzly/play_screen.dart';
@@ -126,10 +127,19 @@ class _CompleteRegistration2State extends State<CompleteRegistration2> with Auto
                                   MaterialPageRoute(builder: (context) => LoadingScreen(
                                     waitFor: (displayMessage, displayErrorMessage) async {
                                       try{
+                                        displayMessage("Daten werden gespeichert");
+                                        await UserService.syncOnly([UserDataField.detectiveName, UserDataField.detectiveColor, UserDataField.isRegistrationComplete], (error) {
+                                          displayErrorMessage("Ein Fehler ist aufgetreten!");
+                                        });
+                                      } catch (e) {
+                                        print(e);
+                                        displayErrorMessage("Ein Fehler ist aufgetreten!");
+                                      }
+                                      try{
                                         displayMessage("Lade neue Episoden");
                                         await EpisodesService.loadEpisodes();
                                       } catch (e) {
-                                        displayErrorMessage("Keine Internetverbindung!");
+                                        displayErrorMessage("Internetverbindung fehlgeschlagen!");
                                       }
                                     },
                                     navigateTo: (result) => const PlayScreen(),
