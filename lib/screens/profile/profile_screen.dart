@@ -7,6 +7,7 @@ import 'package:quizzly/screens/archive/archive_screen.dart';
 import 'package:quizzly/screens/boarding/root_screen.dart';
 import 'package:quizzly/screens/bottom_navigation_button.dart';
 import 'package:quizzly/screens/play/play_screen.dart';
+import 'package:quizzly/screens/profile/change_detective_color_screen.dart';
 
 import '../../auth/local_user.dart';
 
@@ -89,41 +90,47 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               Text("Seit dem 31.03.2023 in der Zentrale dabei."),
               const SizedBox(height: 10),
               Expanded(
-                child: ListView(
-                  children: [
-                    NavigateToPageButton(text: "Detektivfarbe ändern"),
-                    const SizedBox(height: 10),
-                    NavigateToPageButton(text: "Detektivnamen ändern"),
-                    const SizedBox(height: 10),
-                    NavigateToPageButton(text: "Benutzernamen ändern"),
-                    const SizedBox(height: 10),
-                    NavigateToPageButton(text: "Passwort ändern"),
-                    const SizedBox(height: 40),
-                    SimpleTextButton(
-                        text: "Ausloggen",
-                      onPressed: (){
-                        showGeneralDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            barrierLabel: "popup_barrier",
-                            pageBuilder: (contextInternal, animation, secondaryAnimation) {
-                              return AcceptDeclineDialog(
-                                  title: "Achtung",
-                                  infoText: "Du bist dabei, dich auszuloggen. Um diese App weiter zu nutzen, musst du dich danach also wieder anmelden. Möchtest du fortfahren?",
-                                  acceptText: "Ja",
-                                  declineText: "Nein",
-                                  onAccept: () async {
-                                    await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>RootScreen()),(route) => false));
-                                  },
-                                  onDecline: (){}
-                              );
-                            }
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    NavigateToPageButton(text: "Gefährliche Operationen")
-                  ]
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        NavigateToPageButton(
+                          text: "Detektivfarbe ändern",
+                          navigateTo: ChangeDetectiveColorScreen() ,
+                        ),
+                        const SizedBox(height: 10),
+                        NavigateToPageButton(text: "Detektivnamen ändern"),
+                        const SizedBox(height: 10),
+                        NavigateToPageButton(text: "Benutzernamen ändern"),
+                        const SizedBox(height: 10),
+                        NavigateToPageButton(text: "Passwort ändern"),
+                        const SizedBox(height: 40),
+                        SimpleTextButton(
+                          text: "Ausloggen",
+                          onPressed: (){
+                            showGeneralDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                barrierLabel: "popup_barrier",
+                                pageBuilder: (contextInternal, animation, secondaryAnimation) {
+                                  return AcceptDeclineDialog(
+                                      title: "Achtung",
+                                      infoText: "Du bist dabei, dich auszuloggen. Um diese App weiter zu nutzen, musst du dich danach also wieder anmelden. Möchtest du fortfahren?",
+                                      acceptText: "Ja",
+                                      declineText: "Nein",
+                                      onAccept: () async {
+                                        await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>RootScreen()),(route) => false));
+                                      },
+                                      onDecline: (){}
+                                  );
+                                }
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        NavigateToPageButton(text: "Gefährliche Operationen")
+                      ]
+                  )
                 )
               )
             ]

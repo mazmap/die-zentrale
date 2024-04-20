@@ -14,15 +14,15 @@ class CRSelectColorState extends State<CRSelectColor> {
     return _selected != -1;
   }
 
-  String getSelectedColor(){
+  int getSelectedColor(){
     if(_selected == 0){
-      return "FFFFFF";
+      return 0xFFFFFFFF;
     } else if(_selected == 1){
-      return "E30613";
+      return 0xFFE30613;
     } else if(_selected == 2){
-      return "009FE4";
+      return 0xFF009FE4;
     }
-    return "";
+    return 0;
   }
 
   @override

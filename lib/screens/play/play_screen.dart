@@ -57,10 +57,12 @@ class _PlayScreenState extends State<PlayScreen> with SingleTickerProviderStateM
               ),
               const SizedBox(height: 15),
               Expanded(
-                child: ListView(
-                  children: [
-                    CoverQuizTile(),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CoverQuizTile(),
+                    ],
+                  ),
                 ),
               )
             ],

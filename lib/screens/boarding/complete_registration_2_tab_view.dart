@@ -120,7 +120,7 @@ class _CompleteRegistration2State extends State<CompleteRegistration2> with Auto
                               setState(() {
                                 _errorMessage = "";
                               });
-                              UserService.setDetectiveColorFromColorCode(_colorSelectorKey.currentState?.getSelectedColor() ?? "FFFFFF");
+                              UserService.setDetectiveColorFromColorCode(_colorSelectorKey.currentState?.getSelectedColor() ?? 0xFFFFFFFF);
                               UserService.setRegistrationComplete();
                               Navigator.pushReplacement(
                                   context,

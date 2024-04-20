@@ -22,8 +22,8 @@ class UserService {
     LocalUser.detectiveName = detectiveName;
   }
 
-  static Future<void> setDetectiveColorFromColorCode(String colorCode, [bool sync = false]) async {
-    LocalUser.detectiveColor = Color(int.parse(colorCode, radix: 16)).withAlpha(255);
+  static Future<void> setDetectiveColorFromColorCode(int colorCode, [bool sync = false]) async {
+    LocalUser.detectiveColor = Color(colorCode).withAlpha(255);
   }
 
   static Future<void> syncAll() async {

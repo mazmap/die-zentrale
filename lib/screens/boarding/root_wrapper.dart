@@ -33,6 +33,10 @@ class RootWrapper extends StatelessWidget {
                   firebaseUID: firebaseUser!.uid,
                   isRegistrationComplete: userData["isRegistrationComplete"]
               );
+              if(userData["isRegistrationComplete"]){
+                UserService.setDetectiveName(userData["detectiveName"]);
+                UserService.setDetectiveColorFromColorCode(userData["detectiveColor"]);
+              }
             });
             return LocalUser.isRegistrationComplete;
           },

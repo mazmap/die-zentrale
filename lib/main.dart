@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: Colors.black
         ),
-        scaffoldBackgroundColor: Colors.white
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: RootWrapper(),
       debugShowCheckedModeBanner: false,
