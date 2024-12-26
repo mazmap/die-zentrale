@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzly/episodes_service.dart';
+import 'package:quizzly/data/episodes_service.dart';
 import 'package:quizzly/route_transitions/slide_from_right_route.dart';
 import 'package:quizzly/route_transitions/slide_from_top_down_route.dart';
 import 'package:quizzly/screens/play/cover_quiz/cover_display.dart';

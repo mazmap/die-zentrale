@@ -4,7 +4,7 @@ import 'package:quizzly/auth/user_service.dart';
 import 'package:quizzly/screens/boarding/cr_select_color.dart';
 import 'package:quizzly/screens/play/play_screen.dart';
 
-import '../../episodes_service.dart';
+import '../../data/episodes_service.dart';
 import '../loading/loading_screen.dart';
 
 class CompleteRegistration2 extends StatefulWidget {

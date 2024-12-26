@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzly/episodes.dart';
+import 'package:quizzly/data/episodes.dart';
 
-import '../../episode.dart';
-import '../../episodes_service.dart';
+import '../../data/episode.dart';
+import '../../data/episodes_service.dart';
 import 'archive_episode_tile.dart';
 
 class ArchiveEpisodesSearchList extends StatefulWidget {
@@ -46,8 +46,8 @@ class _ArchiveEpisodesSearchListState extends State<ArchiveEpisodesSearchList> {
           focusedBorder: InputBorder.none,
           isDense: true,
           contentPadding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15
+              vertical: 15,
+              horizontal: 20
           ),
           hintText: "Nach Episoden suchen...",
           fillColor: Colors.white,

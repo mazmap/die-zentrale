@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzly/screens/play/cover_quiz/ongoing_quiz_aq_state.dart';
 
-import '../../../episode.dart';
+import '../../../data/episode.dart';
 import '../../../route_transitions/slide_from_right_route.dart';
 import '../../archive/archive_episode_screen.dart';
 

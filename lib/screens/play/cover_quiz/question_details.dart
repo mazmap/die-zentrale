@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../../../episode.dart';
+import '../../../data/episode.dart';
 import 'coord_box.dart';
 
 enum AnswerState { wrongAnswer, rightAnswer, unanswered }

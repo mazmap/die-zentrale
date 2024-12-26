@@ -8,7 +8,7 @@ import 'package:quizzly/screens/loading/loading_screen.dart';
 import 'package:quizzly/screens/play/play_screen.dart';
 
 import '../../auth/local_user.dart';
-import '../../episodes_service.dart';
+import '../../data/episodes_service.dart';
 
 class RootWrapper extends StatelessWidget {
   final User? firebaseUser = FirebaseAuth.instance.currentUser;

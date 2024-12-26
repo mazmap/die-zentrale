@@ -7,7 +7,7 @@ import 'package:quizzly/screens/loading/loading_screen.dart';
 import 'package:quizzly/screens/play/play_screen.dart';
 
 import '../../auth/user_service.dart';
-import '../../episodes_service.dart';
+import '../../data/episodes_service.dart';
 
 class LoginTabView extends StatefulWidget {
   final TabController tabController;

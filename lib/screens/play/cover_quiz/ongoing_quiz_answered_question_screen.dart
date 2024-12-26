@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzly/episodes_service.dart';
+import 'package:quizzly/data/episodes_service.dart';
 import 'package:quizzly/screens/play/cover_quiz/cover_review_display.dart';
 import 'package:quizzly/screens/play/cover_quiz/ongoing_quiz_aq_state.dart';
 import 'package:quizzly/screens/play/cover_quiz/ongoing_quiz_review_answer_tile.dart';

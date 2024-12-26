@@ -1,4 +1,4 @@
-import 'package:quizzly/episode.dart';
+import 'package:quizzly/data/episode.dart';
 
 class Episodes {
   static List<Episode> episodes = [];

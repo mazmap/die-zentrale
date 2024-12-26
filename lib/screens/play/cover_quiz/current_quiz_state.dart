@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 
-import '../../../episode.dart';
-import '../../../episodes.dart';
-import '../../../episodes_service.dart';
+import '../../../data/episode.dart';
+import '../../../data/episodes.dart';
+import '../../../data/episodes_service.dart';
 import 'coord_box.dart';
 import 'question_details.dart';
 

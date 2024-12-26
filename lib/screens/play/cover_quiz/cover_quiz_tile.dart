@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:quizzly/screens/play/cover_quiz/cover_quiz_home_screen.dart';
 import 'package:quizzly/screens/play/quiz_tile.dart';
 
-import '../../../episode.dart';
-import '../../../episodes.dart';
+import '../../../data/episode.dart';
+import '../../../data/episodes.dart';
 
 class CoverQuizTile extends StatelessWidget {
   late final String leftCoverPath;

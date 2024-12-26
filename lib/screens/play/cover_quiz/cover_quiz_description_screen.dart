@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../episodes_service.dart';
+import '../../../data/episodes_service.dart';
 
 class CoverQuizDescriptionScreen extends StatelessWidget {
   const CoverQuizDescriptionScreen({super.key});

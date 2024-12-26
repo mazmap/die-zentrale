@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzly/route_transitions/slide_from_right_route.dart';
 import 'package:quizzly/screens/archive/archive_episode_screen.dart';
 
-import '../../episode.dart';
+import '../../data/episode.dart';
 
 class ArchiveEpisodeTile extends StatelessWidget {
   final Episode episode;
@@ -13,28 +13,23 @@ class ArchiveEpisodeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       type: MaterialType.card,
-      color: Colors.white,
+      color: Color.fromRGBO(0, 16, 22, 1.0),
       child: InkWell(
-        splashColor: Color.fromRGBO(0, 0, 0, 0.2),
         onTap: () {
           Navigator.push(context, SlideFromRightRoute(page: ArchiveEpisodeScreen(episode: episode,)));
         },
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all()
+              border: Border.all(color: Color.fromRGBO(0, 16, 22, 1.0))
           ),
-          height: 75,
           child: Row(
             children: [
               Container(
-                decoration: const BoxDecoration(
-                    border: Border(
-                        right: BorderSide()
-                    ),
-                ),
+                padding: EdgeInsets.all(10),
+                alignment: Alignment.center,
                 child: Ink.image(
-                  height: 73,
-                  width: 73,
+                  height: 55,
+                  width: 55,
                   image: AssetImage(
                     episode.coverAssetPath,
                   ),
@@ -42,27 +37,51 @@ class ArchiveEpisodeTile extends StatelessWidget {
               ),
               Expanded(child: Padding(
                 padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                              child: Text(
-                                episode.title,
-                                overflow: TextOverflow.fade,
-                                softWrap: false,
-                                style: TextStyle(fontVariations: [FontVariation.weight(200)])
+                          Text(
+                              episode.title,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontVariations: [FontVariation.weight(200)]
                               )
                           ),
-                          SizedBox(width: 5),
-                          Text("(${episode.number})")
+                          Text(
+                              episode.releaseDate,
+                              style: TextStyle(
+                                color: Colors.white,
+                              )
+                          )
                         ]
+                      ),
                     ),
-                    Text(episode.releaseDate)
-                  ]
+                    SizedBox(width: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.blue, width: 2),
+                      ),
+                      padding: EdgeInsets.all(5),
+                      alignment: Alignment.center,
+                      child: Text(
+                          "${episode.number}",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontVariations: [
+                              FontVariation.weight(200)
+                            ]
+                          )
+                      )
+                    )
+                  ],
                 ),
               ))
             ],

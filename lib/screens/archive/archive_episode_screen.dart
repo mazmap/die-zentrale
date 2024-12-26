@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizzly/screens/archive/archive_episode_screen_tile.dart';
 
-import '../../episode.dart';
+import '../../data/episode.dart';
 
 class ArchiveEpisodeScreen extends StatelessWidget {
   final Episode episode;
