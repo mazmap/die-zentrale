@@ -123,3 +123,9 @@ app.*.symbols
 
 # mazmap: 
 ios/
+android/
+web/
+macos/
+windows/
+test/
+.idea/
