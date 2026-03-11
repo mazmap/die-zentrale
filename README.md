@@ -1,16 +1,23 @@
-# quizzly
+# Die Zentrale
 
-A new Flutter project.
+Eine Drei ??? Cover-Quiz App für Android inspiriert durch das _3F-Bilderquiz_ der Fanseite [https://www.3fragezeichen.de/](https://www.3fragezeichen.de/). 
 
-## Getting Started
+# Screenshots
+Start-up screen: 
+![Start-up screen](github/images/screenshot1.png)
 
-This project is a starting point for a Flutter application.
+Homescreen: 
+![Homescreen](github/images/screenshot2.png)
 
-A few resources to get you started if this is your first Flutter project:
+Profil-Screen:
+![Profil-Screen](github/images/screenshot3.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Folgen-Archiv: 
+![Folgen-Archiv](github/images/screenshot4.png)
+![Archiv-Kartei](github/images/screenshot5.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Cover-Quiz:
+![Leaderboard](github/images/screenshot6.png)
+![Quiz](github/images/screenshot7.png)
+<video src="github/videos/screenrec1-compressed.mp4" controls="controls"></video>
+<video src="github/videos/screenrec2-compressed.mp4" controls="controls"></video>

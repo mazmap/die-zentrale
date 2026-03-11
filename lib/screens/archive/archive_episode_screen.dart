@@ -56,7 +56,7 @@ class ArchiveEpisodeScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(15),
-        child: ListView(
+        child: Stack(
           children: [
             ArchiveEpisodeScreenTile(
                 title: "Kurzinformationen",
@@ -113,43 +113,52 @@ class ArchiveEpisodeScreen extends StatelessWidget {
                   )
                 )
             ),
-            const SizedBox(height: 10),
-            ArchiveEpisodeScreenTile(
-                title: "Cover",
-                child: Material( // the material is necessary! otherwise the cover "overscrolls" on the top (ignoring the padding)
-                  child: InkWell(
-                    onTap: () {
-                      showGeneralDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          barrierLabel: "image_zoom_popup",
-                          pageBuilder: (context, primaryAnimation, secondaryAnimation){
-                        return Dialog(
-                            shape: const ContinuousRectangleBorder(),
-                            insetPadding: const EdgeInsets.all(15),
-                          child: InteractiveViewer(
-                            maxScale: 10,
-                            child: Image.asset(episode.coverAssetPath)
-                          )
-                        );
-                      });
-                    },
-                    splashFactory: InkSparkle.splashFactory,
-                    child: Ink.image(
-                      fit: BoxFit.fill,
-                      height: MediaQuery.of(context).size.width-32,
-                        image: AssetImage(episode.coverAssetPath)
+            Padding(
+              padding: const EdgeInsets.only(top:40),
+              child: ArchiveEpisodeScreenTile(
+                  title: "Cover",
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Material( // the material is necessary! otherwise the cover "overscrolls" on the top (ignoring the padding)
+                      child: InkWell(
+                        onTap: () {
+                          showGeneralDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierLabel: "image_zoom_popup",
+                              pageBuilder: (context, primaryAnimation, secondaryAnimation){
+                            return Dialog(
+                                shape: const ContinuousRectangleBorder(),
+                                insetPadding: const EdgeInsets.all(15),
+                              child: InteractiveViewer(
+                                clipBehavior: Clip.none,
+                                maxScale: 10,
+                                child: Image.asset(episode.coverAssetPath)
+                              )
+                            );
+                          });
+                        },
+                        splashFactory: InkSparkle.splashFactory,
+                        child: Ink.image(
+                          fit: BoxFit.fill,
+                          height: MediaQuery.of(context).size.width-32,
+                            image: AssetImage(episode.coverAssetPath)
+                        ),
+                      ),
                     ),
-                  ),
-                )
+                  )
+              ),
             ),
             const SizedBox(height: 10),
-            ArchiveEpisodeScreenTile(
-                title: "Klappentext",
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: SelectableText(episode.description)
-                )
+            Padding(
+              padding: const EdgeInsets.only(top:80),
+              child: ArchiveEpisodeScreenTile(
+                  title: "Klappentext",
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: SelectableText(episode.description)
+                  )
+              ),
             )
           ]
         )
