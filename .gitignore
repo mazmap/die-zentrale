@@ -127,5 +127,6 @@ android/
 web/
 macos/
 windows/
+linux/
 test/
 .idea/
